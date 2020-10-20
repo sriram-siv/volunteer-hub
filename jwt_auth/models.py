@@ -6,11 +6,12 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50)
     email = models.CharField(max_length=50, unique=True)
     phone = models.CharField(max_length=15)
-    profile_image = models.CharField(max_length=300)
+    profile_image = models.CharField(max_length=300, blank=True)
     active = models.BooleanField(default=True)
     skills = models.ManyToManyField(
         'skills.Skill',
-        related_name='user_skills'
+        related_name='user_skills',
+        blank=True
     )
 
     def __str__(self):
