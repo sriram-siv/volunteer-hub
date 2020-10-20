@@ -1,0 +1,13 @@
+{
+  "python.pythonPath": "/Users/grahbula/.local/share/virtualenvs/poke-django-_SUOPRcC/bin/python",
+
+  "workbench.colorCustomizations": {
+    "statusBar.background": "#fe635e",
+    "titleBar.activeBackground": "#fe635e",
+    "titleBar.inactiveBackground": "#fe635e",
+    "statusBar.foreground": "#000",
+    "titleBar.inactiveForeground": "#000",
+    "titleBar.activeForeground": "#000",
+  },
+  "window.title": "VOLUNTEERS BACKEND"
+}
