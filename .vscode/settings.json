@@ -1,5 +1,5 @@
 {
-  "python.pythonPath": "/Users/grahbula/.local/share/virtualenvs/poke-django-_SUOPRcC/bin/python",
+  "python.pythonPath": "/usr/local/bin/python3",
 
   "workbench.colorCustomizations": {
     "statusBar.background": "#fe635e",
