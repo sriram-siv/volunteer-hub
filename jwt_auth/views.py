@@ -2,8 +2,8 @@ from datetime import datetime, timedelta
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import PermissionDenied
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.exceptions import PermissionDenied, NotFound
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from django.contrib.auth import get_user_model
 from django.conf import settings
 import jwt
@@ -49,3 +49,17 @@ class ProfileListView(APIView):
         profile_list = User.objects.all()
         serialized_profile_list = PopulatedUserSerializer(profile_list, many=True)
         return Response(serialized_profile_list.data, status=status.HTTP_200_OK)
+
+
+class ProfileDetailView(APIView):
+
+    def get_profile(self, pk):
+        try:
+            return User.objects.get(pk=pk)
+        except User.DoesNotExist:
+            raise NotFound()
+    
+    def get(self, _request, pk):
+        profile = self.get_profile(pk=pk)
+        serialized_profile = PopulatedUserSerializer(profile)
+        return Response(serialized_profile.data, status=status.HTTP_200_OK)
