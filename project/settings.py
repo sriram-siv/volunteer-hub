@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'jwt_auth',
     'skills',
+    'chat_messages',
+    'channels',
 ]
 
 MIDDLEWARE = [
@@ -71,6 +73,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'project.wsgi.application'
+ASGI_APPLICATION = 'project.routing.application'
 
 
 # Database
