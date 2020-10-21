@@ -2,6 +2,8 @@ import React from 'react'
 import MapGL from '@urbica/react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
+import Pin from './Pin'
+
 class Map extends React.Component {
 
   state = {
@@ -29,7 +31,9 @@ class Map extends React.Component {
         accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         {...this.state.viewport}
         onViewportChange={this.setViewport}
-      />
+      >
+        <Pin latitude={51.2} longitude={0} size={20} color="mediumpurple" number={12} draggable />
+      </MapGL>
     )
   }
 }
