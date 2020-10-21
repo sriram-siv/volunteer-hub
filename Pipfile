@@ -11,6 +11,8 @@ pylint = "*"
 psycopg2-binary = "*"
 djangorestframework = "*"
 pyjwt = "*"
+channels = "*"
+channels-redis = "*"
 
 [requires]
 python_version = "3.8"
