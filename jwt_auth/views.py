@@ -9,6 +9,7 @@ from django.conf import settings
 import jwt
 
 from .serializers.common import UserSerializer
+from .serializers.populated import PopulatedUserSerializer
 
 User = get_user_model()
 
@@ -41,3 +42,10 @@ class LoginView(APIView):
             settings.SECRET_KEY,
             algorithm='HS256')
         return Response({'token': token, 'message': f'Welcome Back {user_to_login.username}'})
+
+class ProfileListView(APIView):
+
+    def get(self, _request):
+        profile_list = User.objects.all()
+        serialized_profile_list = PopulatedUserSerializer(profile_list, many=True)
+        return Response(serialized_profile_list.data, status=status.HTTP_200_OK)
