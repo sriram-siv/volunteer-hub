@@ -40,6 +40,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'jwt_auth',
     'skills',
+    'rooms',
+    'campaigns',
     'chat_messages',
     'channels',
 ]
