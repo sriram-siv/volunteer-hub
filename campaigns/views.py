@@ -25,3 +25,20 @@ class CampaignListView(APIView):
             campaign_to_create.save()
             return Response(campaign_to_create.data, status=status.HTTP_201_CREATED)
         return Response(campaign_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+
+class CampaignDetailView(APIView):
+    ''' Handles requests to /campaigns/:campaign_id '''
+
+    permission_classes = (IsAuthenticatedOrReadOnly, )
+
+    def get_campaign(self, pk):
+        try:
+            return Campaign.objects.get(pk=pk)
+        except Campaign.DoesNotExist:
+            raise NotFound()
+
+    def get(self, request, pk):
+        campaign = self.get_campaign(pk=pk)
+        serialized_campaign = PopulatedCampaignSerializer(campaign)
+        return Response(serialized_campaign.data, status=status.HTTP_200_OK)
