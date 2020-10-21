@@ -3,33 +3,33 @@ import React from 'react'
 class Room extends React.Component {
 
   componentDidMount = () => {
-
-    const room = this.props.match.params.room
-
-    this.chatSocket = new WebSocket(
-      'ws://'
-      + 'localhost:8000'
-      + '/ws/chat/'
-      + room
-      + '/'
-    )
-
-    this.chatSocket.onmessage = function(e) {
-      const data = JSON.parse(e.data)
-      console.log(data)
-    }
-
-    this.chatSocket.onclose = () => console.error('Chat socket closed unexpectedly')
-
-    console.log(this.chatSocket)
+    this.connectToSocket()
+    
 
 
 
   }
 
+  connectToSocket = () => {
+    // TODO Replace this for deployment
+    const domain = 'localhost:8000'
+    this.chatSocket = new WebSocket(
+      `ws://${domain}/ws/chat/${this.props.match.params.room}/`
+    )
+
+    this.chatSocket.onmessage = (e) => {
+      const data = JSON.parse(e.data)
+      console.log(data)
+    }
+
+    this.chatSocket.onclose = () => console.error('Chat socket closed unexpectedly')
+    console.log(this.chatSocket)
+  }
+
   sendMessage = () => {
     this.chatSocket.send(JSON.stringify({
-      'message': 'hello'
+      'text': 'hello',
+      'user': 'volunteer_55'
     }))
   }
 
