@@ -42,7 +42,6 @@ class CampaignDetailView(APIView):
         if campaign.coordinator.id != user.id:
             raise PermissionDenied()
 
-
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
         serialized_campaign = PopulatedCampaignSerializer(campaign)

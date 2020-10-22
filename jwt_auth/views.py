@@ -61,13 +61,28 @@ class ProfileDetailView(APIView):
 
     ''' Handles requests to /profiles/:profile_id '''
 
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     def get_profile(self, pk):
         try:
             return User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise NotFound()
+
+    def is_user(self, profile, user):
+        if profile.id != user.id:
+            raise PermissionDenied()
     
     def get(self, _request, pk):
         profile = self.get_profile(pk=pk)
         serialized_profile = PopulatedUserSerializer(profile)
         return Response(serialized_profile.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        profile_to_update = self.get_profile(pk=pk)
+        self.is_user(profile_to_update, request.user)
+        updated_profile = UserSerializer(profile_to_update, data=request.data)
+        if updated_profile.is_valid():
+            updated_profile.save()
+            return Response(updated_profile.data, status=status.HTTP_202_ACCEPTED)
+        return Response(updated_profile.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
