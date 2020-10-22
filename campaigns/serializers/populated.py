@@ -6,5 +6,6 @@ from skills.serializers.common import SkillSerializer
 class PopulatedCampaignSerializer(CampaignSerializer):
 
     coordinator = NestedUserSerializer()
-    volunteers = NestedUserSerializer(many=True)
+    pend_volunteers = NestedUserSerializer(many=True)
+    conf_volunteers = NestedUserSerializer(many=True)
     skills = SkillSerializer(many=True)

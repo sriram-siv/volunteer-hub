@@ -48,9 +48,9 @@ class CampaignDetailView(APIView):
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        campaign_to_udpate = self.get_campaign(pk=pk)
+        campaign_to_update = self.get_campaign(pk=pk)
         self.is_coordinator(campaign_to_udpate, request.user)
-        updated_campaign = CampaignSerializer(campaign_to_udpate, data=request.data)
+        updated_campaign = CampaignSerializer(campaign_to_update, data=request.data)
         if updated_campaign.is_valid():
             updated_campaign.save()
             return Response(updated_campaign.data, status=status.HTTP_202_ACCEPTED)
@@ -67,11 +67,23 @@ class CampaignVolunteerView(CampaignDetailView):
 
     permission_classes = (IsAuthenticated,)
 
+    # USER ADDS SELF TO PENDING VOLUNTEER 
     def post(self, request, pk):
         campaign_to_volunteer = self.get_campaign(pk=pk)
-        campaign_to_volunteer.volunteers.add(request.user.id)
+        campaign_to_volunteer.pend_volunteers.add(request.user.id)
         campaign_to_volunteer.save()
         return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
+
+    # COORDINATOR MOVES VOLUNTEER FROM PENDING TO CONFIRMED
+    def put(self, request, pk):
+        campaign_to_update = self.get_campaign(pk=pk)
+        self.is_coordinator(campaign_to_update, request.user)
+        volunteer_id = request.data['volunteer_id']
+        campaign_to_update.pend_volunteers.remove(volunteer_id)
+        campaign_to_update.conf_volunteers.add(volunteer_id)
+        campaign_to_update.save()
+        return Response({ 'message': f'Volunteer {volunteer_id} confirmed' }, status=status.HTTP_202_ACCEPTED)
+
 
     
 
