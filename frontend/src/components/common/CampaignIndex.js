@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Map from '../map/Map'
+// import icons from '../elements/Icons'
 
 class CampaignIndex extends React.Component {
 
@@ -19,12 +20,17 @@ class CampaignIndex extends React.Component {
     ]
     return (
       <div>
-        <div className="header">
+        {/* <div className="header">
           <div className="title">Find projects for you</div>
           <div className="subtitle">something to suit your skills</div>
-        </div>
+        </div> */}
         <div className="campaign-index-map">
-          <div className="geocode">GeoCoder</div>
+          <div className="geocode">
+            GeoCoder
+            <span className="temp-icons">findme</span>
+          </div>
+          <div className="tag-search">tags</div>
+          <div className="skill-search">skills</div>
           <div className="campaign-list">Campaign List</div>
           <Map pins={campaigns} />
         </div>

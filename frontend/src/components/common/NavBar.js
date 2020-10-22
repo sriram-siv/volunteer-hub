@@ -26,7 +26,7 @@ class NavBar extends React.Component {
         </div>
         <div className="center">Volunteer.io</div>
         <div className="user">
-          <Select options={options} />
+          <Select options={options} defaultValue={{ value: 'index', label: 'Campaign Index' }} />
         </div>
       </div>
     )
