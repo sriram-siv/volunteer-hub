@@ -15,6 +15,8 @@ User = get_user_model()
 
 class RegisterView(APIView):
 
+    ''' Handles requests to /auth/register '''
+
     def post(self, request):
         user_to_create = UserSerializer(data=request.data)
         if user_to_create.is_valid():
@@ -23,6 +25,8 @@ class RegisterView(APIView):
         return Response(user_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 class LoginView(APIView):
+
+    ''' Handles requetsts to /auth/login '''
 
     def get_user(self, email):
         try:
@@ -45,6 +49,8 @@ class LoginView(APIView):
 
 class ProfileListView(APIView):
 
+    ''' Handles requests to /profiles '''
+
     def get(self, _request):
         profile_list = User.objects.all()
         serialized_profile_list = PopulatedUserSerializer(profile_list, many=True)
@@ -52,6 +58,8 @@ class ProfileListView(APIView):
 
 
 class ProfileDetailView(APIView):
+
+    ''' Handles requests to /profiles/:profile_id '''
 
     def get_profile(self, pk):
         try:
