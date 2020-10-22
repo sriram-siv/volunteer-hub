@@ -15,6 +15,8 @@ User = get_user_model()
 
 class RegisterView(APIView):
 
+    ''' Handles requests to /auth/register '''
+
     def post(self, request):
         user_to_create = UserSerializer(data=request.data)
         if user_to_create.is_valid():
@@ -23,6 +25,8 @@ class RegisterView(APIView):
         return Response(user_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 class LoginView(APIView):
+
+    ''' Handles requetsts to /auth/login '''
 
     def get_user(self, email):
         try:
@@ -45,6 +49,8 @@ class LoginView(APIView):
 
 class ProfileListView(APIView):
 
+    ''' Handles requests to /profiles '''
+
     def get(self, _request):
         profile_list = User.objects.all()
         serialized_profile_list = PopulatedUserSerializer(profile_list, many=True)
@@ -53,13 +59,30 @@ class ProfileListView(APIView):
 
 class ProfileDetailView(APIView):
 
+    ''' Handles requests to /profiles/:profile_id '''
+
+    permission_classes = (IsAuthenticatedOrReadOnly,)
+
     def get_profile(self, pk):
         try:
             return User.objects.get(pk=pk)
         except User.DoesNotExist:
             raise NotFound()
+
+    def is_user(self, profile, user):
+        if profile.id != user.id:
+            raise PermissionDenied()
     
     def get(self, _request, pk):
         profile = self.get_profile(pk=pk)
         serialized_profile = PopulatedUserSerializer(profile)
         return Response(serialized_profile.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        profile_to_update = self.get_profile(pk=pk)
+        self.is_user(profile_to_update, request.user)
+        updated_profile = UserSerializer(profile_to_update, data=request.data)
+        if updated_profile.is_valid():
+            updated_profile.save()
+            return Response(updated_profile.data, status=status.HTTP_202_ACCEPTED)
+        return Response(updated_profile.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)

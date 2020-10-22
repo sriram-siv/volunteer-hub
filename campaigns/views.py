@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import NotFound, PermissionDenied
-from rest_framework.permissions import IsAuthenticatedOrReadOnly
+from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticated
 
 from .models import Campaign
 from .serializers.common import CampaignSerializer
@@ -38,7 +38,41 @@ class CampaignDetailView(APIView):
         except Campaign.DoesNotExist:
             raise NotFound()
 
+    def is_coordinator(self, campaign, user):
+        if campaign.coordinator.id != user.id:
+            raise PermissionDenied()
+
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
         serialized_campaign = PopulatedCampaignSerializer(campaign)
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        campaign_to_udpate = self.get_campaign(pk=pk)
+        self.is_coordinator(campaign_to_udpate, request.user)
+        updated_campaign = CampaignSerializer(campaign_to_udpate, data=request.data)
+        if updated_campaign.is_valid():
+            updated_campaign.save()
+            return Response(updated_campaign.data, status=status.HTTP_202_ACCEPTED)
+        return Response(updated_campaign.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def delete(self, request, pk):
+        campaign_to_delete = self.get_campaign(pk=pk)
+        self.is_coordinator(campaign_to_delete, request.user)
+        campaign_to_delete.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+class CampaignVolunteerView(CampaignDetailView):
+    ''' Handles requests to /campaigns/:campaign_id/volunteers '''
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, pk):
+        campaign_to_volunteer = self.get_campaign(pk=pk)
+        campaign_to_volunteer.volunteers.add(request.user.id)
+        campaign_to_volunteer.save()
+        return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
+
+    
+
+
