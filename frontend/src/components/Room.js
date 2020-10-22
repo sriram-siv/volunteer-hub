@@ -1,5 +1,7 @@
 import React from 'react'
 
+import Button from './elements/Button'
+
 class Room extends React.Component {
 
   state = {
@@ -49,7 +51,8 @@ class Room extends React.Component {
         </div>
         <form style={{ marginTop: '5px' }}>
           <input type="text" style={{ display: 'inline-block', marginLeft: '5px', paddingTop: '3px', width: 'calc(100% - 120px)' }} className="form-control" name="draft" value={draft} onChange={this.handleChange} />
-          <button style={{ width: '100px', marginLeft: '10px' }} className="btn btn-outline-primary" onClick={this.sendMessage} >send</button>
+          <span style={{ display: 'inline-block', width: '10px' }} />
+          <Button style={{ width: '100px' }} handleClick={this.sendMessage} text="send" />
         </form>
       </>
     )
