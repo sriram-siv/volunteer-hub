@@ -8,7 +8,7 @@ from django.contrib.auth import get_user_model
 from django.conf import settings
 import jwt
 
-from .serializers.common import UserSerializer
+from .serializers.common import UserSerializer, ProfileSerializer
 from .serializers.populated import PopulatedUserSerializer
 
 User = get_user_model()
@@ -81,7 +81,7 @@ class ProfileDetailView(APIView):
     def put(self, request, pk):
         profile_to_update = self.get_profile(pk=pk)
         self.is_user(profile_to_update, request.user)
-        updated_profile = UserSerializer(profile_to_update, data=request.data)
+        updated_profile = ProfileSerializer(profile_to_update, data=request.data)
         if updated_profile.is_valid():
             updated_profile.save()
             return Response(updated_profile.data, status=status.HTTP_202_ACCEPTED)

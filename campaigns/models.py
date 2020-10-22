@@ -11,9 +11,14 @@ class Campaign(models.Model):
         related_name='coord_campaigns',
         on_delete=models.CASCADE
     )
-    volunteers = models.ManyToManyField(
+    pend_volunteers = models.ManyToManyField(
         'jwt_auth.User',
-        related_name='campaigns',
+        related_name='pend_campaigns',
+        blank=True
+    )
+    conf_volunteers = models.ManyToManyField(
+        'jwt_auth.User',
+        related_name='conf_campaigns',
         blank=True
     )
     skills = models.ManyToManyField(
