@@ -22,17 +22,19 @@ class Map extends React.Component {
   }
 
   render() {
+    const { pins } = this.props
     return (
       <MapGL
         ref={map => this.mapRef = map}
         mapStyle='mapbox://styles/mapbox/streets-v11'
-        style={{ width: '100%', height: '400px' }}
+        style={{ width: '100%', height: '100%' }}
         cursorStyle="default"
         accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         {...this.state.viewport}
+        viewportChangeMethod="flyTo"
         onViewportChange={this.setViewport}
       >
-        <Pin latitude={51.2} longitude={0} size={20} color="mediumpurple" number={12} draggable />
+        {pins.map((pin, i) => <Pin key={i} {...pin} number={i + 1} clickPin={this.setViewport} />)}
       </MapGL>
     )
   }

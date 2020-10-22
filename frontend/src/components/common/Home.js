@@ -1,5 +1,7 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+// import { Link } from 'react-router-dom'
+
+import Landing from './Landing'
 
 class Home extends React.Component {
 
@@ -12,10 +14,13 @@ class Home extends React.Component {
   }
 
   render() {
+    const auth = false
     return (
       <>
-        <input type="text" name="roomName" value={this.state.roomName} onChange={this.handleChange} />
-        <Link to={`/chat/${this.state.roomName}`} >Go</Link>
+        {auth
+          ? 'You are logged in!'
+          : <Landing />
+        }
       </>
     )
   }

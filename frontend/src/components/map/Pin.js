@@ -15,6 +15,7 @@ class Pin extends React.Component {
 
   componentDidMount = () => {
     const { latitude, longitude, number, color, alt, draggable, size } = this.props
+    console.log(this.props)
     this.setState({ latitude, longitude, number, color, alt, draggable, size })
   }
 
@@ -37,7 +38,8 @@ class Pin extends React.Component {
       position: 'relative',
       width: `${size}px`,
       height: `${size}px`,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      top: `-${size - 2}px`
     }
     const border = {
       width: '100%',
@@ -89,8 +91,7 @@ class Pin extends React.Component {
         latitude={latitude}
         longitude={longitude}
         draggable={draggable}
-        offsetTop={-size * 1.35}
-        offsetLeft={-size / 2}
+        onClick={() => this.props.clickPin({ latitude, longitude, zoom: 15 })}
       >
         <div style={container}
           onMouseEnter={this.hoverPin}

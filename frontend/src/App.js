@@ -1,18 +1,22 @@
 import React from 'react'
 import { BrowserRouter, Switch, Route } from 'react-router-dom'
-import Home from './components/Home'
-import Room from './components/Room'
-import Map from './components/map/Map'
+import NavBar from './components/common/NavBar'
+import Home from './components/common/Home'
+import Room from './components/common/Room'
+import CampaignIndex from './components/common/CampaignIndex'
 
 class App extends React.Component {
 
   render() {
+    const path = window.location.pathname
+    // TODO if unauthorized redirect to landing page
     return (
       <BrowserRouter>
+        {path !== '/' && <NavBar />}
         <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/chat/:room" component={Room} />
-          <Route path='/map' component={Map} />
+          <Route path='/campaigns' component={CampaignIndex} />
         </Switch>
       </BrowserRouter>
     )

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Button from './elements/Button'
+import Button from '../elements/Button'
 
 class Room extends React.Component {
 
