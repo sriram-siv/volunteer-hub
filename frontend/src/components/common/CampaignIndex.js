@@ -1,6 +1,8 @@
 import React from 'react'
 
 import Map from '../map/Map'
+import InputText from '../elements/InputText'
+import Button from '../elements/Button'
 // import icons from '../elements/Icons'
 
 class CampaignIndex extends React.Component {
@@ -20,18 +22,12 @@ class CampaignIndex extends React.Component {
     ]
     return (
       <div>
-        {/* <div className="header">
-          <div className="title">Find projects for you</div>
-          <div className="subtitle">something to suit your skills</div>
-        </div> */}
         <div className="campaign-index-map">
-          <div className="geocode">
-            GeoCoder
-            <span className="temp-icons">findme</span>
+          <div className="search-fields">
+            <InputText label="Location"/>
+            <InputText label="Tags" />
+            <Button />
           </div>
-          <div className="tag-search">tags</div>
-          <div className="skill-search">skills</div>
-          <div className="campaign-list">Campaign List</div>
           <Map pins={campaigns} />
         </div>
       </div>

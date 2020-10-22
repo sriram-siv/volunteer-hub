@@ -21,7 +21,9 @@ class NavBar extends React.Component {
     return (
       <div className="navigation">
         <div className="left">
-          {theme === 'light' ? icons.sun() : icons.moon()}
+          <span onClick={this.props.changeTheme}>
+            {theme === 'light' ? icons.sun() : icons.moon()}
+          </span>
           {icons.user()}
         </div>
         <div className="center">Volunteer.io</div>
