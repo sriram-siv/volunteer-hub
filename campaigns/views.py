@@ -66,13 +66,13 @@ class CampaignDetailView(APIView):
 class CampaignVolunteerView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/volunteers '''
 
-    permission_classes = (IsAuthenticated)
+    permission_classes = (IsAuthenticated,)
 
     def post(self, request, pk):
         campaign_to_volunteer = self.get_campaign(pk=pk)
         campaign_to_volunteer.volunteers.add(request.user.id)
         campaign_to_volunteer.save()
-        return Response({ 'message': f'Volunteer added to campaign {pk}' }, campaign_to_volunteer.data, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
 
     
 
