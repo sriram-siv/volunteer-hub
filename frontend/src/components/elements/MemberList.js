@@ -41,6 +41,8 @@ const Toggle = styled.div`
   position: absolute;
   top: 7px;
   right: 15px;
+  transform: rotateZ(${props => props.isHidden ? '0deg' : '90deg'});
+  transition: all 0.2s;
 `
 
 class MemberList extends React.Component {
@@ -59,7 +61,8 @@ class MemberList extends React.Component {
     const { isHidden } = this.state
     return (
       <List isHidden={isHidden}>
-        <Toggle onClick={this.toggleView}>{isHidden ? icons.down() : icons.up()}</Toggle>
+        {/* <Toggle onClick={this.toggleView}>{isHidden ? icons.down() : icons.up()}</Toggle> */}
+        <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right()}</Toggle>
         <Title>Members</Title>
         <ListScroll>
           {this.members.map((member, i) => <MemberDetail key={i}>{member}</MemberDetail>)}
