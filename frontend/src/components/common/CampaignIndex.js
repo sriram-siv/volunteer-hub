@@ -2,9 +2,10 @@ import React from 'react'
 
 import Map from '../map/Map'
 import InputText from '../elements/InputText'
-import Button from '../elements/Button'
 import Geocoder from '../elements/Geocoder'
 import SearchFields from '../elements/SearchFields'
+
+import { getAllCampaigns } from '../../lib/api'
 // import icons from '../elements/Icons'
 
 class CampaignIndex extends React.Component {
@@ -13,8 +14,9 @@ class CampaignIndex extends React.Component {
     campaigns: null
   }
 
-  componentDidMount = () => {
-    // Get all Campaigns and load to state
+  componentDidMount = async () => {
+    const campaigns = await getAllCampaigns()
+    console.log(campaigns)
   }
 
   getResults = () => {

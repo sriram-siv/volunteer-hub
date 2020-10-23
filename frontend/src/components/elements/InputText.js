@@ -47,6 +47,8 @@ const Highlight = styled.div`
 
 class InputField extends React.Component {
 
+  /* Add docstring to say that returnValue and name must always be provided */
+
   state = {
     value: '',
     focus: false
@@ -55,7 +57,7 @@ class InputField extends React.Component {
   handleChange = event => {
     this.setState({ value: event.target.value })
     // Return the value to parent if needed
-    if (this.props.returnValue) this.props.returnValue(event.target.value)
+    if (this.props.returnValue) this.props.returnValue({ name: this.props.name, value: event.target.value })
   }
   handleFocus = () => {
     this.setState({ focus: true })

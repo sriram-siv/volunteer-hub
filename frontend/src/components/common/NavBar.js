@@ -17,7 +17,9 @@ class NavBar extends React.Component {
       control: styles => ({
         ...styles,
         backgroundColor: this.props.theme.background,
-        color: 'yellow'
+        borderRadius: '2px',
+        borderColor: this.props.theme.shadow,
+        height: 'calc(3rem - 4px)'
       }),
       singleValue: (styles, state) => ({
         ...styles,
