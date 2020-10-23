@@ -48,15 +48,9 @@ const Highlight = styled.div`
 class InputField extends React.Component {
 
   state = {
-    value: '',
     focus: false
   }
 
-  handleChange = event => {
-    this.setState({ value: event.target.value })
-    // Return the value to parent if needed
-    if (this.props.returnValue) this.props.returnValue(event.target.value)
-  }
   handleFocus = () => {
     this.setState({ focus: true })
   }
@@ -65,11 +59,12 @@ class InputField extends React.Component {
   }
 
   render() {
-    const { value, focus } = this.state
-    const { label, width } = this.props
+    const { focus } = this.state
+    const { label, width, geocoderProps } = this.props
+    const value = this.input ? this.input.value : ''
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} value={value} onChange={this.handleChange} spellCheck="false"  />
+        <Input ref={input => this.input = input} {...geocoderProps} spellCheck="false"  />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>

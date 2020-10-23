@@ -4,21 +4,24 @@ import styled from 'styled-components'
 // background-color: #eeed;
 // color: #333;
 const ButtonElement = styled.button`
-  background-color: #111d;
-  color: #ddd;
-  border-radius: 3px;
-  width: 100%;
-  height: 3rem;
-  border: 1px solid #aeb4ba;
+  display: block;
+  background-color: ${props => props.theme.background};
+  color: ${props => props.theme.text};
+  border-radius: 2px;
+  width: ${props => props.width};
+  margin: auto;
+  height: 3.1rem;
+  border: 2px solid #fef15e;
   transition: all 0.15s;
 
   &:hover {
-    background-color: #ff0e;
+    background-color: #fef15eef;
+    color: #333;
   }
 `
 
-const Button = () => {
-  return <ButtonElement>search</ButtonElement>
+const Button = ({ width, label, onClick }) => {
+  return <ButtonElement width={width} onClick={onClick}>{label}</ButtonElement>
 }
 
 export default Button

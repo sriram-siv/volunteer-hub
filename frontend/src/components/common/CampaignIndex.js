@@ -3,6 +3,8 @@ import React from 'react'
 import Map from '../map/Map'
 import InputText from '../elements/InputText'
 import Button from '../elements/Button'
+import Geocoder from '../elements/Geocoder'
+import SearchFields from '../elements/SearchFields'
 // import icons from '../elements/Icons'
 
 class CampaignIndex extends React.Component {
@@ -15,6 +17,11 @@ class CampaignIndex extends React.Component {
     // Get all Campaigns and load to state
   }
 
+  getResults = () => {
+    this.setState({ showResults: true })
+    console.log(this.geocoder.geoRef.state.inputValue)
+  }
+
 
   render() {
     const campaigns = [
@@ -23,11 +30,12 @@ class CampaignIndex extends React.Component {
     return (
       <div>
         <div className="campaign-index-map">
-          <div className="search-fields">
+          <SearchFields>
             <InputText label="Location"/>
             <InputText label="Tags" />
-            <Button />
-          </div>
+            <Geocoder ref={geocoder => this.geocoder = geocoder} />
+            <Button label="search" width="100%" onClick={this.getResults} />
+          </SearchFields>
           <Map pins={campaigns} />
         </div>
       </div>

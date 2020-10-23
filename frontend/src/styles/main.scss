@@ -38,6 +38,9 @@ button {
     transform: translateX(-50%);
     font-family: 'Montserrat Alternates', sans-serif;
     font-size: 1.1rem;
+    &::selection {
+      background-color: #fef15e;
+    }
   }
 }
 
@@ -67,7 +70,22 @@ button {
     z-index: 1;
 
     > * {
+      position: relative;
       margin-bottom: 5px;
+      top: 0;
+      transition: all 1s;
+    }
+
+    :nth-child()
+
+    &.hide {
+      > * {
+        position: absolute;
+        top: 0;
+      }
     }
   }
 }
+
+
+// GEOCODER
