@@ -6,6 +6,7 @@ import NavBar from './components/common/NavBar'
 import Home from './components/common/Home'
 import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
+import CampaignShow from './components/common/CampaignShow'
 
 import Tests from './components/common/Tests'
 
@@ -27,7 +28,7 @@ class App extends React.Component {
       name: 'light',
       primary: '#fef715',
       shadow: '#aeb4ba',
-      background: 'white',
+      background: '#fff',
       text: '#333'
     }
   }
@@ -49,6 +50,7 @@ class App extends React.Component {
             <Route path='/tests' component={Tests} />
             <Route exact path="/" component={Home} />
             <Route path="/chat/:room" component={Room} />
+            <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' component={CampaignIndex} />
           </Switch>
         </BrowserRouter>
