@@ -1,44 +1,22 @@
 import React from 'react'
 import styled from 'styled-components'
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  position: absolute;
-  top: calc(3rem + 15px);
-  right: -5px;
-  background-color: none;
-  padding: 10px;
-  border-radius: 5px;
-`
-
-const Badge = styled.div`
-  position: relative;
-  left: ${props => `${props.position * 17 + 10}px`};
-  width: 50px;
-  height: 50px;
-  background-color: papayawhip;
-  clip-path: circle();
-  border: 2px solid palevioletred;
-  border-radius: 50%;
-  line-height: 50px;
-  text-align: center;
-  font-family: 'Montserrat Alternates', sans-serif;
-`
+import icons from './Icons'
 
 const List = styled.div`
   position: absolute;
   top: calc(3rem + 5px);
   right: 5px;
   width: 200px;
-  height: 250px;
+  height: ${props => props.isHidden ? '40px' : '290px'};
   background-color: ${props => `${props.theme.shadow}dd`};
   border-radius: 2px;
+  overflow-y: hidden;
+  transition: all 0.2s;
 `
 
 const ListScroll = styled.div`
   margin-top: 5px;
-  height: 205px;
+  height: 245px;
   overflow-y: scroll;
 `
 
@@ -52,42 +30,36 @@ const MemberDetail = styled.div`
   border-radius: 2px;
 `
 
-const CloseButton = styled.div`
-  position: absolute;
-  top: 15px;
-  right: 15px;
-  width: 4rem;
-  height: 30px;
-  line-height: 30px;
-  border-radius: 2px;
-  background-color: papayawhip;
-  text-align: center;
-`
-
 const Title = styled.div`
   text-align: center;
   line-height: 30px;
   padding-top: 5px;
   color: #333;
-  font-family: 'Montserrat Alternates', sans-serif;
+  `
+
+const Toggle = styled.div`
+  position: absolute;
+  top: 7px;
+  right: 15px;
 `
 
 class MemberList extends React.Component {
 
   state = {
-    view: 'badges'
+    isHidden: true
   }
 
   toggleView = () => {
-    const view = this.state.view === 'badges' ? 'list' : 'badges'
-    this.setState({ view })
+    this.setState({ isHidden: !this.state.isHidden })
   }
 
   members = [ 'Sri', 'Don', 'Ren', 'Liam', 'Charlotte', 'Jack' ]
 
   render() {
+    const { isHidden } = this.state
     return (
-      <List>
+      <List isHidden={isHidden}>
+        <Toggle onClick={this.toggleView}>{isHidden ? icons.down() : icons.up()}</Toggle>
         <Title>Members</Title>
         <ListScroll>
           {this.members.map((member, i) => <MemberDetail key={i}>{member}</MemberDetail>)}
