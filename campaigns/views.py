@@ -72,6 +72,7 @@ class CampaignVolunteerView(CampaignDetailView):
         campaign_to_volunteer = self.get_campaign(pk=pk)
         campaign_to_volunteer.pend_volunteers.add(request.user.id)
         campaign_to_volunteer.save()
+        serialized_campaign_to_volunteer = CampaignSerializer(campaign_to_volunteer)
         return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
 
     # COORDINATOR MOVES VOLUNTEER FROM PENDING TO CONFIRMED
@@ -82,7 +83,21 @@ class CampaignVolunteerView(CampaignDetailView):
         campaign_to_update.pend_volunteers.remove(volunteer_id)
         campaign_to_update.conf_volunteers.add(volunteer_id)
         campaign_to_update.save()
+        serialized_campaign_to_update = CampaignSerializer(campaign_to_update)
         return Response({ 'message': f'Volunteer {volunteer_id} confirmed' }, status=status.HTTP_202_ACCEPTED)
+
+    # COORDINATOR OR USER CAN REMOVE THEMSELVES FROM PROJECT
+    def delete(self, request, pk):
+        # if owner is true OR if volunteer_id == request.user.id remove. Otherwise returned permissiondenied
+        campaign_to_update = self.get_campaign(pk=pk)
+        volunteer_id = request.data['volunteer_id']
+        if (request.user.id == campaign_to_update.coordinator.id or request.user.id == volunteer_id):
+            campaign_to_update.pend_volunteers.remove(volunteer_id)
+            campaign_to_update.conf_volunteers.remove(volunteer_id)
+            seralized_campaign_to_update = CampaignSerializer(campaign_to_update)
+            return Response(
+                { 'message': f'Volunteer {volunteer_id} removed from campaign {campaign_to_update.id}.' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Must be user or coordinator to perform this action.' })
 
 
     
