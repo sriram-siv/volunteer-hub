@@ -8,6 +8,7 @@ import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
 
 import Tests from './components/common/Tests'
+import DgTest from './components/common/DgTest'
 
 class App extends React.Component {
 
@@ -47,6 +48,7 @@ class App extends React.Component {
           {path !== '/' && <NavBar changeTheme={this.changeTheme}/>}
           <Switch>
             <Route path='/tests' component={Tests} />
+            <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns' component={CampaignIndex} />
