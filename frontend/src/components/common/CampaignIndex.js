@@ -31,10 +31,8 @@ class CampaignIndex extends React.Component {
       <div>
         <div className="campaign-index-map">
           <SearchFields>
-            <InputText label="Location"/>
-            <InputText label="Tags" />
             <Geocoder ref={geocoder => this.geocoder = geocoder} />
-            <Button label="search" width="100%" onClick={this.getResults} />
+            <InputText label="Tags" />
           </SearchFields>
           <Map pins={campaigns} />
         </div>

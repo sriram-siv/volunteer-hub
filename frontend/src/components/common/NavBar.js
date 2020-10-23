@@ -1,38 +1,44 @@
 import React from 'react'
+import { withTheme } from 'styled-components'
 import Select from 'react-select'
 
 import icons from '../elements/Icons'
 
 class NavBar extends React.Component {
 
-  state = {
-    theme: 'light'
-  }
-
-
   render() {
-    const { theme } = this.state
     const options = [
       { value: 'projectA', label: 'Project A' },
       { value: 'projectB', label: 'Project B' },
       { value: 'index', label: 'Campaign Index' },
-      { value: 'newCampaign', label: 'New Campaign' },
+      { value: 'newCampaign', label: 'New Campaign' }
     ]
+    const colourStyles = {
+      control: styles => ({
+        ...styles,
+        backgroundColor: this.props.theme.background,
+        color: 'yellow'
+      }),
+      singleValue: (styles, state) => ({
+        ...styles,
+        color: this.props.theme.text
+      })
+    }
     return (
       <div className="navigation">
         <div className="left">
           <span onClick={this.props.changeTheme}>
-            {theme === 'light' ? icons.sun() : icons.moon()}
+            {this.props.theme.name === 'light' ? icons.sun() : icons.moon()}
           </span>
           {icons.user()}
         </div>
         <div className="center">Volunteer.io</div>
         <div className="user">
-          <Select options={options} defaultValue={{ value: 'index', label: 'Campaign Index' }} />
+          <Select options={options} defaultValue={{ value: 'index', label: 'Campaign Index' }} styles={colourStyles}/>
         </div>
       </div>
     )
   }
 }
 
-export default NavBar
+export default withTheme(NavBar)

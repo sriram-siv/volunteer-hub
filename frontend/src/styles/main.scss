@@ -61,31 +61,11 @@ button {
   width: 100vw;
   margin: auto;
 
-  .search-fields {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    height: 2rem;
-    width: 350px;
-    z-index: 1;
-
-    > * {
-      position: relative;
-      margin-bottom: 5px;
-      top: 0;
-      transition: all 1s;
-    }
-
-    :nth-child()
-
-    &.hide {
-      > * {
-        position: absolute;
-        top: 0;
-      }
-    }
-  }
 }
 
 
 // GEOCODER
+.react-geocoder-results {
+  position: absolute;
+  z-index: 2;
+}

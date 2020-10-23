@@ -35,6 +35,7 @@ class Geocoder extends React.Component {
         itemComponent={getItem}
         updateInputOnSelect
         onSelected={this.selectItem}
+        timeout={150}
       />
     )
   }

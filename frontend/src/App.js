@@ -17,12 +17,14 @@ class App extends React.Component {
 
   themes = {
     dark: {
+      name: 'dark',
       primary: '#fef715',
       shadow: '#aeb4ba',
       background: '#333',
       text: '#ccc'
     },
     light: {
+      name: 'light',
       primary: '#fef715',
       shadow: '#aeb4ba',
       background: 'white',
