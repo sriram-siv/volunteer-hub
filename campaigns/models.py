@@ -4,6 +4,8 @@ class Campaign(models.Model):
     name = models.CharField(max_length=50)
     volunteer_count = models.IntegerField()
     description = models.TextField(max_length=250)
+    latitude = models.CharField(max_length=20)
+    longitude = models.CharField(max_length=20)
     start_date = models.DateTimeField()
     active = models.BooleanField(default=True)
     coordinator = models.ForeignKey(
