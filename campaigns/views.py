@@ -100,6 +100,8 @@ class CampaignVolunteerView(CampaignDetailView):
 class CampaignSkillView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/skills '''
 
+    permission_classes = (IsAuthenticated,)
+
     def post(self, request, pk):
         campaign_to_add_skill = self.get_campaign(pk=pk)
         self.is_coordinator(campaign_to_add_skill, request.user)

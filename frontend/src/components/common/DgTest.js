@@ -2,7 +2,7 @@ import React from 'react'
 
 import InputText from '../elements/InputText'
 import Button from '../elements/Button'
-import { getAllCampaigns, registerUser } from '../../lib/api'
+import { registerUser } from '../../lib/api'
 
 // TEST REGISTRATION FORM
 
