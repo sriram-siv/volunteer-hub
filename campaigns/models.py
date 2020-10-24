@@ -23,11 +23,6 @@ class Campaign(models.Model):
         related_name='conf_campaigns',
         blank=True
     )
-    skills = models.ManyToManyField(
-        'skills.Skill',
-        related_name='campaign_skills',
-        blank=True
-    )
 
     def __str__(self):
         return f'{self.name} - Active: {self.active}'

@@ -9,11 +9,6 @@ class User(AbstractUser):
     phone = models.CharField(max_length=15)
     profile_image = models.CharField(max_length=300, blank=True)
     active = models.BooleanField(default=True)
-    skills = models.ManyToManyField(
-        'skills.Skill',
-        related_name='user_skills',
-        blank=True
-    )
 
     def __str__(self):
         return f'{self.last_name}, {self.first_name}'

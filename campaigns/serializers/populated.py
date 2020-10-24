@@ -8,4 +8,4 @@ class PopulatedCampaignSerializer(CampaignSerializer):
     coordinator = NestedUserSerializer()
     pend_volunteers = NestedUserSerializer(many=True)
     conf_volunteers = NestedUserSerializer(many=True)
-    skills = SkillSerializer(many=True)
+    campaign_skills = SkillSerializer(many=True)
