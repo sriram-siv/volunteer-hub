@@ -86,3 +86,9 @@ class ProfileDetailView(APIView):
             updated_profile.save()
             return Response(updated_profile.data, status=status.HTTP_202_ACCEPTED)
         return Response(updated_profile.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
+
+    def delete(self, request, pk):
+        profile_to_delete = self.get_profile(pk=pk)
+        self.is_user(profile_to_delete, request.user)
+        profile_to_delete.delete()
+        return Response({ 'message': 'Profile Deleted' }, status=status.HTTP_204_NO_CONTENT)
