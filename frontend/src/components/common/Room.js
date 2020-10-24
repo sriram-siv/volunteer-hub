@@ -2,6 +2,7 @@ import React from 'react'
 
 import Button from '../elements/Button'
 import MessageBox from '../elements/MessageBox'
+import InputArea from '../elements/InputArea'
 
 class Room extends React.Component {
 
@@ -23,8 +24,9 @@ class Room extends React.Component {
 
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log(data)
-      this.setState({ messages: [...this.state.messages, data.message ] })
+      data.message.text = data.message.text.split('\n').map(line => <>{line}<br /></>)
+      this.setState({ messages: [...this.state.messages, data.message] })
+      this.chatWindow.scrollTop = this.chatWindow.scrollHeight
     }
 
     this.chatSocket.onclose = () => console.error('Chat socket closed unexpectedly')
@@ -43,18 +45,22 @@ class Room extends React.Component {
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
+
   render() {
     const { messages, draft } = this.state
     return (
       <>
-        <div style={{ backgroundColor: 'papayawhip', height: '200px', overflowY: 'scroll' }}>
+        <div ref={ref => this.chatWindow = ref} style={{ backgroundColor: 'papayawhip', height: 'calc(100vh - 7rem - 20px', overflowY: 'scroll' }}>
           {messages.map((message, i) => <MessageBox key={i} data={message} isSelf={i % 2 === 0} />)}
         </div>
-        <form style={{ marginTop: '5px' }}>
-          <input type="text" style={{ display: 'inline-block', marginLeft: '5px', paddingTop: '3px', width: 'calc(100% - 120px)' }} className="form-control" name="draft" value={draft} onChange={this.handleChange} />
-          <span style={{ display: 'inline-block', width: '10px' }} />
-          <Button style={{ width: '100px' }} width="100px" onClick={this.sendMessage} label="send" />
-        </form>
+        <div style={{ margin: '10px' }}>
+          <InputArea
+            width="100%"
+            name="draft" value={draft}
+            returnValue={this.handleChange}
+            submit={this.sendMessage}
+          />
+        </div>
       </>
     )
   }
