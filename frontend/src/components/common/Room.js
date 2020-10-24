@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Button from '../elements/Button'
+import MessageBox from '../elements/MessageBox'
 
 class Room extends React.Component {
 
@@ -46,13 +47,13 @@ class Room extends React.Component {
     const { messages, draft } = this.state
     return (
       <>
-        <div style={{ backgroundColor: 'plum', height: '200px', overflowY: 'scroll' }}>
-          {messages.map((message, i) => <p key={i}>{message.text}</p>)}
+        <div style={{ backgroundColor: 'papayawhip', height: '200px', overflowY: 'scroll' }}>
+          {messages.map((message, i) => <MessageBox key={i} data={message} isSelf={i % 2 === 0} />)}
         </div>
         <form style={{ marginTop: '5px' }}>
           <input type="text" style={{ display: 'inline-block', marginLeft: '5px', paddingTop: '3px', width: 'calc(100% - 120px)' }} className="form-control" name="draft" value={draft} onChange={this.handleChange} />
           <span style={{ display: 'inline-block', width: '10px' }} />
-          <Button style={{ width: '100px' }} handleClick={this.sendMessage} text="send" />
+          <Button style={{ width: '100px' }} width="100px" onClick={this.sendMessage} label="send" />
         </form>
       </>
     )

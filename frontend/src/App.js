@@ -52,6 +52,7 @@ class App extends React.Component {
             <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
             <Route path="/chat/:room" component={Room} />
+            {/* path /campaign/:id/coordinator -> volunteer view panel */}
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' component={CampaignIndex} />
           </Switch>
