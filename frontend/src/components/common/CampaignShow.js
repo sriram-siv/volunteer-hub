@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
 import BannerImage from '../elements/BannerImage'
-import MemberList from '../elements/MemberList'
+import MultiList from '../elements/MultiList'
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,10 +15,22 @@ const Wrapper = styled.div`
 class CampaignShow extends React.Component {
 
   render() {
+
+    const lists = [
+      { title: 'members', items: ['sri', 'don', 'charlotte', 'jack'] },
+      { title: 'groups', items: [ 'coordinators', 'team', 'Don' ] }
+    ]
+
+    const multiListStyle = {
+      position: 'absolute',
+      top: 'calc(3rem + 5px)',
+      right: '5px'
+    }
+
     return (
       <Wrapper>
         <BannerImage />
-        <MemberList />
+        <MultiList containerStyle={multiListStyle} lists={lists}/>
       </Wrapper>
     )
   }
