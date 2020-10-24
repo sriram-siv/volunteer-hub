@@ -5,10 +5,12 @@ class Skill(models.Model):
     users = models.ManyToManyField(
         'jwt_auth.User',
         related_name='user_skills',
+        blank=True
     )
     campaigns = models.ManyToManyField(
         'campaigns.Campaign',
         related_name='campaign_skills',
+        blank=True
     )
 
     def __str__(self):

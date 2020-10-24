@@ -92,3 +92,15 @@ class ProfileDetailView(APIView):
         self.is_user(profile_to_delete, request.user)
         profile_to_delete.delete()
         return Response({ 'message': 'Profile Deleted' }, status=status.HTTP_204_NO_CONTENT)
+
+class ProfileSkillsView(ProfileDetailView):
+    ''' handles requests to /profiles/:profile_id/skills '''
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, pk):
+        profile_to_add_skill = self.get_profile(pk=pk)
+        self.is_user(profile_to_add_skill, request.user)
+        profile_to_add_skill.user_skills.add(request.data['skill_id'])
+        profile_to_add_skill.save()
+        return Response({ 'message': f'Skill added to profile' }, status=status.HTTP_202_ACCEPTED)
