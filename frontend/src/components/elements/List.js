@@ -2,14 +2,15 @@ import React from 'react'
 import styled from 'styled-components'
 import icons from './Icons'
 
-const List = styled.div`
-  position: absolute;
-  top: calc(3rem + 5px);
-  right: 5px;
+// position: ${props => props.isHidden ? 'relative' : 'absolute'};
+// top: 0;
+const Wrapper = styled.div`
+  position: relative;
   width: 200px;
   height: ${props => props.isHidden ? '40px' : '290px'};
   background-color: ${props => `${props.theme.shadow}dd`};
   border-radius: 2px;
+  border: 1px solid #999;
   overflow-y: hidden;
   transition: all 0.2s;
 `
@@ -20,7 +21,7 @@ const ListScroll = styled.div`
   overflow-y: scroll;
 `
 
-const MemberDetail = styled.div`
+const ItemDetail = styled.div`
   height: 3rem;
   line-height: 3rem;
   text-align: center;
@@ -41,9 +42,11 @@ const Toggle = styled.div`
   position: absolute;
   top: 7px;
   right: 15px;
+  transform: rotateZ(${props => props.isHidden ? '0deg' : '90deg'});
+  transition: all 0.2s;
 `
 
-class MemberList extends React.Component {
+class List extends React.Component {
 
   state = {
     isHidden: true
@@ -51,22 +54,22 @@ class MemberList extends React.Component {
 
   toggleView = () => {
     this.setState({ isHidden: !this.state.isHidden })
+    this.props.onToggle(this.props.title)
   }
-
-  members = [ 'Sri', 'Don', 'Ren', 'Liam', 'Charlotte', 'Jack' ]
 
   render() {
     const { isHidden } = this.state
+    const { title, items } = this.props
     return (
-      <List isHidden={isHidden}>
-        <Toggle onClick={this.toggleView}>{isHidden ? icons.down() : icons.up()}</Toggle>
-        <Title>Members</Title>
+      <Wrapper isHidden={isHidden}>
+        <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right()}</Toggle>
+        <Title>{title}</Title>
         <ListScroll>
-          {this.members.map((member, i) => <MemberDetail key={i}>{member}</MemberDetail>)}
+          {items.map((item, i) => <ItemDetail key={i}>{item}</ItemDetail>)}
         </ListScroll>
-      </List>
+      </Wrapper>
     )
   }
 }
 
-export default MemberList
+export default List
