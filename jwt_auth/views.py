@@ -103,4 +103,11 @@ class ProfileSkillsView(ProfileDetailView):
         self.is_user(profile_to_add_skill, request.user)
         profile_to_add_skill.user_skills.add(request.data['skill_id'])
         profile_to_add_skill.save()
-        return Response({ 'message': f'Skill added to profile' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Skill added to profile' }, status=status.HTTP_202_ACCEPTED)
+
+    def delete(self, request, pk):
+        profile_to_delete_skill = self.get_profile(pk=pk)
+        self.is_user(profile_to_delete_skill, request.user)
+        profile_to_delete_skill.user_skills.remove(request.data['skill_id'])
+        profile_to_delete_skill.save()
+        return Response({ 'message': 'Skill removed from profile' }, status=status.HTTP_204_NO_CONTENT)
