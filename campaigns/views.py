@@ -97,7 +97,22 @@ class CampaignVolunteerView(CampaignDetailView):
                 { 'message': f'Volunteer {volunteer_id} removed from campaign {campaign_to_update.id}.' }, status=status.HTTP_202_ACCEPTED)
         return Response({ 'message': 'Must be user or coordinator to perform this action.' })
 
+class CampaignSkillView(CampaignDetailView):
+    ''' Handles requests to /campaigns/:campaign_id/skills '''
 
+    def post(self, request, pk):
+        campaign_to_add_skill = self.get_campaign(pk=pk)
+        self.is_coordinator(campaign_to_add_skill, request.user)
+        campaign_to_add_skill.campaign_skills.add(request.data['skill_id'])
+        campaign_to_add_skill.save()
+        return Response({ 'message': 'Skill added to campaign' }, status=status.HTTP_202_ACCEPTED)
+
+    def delete(self, request, pk):
+        campaign_to_delete_skill = self.get_campaign(pk=pk)
+        self.is_coordinator(campaign_to_delete_skill, request.user)
+        campaign_to_delete_skill.campaign_skills.remove(request.data['skill_id'])
+        campaign_to_delete_skill.save()
+        return Response({ 'message': 'Skill removed from campaign' }, status=status.HTTP_204_NO_CONTENT)
     
 
 
