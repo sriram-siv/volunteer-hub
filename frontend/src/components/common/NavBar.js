@@ -1,4 +1,5 @@
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import { withTheme } from 'styled-components'
 import Select from 'react-select'
 
@@ -6,11 +7,14 @@ import icons from '../elements/Icons'
 
 class NavBar extends React.Component {
 
+  selectSection = (e) => {
+    this.props.history.push(e.value)
+  }
+
   render() {
     const options = [
-      { value: 'projectA', label: 'Project A' },
-      { value: 'projectB', label: 'Project B' },
-      { value: 'index', label: 'Campaign Index' },
+      { value: '/campaigns/35fs3', label: 'My Campaign' },
+      { value: '/campaigns', label: 'Campaign Index' },
       { value: 'newCampaign', label: 'New Campaign' }
     ]
     const colourStyles = {
@@ -19,7 +23,7 @@ class NavBar extends React.Component {
         backgroundColor: this.props.theme.background,
         borderRadius: '2px',
         borderColor: this.props.theme.shadow,
-        height: 'calc(3rem - 4px)'
+        height: 'calc(2rem)'
       }),
       singleValue: (styles, state) => ({
         ...styles,
@@ -36,11 +40,16 @@ class NavBar extends React.Component {
         </div>
         <div className="center">Volunteer.io</div>
         <div className="user">
-          <Select options={options} defaultValue={{ value: 'index', label: 'Campaign Index' }} styles={colourStyles}/>
+          <Select
+            styles={colourStyles}
+            options={options}
+            defaultValue={{ value: '/campaigns', label: 'Campaign Index' }}
+            onChange={this.selectSection}
+          />
         </div>
       </div>
     )
   }
 }
 
-export default withTheme(NavBar)
+export default withRouter(withTheme(NavBar))

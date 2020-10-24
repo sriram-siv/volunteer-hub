@@ -1,58 +1,70 @@
 import React from 'react'
 import styled from 'styled-components'
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  position: absolute;
-  top: calc(3rem + 15px);
-  right: 30px;
-  background-color: grey;
-  padding: 10px;
-  border-radius: 5px;
-`
-
-const Badge = styled.div`
-  position: relative;
-  left: ${props => `${props.position * 17 + 10}px`};
-  width: 50px;
-  height: 50px;
-  background-color: papayawhip;
-  clip-path: circle();
-  border: 2px solid palevioletred;
-  border-radius: 50%;
-  line-height: 50px;
-  text-align: center;
-  font-family: 'Montserrat Alternates', sans-serif;
-`
+import icons from './Icons'
 
 const List = styled.div`
-  
+  position: absolute;
+  top: calc(3rem + 5px);
+  right: 5px;
+  width: 200px;
+  height: ${props => props.isHidden ? '40px' : '290px'};
+  background-color: ${props => `${props.theme.shadow}dd`};
+  border-radius: 2px;
+  overflow-y: hidden;
+  transition: all 0.2s;
+`
+
+const ListScroll = styled.div`
+  margin-top: 5px;
+  height: 245px;
+  overflow-y: scroll;
+`
+
+const MemberDetail = styled.div`
+  height: 3rem;
+  line-height: 3rem;
+  text-align: center;
+  background-color: ${props => props.theme.background};
+  color: ${props => props.theme.text};
+  margin: 0 5px 5px;
+  border-radius: 2px;
+`
+
+const Title = styled.div`
+  text-align: center;
+  line-height: 30px;
+  padding-top: 5px;
+  color: #333;
+  `
+
+const Toggle = styled.div`
+  position: absolute;
+  top: 7px;
+  right: 15px;
 `
 
 class MemberList extends React.Component {
 
   state = {
-    view: 'badges'
+    isHidden: true
   }
 
   toggleView = () => {
-    this.setState({ view: !this.state.view })
+    this.setState({ isHidden: !this.state.isHidden })
   }
 
   members = [ 'Sri', 'Don', 'Ren', 'Liam', 'Charlotte', 'Jack' ]
 
   render() {
+    const { isHidden } = this.state
     return (
-      <Wrapper>
-        {this.state.view === 'badges' && <>
-          <Badge onClick={this.toggleView}>count</Badge>
-          {this.members.slice(0, 5).map((member, i) => <Badge key={i} position={i}>{member}</Badge>)}
-        </>}
-        {this.state.view === 'list' && <>
-
-        </>}
-      </Wrapper>
+      <List isHidden={isHidden}>
+        <Toggle onClick={this.toggleView}>{isHidden ? icons.down() : icons.up()}</Toggle>
+        <Title>Members</Title>
+        <ListScroll>
+          {this.members.map((member, i) => <MemberDetail key={i}>{member}</MemberDetail>)}
+        </ListScroll>
+      </List>
     )
   }
 }
