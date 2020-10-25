@@ -71,7 +71,7 @@ class MessageBox extends React.Component {
         <AccentShadow/>
         <Box>
           <Accent/>
-          {!isSelf && <Name>{data.user}</Name>}
+          {!isSelf && <Name>{data.user_id}</Name>}
           {data.text.split('\n').map((line, i) => {
             // const links = line.match(linkMatch)
             // const plain = line.split(linkMatch).filter(res => res)
