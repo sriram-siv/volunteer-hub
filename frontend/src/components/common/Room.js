@@ -23,6 +23,8 @@ class Room extends React.Component {
       `ws://${domain}/ws/chat/${this.props.match.params.room}/`
     )
 
+    this.chatSocket.addEventListener('open', this.getChatHistory())
+
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
       this.setState({ messages: [...this.state.messages, data.message] })
@@ -31,6 +33,11 @@ class Room extends React.Component {
 
     this.chatSocket.onclose = () => console.error('Chat socket closed unexpectedly')
     console.log(this.chatSocket)
+  }
+
+  getChatHistory = () => {
+    // TODO api request for message history
+    console.log('fetching history..')
   }
 
   sendMessage = event => {
@@ -51,9 +58,6 @@ class Room extends React.Component {
     const { messages, draft } = this.state
     return (
       <>
-        {/* <div ref={ref => this.chatWindow = ref} style={{ backgroundColor: 'papayawhip', height: 'calc(100vh - 7rem - 20px', overflowY: 'scroll' }}>
-          {messages.map((message, i) => <MessageBox key={i} data={message} isSelf={i % 2 === 0} />)}
-        </div> */}
         <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages}/>
         <div style={{ margin: '10px' }}>
           <InputArea

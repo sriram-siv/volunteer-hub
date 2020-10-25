@@ -87,7 +87,7 @@ class MessageBox extends React.Component {
             // console.log(line)
             // console.log(inter)
             // return <Text key={i}>{inter.map(val => val.match(linkMatch) ? <Link href={val}>{val}</Link> : val)}</Text>
-            return <Text key={i}>{line}</Text>
+            return <Text ref={ref => console.log(ref ? ref : '') } key={i}>{line}</Text>
           })}
         </Box>
       </Wrapper>
