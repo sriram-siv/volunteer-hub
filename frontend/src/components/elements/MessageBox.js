@@ -59,35 +59,44 @@ class MessageBox extends React.Component {
 
   Link = styled.a`
     background-color: pink;
+    cursor: pointer;
   `
+
+  linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+
+  interpolateLinks = line => {
+    // Get two arrays for plaintext and links
+    const links = line.match(this.linkMatch)
+    const plain = line.split(this.linkMatch).filter(res => res)
+    
+    const joined = links ? plain.concat(links.reverse()) : plain
+    const interpolated = []
+    // Determine first element to decide interpolation pattern
+    const startsPlain = line.startsWith(plain[0])
+    let getStart = startsPlain
+    while (joined.length > 0) {
+      if (getStart) interpolated.push(joined.shift())
+      else interpolated.push(joined.pop())
+      getStart = !getStart
+    }
+    return interpolated
+  }
   
   render() {
     const { data, isSelf } = this.props
-    const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link } = this
-    const linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+    const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link, linkMatch } = this
     // const isSelf = localStorage.getItem('user_id') === data.user_id.id
     return (
       <Wrapper>
         <AccentShadow/>
         <Box>
           <Accent/>
-          {!isSelf && <Name>{data.user_id.id}</Name>}
+          {!isSelf && <Name>{data.user_id.username}</Name>}
           {data.text.split('\n').map((line, i) => {
-            // const links = line.match(linkMatch)
-            // const plain = line.split(linkMatch).filter(res => res)
-            // const startsPlain = line.startsWith(plain[0])
-            // const joined = plain.concat(links.reverse())
-            // const inter = []
-            // let getStart = startsPlain
-            // while (joined.length > 0) {
-            //   if (getStart) inter.push(joined.shift())
-            //   else inter.push(joined.pop())
-            //   getStart = !getStart
-            // }
-            // console.log(line)
-            // console.log(inter)
-            // return <Text key={i}>{inter.map(val => val.match(linkMatch) ? <Link href={val}>{val}</Link> : val)}</Text>
-            return <Text ref={ref => console.log(ref ? ref : '') } key={i}>{line}</Text>
+            const interpolated = this.interpolateLinks(line)
+            return <Text key={i}>{interpolated.map(frag => (
+              frag.match(linkMatch) ? <Link>{frag}</Link> : frag
+            ))}</Text>
           })}
         </Box>
       </Wrapper>

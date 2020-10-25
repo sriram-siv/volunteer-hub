@@ -40,7 +40,7 @@ class Room extends React.Component {
     // get request to room (id)
     const response = await getSingleRoom(this.props.match.params.room)
     const { members, messages } = response.data
-    this.setState({ members, messages })
+    this.setState({ members, messages }, () => this.chatWindow.scrollTop = this.chatWindow.scrollHeight)
   }
 
   sendMessage = event => {
@@ -49,7 +49,7 @@ class Room extends React.Component {
     this.chatSocket.send(JSON.stringify({
       'room_id': this.props.match.params.room,
       'text': this.state.draft.trim(),
-      'user_id': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTYwNDIzNzI2MX0.-fJN_cdpfJ1jUal5E4lTjsnAb0UUOO2GY1MWi1QeJqM"
+      'user_id': 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTYwNDIzNzI2MX0.-fJN_cdpfJ1jUal5E4lTjsnAb0UUOO2GY1MWi1QeJqM'
     }))
     this.setState({ draft: '' })
   }
