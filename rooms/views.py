@@ -33,5 +33,5 @@ class RoomDetailView(APIView):
 
     def get(self, request, pk):
         room = self.get_room(pk=pk)
-        serialized_room = RoomSerializer(room)
+        serialized_room = PopulatedRoomSerializer(room)
         return Response(serialized_room.data, status=status.HTTP_200_OK)
