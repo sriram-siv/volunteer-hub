@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import Map from '../map/Map'
 import InputText from '../elements/InputText'
@@ -8,10 +9,17 @@ import SearchFields from '../elements/SearchFields'
 import { getAllCampaigns } from '../../lib/api'
 // import icons from '../elements/Icons'
 
+const Wrapper = styled.main`
+  position: relative;
+  height: calc(100vh - 3rem);
+  overflow: scroll;
+`
+
 class CampaignIndex extends React.Component {
 
   state = {
-    campaigns: null
+    campaigns: null,
+    tags: ''
   }
 
   componentDidMount = async () => {
@@ -19,26 +27,28 @@ class CampaignIndex extends React.Component {
     console.log(campaigns)
   }
 
-  getResults = () => {
-    this.setState({ showResults: true })
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  getResults = (e) => {
+    if (e.keyCode !== 16) return
     console.log(this.geocoder.geoRef.state.inputValue)
   }
 
-
   render() {
+    const { tags } = this.state
     const campaigns = [
       { latitude: 51.5, longitude: 0, color: '#222', size: 20 }
     ]
     return (
-      <div>
-        <div className="campaign-index-map">
-          <SearchFields>
-            <Geocoder ref={geocoder => this.geocoder = geocoder} />
-            <InputText label="Tags" />
-          </SearchFields>
-          <Map pins={campaigns} />
-        </div>
-      </div>
+      <Wrapper onKeyDown={this.getResults}>
+        <SearchFields>
+          <Geocoder ref={geocoder => this.geocoder = geocoder} />
+          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange}/>
+        </SearchFields>
+        <Map pins={campaigns} />
+      </Wrapper>
     )
   }
 }

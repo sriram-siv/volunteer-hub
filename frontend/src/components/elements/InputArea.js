@@ -7,15 +7,17 @@ const Wrapper = styled.div`
   margin: auto;
 `
 
-const Input = styled.input`
+const Input = styled.textarea`
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
   border-radius: 2px;
-  height: 3.1rem;
+  height: 4rem;
   width: 100%;
-  font-size: 1rem;
+  font-size: 0.85rem;
   border: 1px solid ${props => props.theme.shadow};
-  padding: calc(12px + 0.7rem) 10px 5px;
+  padding: 8px 10px;
+  margin-bottom: -7px;
+  resize: none;
   &:focus {
     outline: none;
   }
@@ -24,35 +26,31 @@ const Input = styled.input`
     color: #444;
   }
   `
-  
-const Label = styled.div`
-  position: absolute;
-  top: ${props => props.focus ? '6px' : '0.8rem'};
-  left: 11px;
-  color: ${props => props.theme.text};
-  font-size: ${props => props.focus ? '0.7rem' : '1rem'};
-`
 
 const Highlight = styled.div`
   height: ${props => props.focus ? '3px' : 0};
   width: calc(100% - 2px);
   background-color: ${props => props.theme.primary};
   position: absolute;
-  bottom: 1px;
+  bottom: 0;
   left: 1px;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
   transition: all 0;
 `
 
+/** my oducmentation for this class */
 class InputField extends React.Component {
 
+  /* Add docstring to say that returnValue and name must always be provided */
+
   state = {
+    shiftPressed: 0,
     focus: false
   }
 
   handleChange = event => {
-    this.props.returnValue(event)
+    this.props.returnValue({ name: this.props.name, value: event.target.value })
   }
   handleFocus = () => {
     this.setState({ focus: true })
@@ -60,14 +58,28 @@ class InputField extends React.Component {
   handleBlur = () => {
     this.setState({ focus: false })
   }
+  keyDown = event => {
+    if (event.keyCode === 16) this.setState({ shiftPressed: this.state.shiftPressed + 1 })
+    if (event.keyCode === 13 && !this.state.shiftPressed) {
+      this.props.submit(event)
+    }
+  }
+  keyUp = event => {
+    if (event.keyCode === 16) this.setState({ shiftPressed: this.state.shiftPressed - 1 })
+  }
 
   render() {
     const { focus } = this.state
-    const { label, width, value, name } = this.props
+    const { name, value, width, returnValue } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} name={name} value={value} onChange={this.handleChange} spellCheck="false"  />
-        <Label focus={focus || value}>{label}</Label>
+        <Input
+          ref={input => this.input = input}
+          name={name} value={value}
+          onChange={returnValue}
+          onKeyDown={this.keyDown}
+          onKeyUp={this.keyUp}
+        />
         <Highlight focus={focus} />
       </Wrapper>
     )

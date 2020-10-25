@@ -2,7 +2,6 @@ import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
 import BannerImage from '../elements/BannerImage'
-import MemberList from '../elements/MemberList'
 
 const Wrapper = styled.div`
   display: flex;
@@ -18,7 +17,6 @@ class Tests extends React.Component {
     return (
       <Wrapper>
         <BannerImage />
-        <MemberList />
       </Wrapper>
     )
   }

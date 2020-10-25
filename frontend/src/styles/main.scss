@@ -6,6 +6,11 @@
 
 body {
   font-family: 'Open Sans', sans-serif;
+
+  ::selection {
+    background-color: #fef15e;
+    color: #333;
+  }
 }
 
 button {
@@ -39,7 +44,7 @@ button {
     font-family: 'Montserrat Alternates', sans-serif;
     font-size: 1.1rem;
     &::selection {
-      background-color: #fef15e;
+      background-color: transparent;
     }
   }
 }
