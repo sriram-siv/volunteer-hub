@@ -11,3 +11,4 @@ class PopulatedCampaignSerializer(CampaignSerializer):
     conf_volunteers = NestedUserSerializer(many=True)
     campaign_skills = NestedSkillSerializer(many=True)
     message_rooms = NestedRoomSerializer(many=True)
+    coordinators = NestedUserSerializer(many=True)

@@ -45,7 +45,7 @@ class LoginView(APIView):
             {'sub': user_to_login.id, 'exp': int(dt.strftime('%s'))},
             settings.SECRET_KEY,
             algorithm='HS256')
-        return Response({'token': token, 'message': f'Welcome Back {user_to_login.username}'})
+        return Response({'token': token, 'id': user_to_login.id, 'message': f'Welcome Back {user_to_login.username}'})
 
 class ProfileListView(APIView):
 
