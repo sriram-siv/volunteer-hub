@@ -84,11 +84,14 @@ class MessageBox extends React.Component {
     }
     return interpolated
   }
+
+  getHref = address => {
+    return address.startsWith('http') ? address : `http://${address}`
+  }
   
   render() {
     const { data, isSelf } = this.props
     const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link, linkMatch } = this
-    // const isSelf = localStorage.getItem('user_id') === data.user_id.id
     return (
       <Wrapper>
         <AccentShadow/>
@@ -98,7 +101,7 @@ class MessageBox extends React.Component {
           {data.text.split('\n').map((line, i) => {
             const interpolated = this.interpolateLinks(line)
             return <Text key={i}>{interpolated.map(frag => (
-              frag.match(linkMatch) ? <Link>{frag}</Link> : frag
+              frag.match(linkMatch) ? <Link href={this.getHref(frag)} target="_blank">{frag}</Link> : frag
             ))}</Text>
           })}
         </Box>

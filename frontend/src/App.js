@@ -22,7 +22,7 @@ class App extends React.Component {
       name: 'dark',
       primary: '#ffff50',
       shadow: '#aeb4ba',
-      background: '#333',
+      background: '#222',
       text: '#ccc',
       fontWeight: 300,
       letterSpacing: '-0.002rem',

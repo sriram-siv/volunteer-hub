@@ -45,9 +45,12 @@ class NavBar extends React.Component {
         borderColor: this.props.theme.shadow,
         height: 'calc(2rem)'
       }),
-      singleValue: (styles, state) => ({
+      singleValue: (styles) => ({
         ...styles,
-        color: this.props.theme.text
+        color: this.props.theme.text,
+        fontWeight: this.props.theme.fontWeight,
+        letterSpacing: this.props.theme.letterSpacing,
+        fontSize: '0.85rem'
       })
     }
     return (
