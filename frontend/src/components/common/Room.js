@@ -1,9 +1,8 @@
 import React from 'react'
 
-import Button from '../elements/Button'
-import MessageBox from '../elements/MessageBox'
 import ChatWindow from '../elements/ChatWindow' 
 import InputArea from '../elements/InputArea'
+import ChatController from '../elements/ChatControl'
 
 class Room extends React.Component {
 
@@ -66,6 +65,7 @@ class Room extends React.Component {
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
+          <ChatController />
         </div>
       </>
     )

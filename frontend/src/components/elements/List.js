@@ -36,6 +36,9 @@ const Title = styled.div`
   line-height: 30px;
   padding-top: 5px;
   color: #333;
+  ::selection {
+    background-color: transparent;
+  }
   `
 
 const Toggle = styled.div`
