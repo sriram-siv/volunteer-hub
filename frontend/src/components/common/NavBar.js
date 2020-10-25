@@ -1,10 +1,20 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import { withTheme } from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import Select from 'react-select'
 
 import icons from '../elements/Icons'
 import UserForms from '../elements/UserForms'
+
+const NavBarContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 3rem;
+  background-color: ${props => props.theme.primary};
+  position: relative;
+  z-index: 10;
+`
 
 class NavBar extends React.Component {
 
@@ -43,8 +53,8 @@ class NavBar extends React.Component {
     return (
       <>
         {this.state.showForm && <UserForms />}
-        <div className="navigation">
-          <div className="left">
+        <NavBarContainer>
+          <div className="nav-left">
             <span onClick={this.props.changeTheme}>
               {this.props.theme.name === 'light' ? icons.sun() : icons.moon()}
             </span>
@@ -52,8 +62,8 @@ class NavBar extends React.Component {
               {icons.user()}
             </span>
           </div>
-          <div className="center">Volunteer.io</div>
-          <div className="user">
+          <div className="nav-center">Volunteer.io</div>
+          <div className="nav-right">
             <Select
               styles={colourStyles}
               options={options}
@@ -61,7 +71,7 @@ class NavBar extends React.Component {
               onChange={this.selectSection}
             />
           </div>
-        </div>
+        </NavBarContainer>
       </>
     )
   }

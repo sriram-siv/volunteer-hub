@@ -5,7 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from django.conf import settings
 from django.contrib.auth import get_user_model
 User = get_user_model()
-
+from jwt_auth.serializers.nested import NestedUserSerializer
 from .serializers.common import ChatMessageSerializer 
 
 class ChatMessageConsumer(WebsocketConsumer):
@@ -32,7 +32,7 @@ class ChatMessageConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
-        token = text_data_json["user_id"].replace('Bearer ', '')
+        token = text_data_json["user"].replace('Bearer ', '')
 
         try:
             payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
@@ -42,12 +42,12 @@ class ChatMessageConsumer(WebsocketConsumer):
         except User.DoesNotExist:
             raise PermissionDenied(detail='User Not Found')
 
-        text_data_json["user_id"] = user.username
+        text_data_json["user"] = { "username": user.username, "id": user.id }
 
         #TODO Add message to DB
         message_to_save = {
             "text": text_data_json["text"],
-            "user_id": user.id,
+            "user": user.id,
             "room_id": text_data_json["room_id"],
         }
         serialized_message = ChatMessageSerializer(data=message_to_save)

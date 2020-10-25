@@ -37,7 +37,10 @@ class UserForms extends React.Component {
   handleSubmit = async event => {
     event.preventDefault()
     const response = await loginUser(this.state.formData)
-    console.log(response)
+    console.log(response.data)
+
+    localStorage.setItem('token', response.data.token)
+    localStorage.setItem('user_id', response.data.id)
   }
 
   render() {

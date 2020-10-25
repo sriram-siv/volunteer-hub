@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import icons from './Icons'
 
 const Wrapper = styled.div`
   background-color: ${props => props.theme.shadow};
@@ -8,20 +9,34 @@ const Wrapper = styled.div`
 `
 
 const Button = styled.button`
-
-  background-color: white;
+  font-size: 0.75rem;
+  background-color: ${props => props.theme.shadow};
   border: none;
-  margin: 2px;
-  float: right;
+  margin: 1px;
+  float: ${props => props.position};
+  height: calc(100% - 2px);
+  border-bottom-left-radius: ${props => props.corner && props.position === 'left' ? '2px' : 0};
+  border-bottom-right-radius: ${props => props.corner && props.position === 'right' ? '2px' : 0};
+
+  &:hover {
+    background-color: #ddd;
+  }
 `
 
-const ChatController = () => {
+const IconSpan = styled.span`
+  display: inline-block;
+  position: relative;
+  transform: rotateZ(90deg);
+`
+
+const ChatControl = () => {
   return (
     <Wrapper>
-      <Button>send</Button>
-      <Button>members</Button>
+      <Button position="left" corner>members</Button>
+      <Button position="right" corner><IconSpan>{icons.send('#232323', 16)}</IconSpan></Button>
+      <Button position="right">😀</Button>
     </Wrapper>
   )
 }
 
-export default ChatController
+export default ChatControl

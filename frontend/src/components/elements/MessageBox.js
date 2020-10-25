@@ -15,10 +15,12 @@ class MessageBox extends React.Component {
     margin: 10px 10px 10px 25px;
     padding: 10px;
     padding-top: ${() => this.props.isSelf ? '10px' : '5px'};
-    background-color: ${props => this.props.isSelf ? '#eee' : props.theme.background};
+    background-color: ${props => this.props.isSelf ? props.theme.accent : props.theme.background};
     border-radius: 2px;
-    box-shadow: ${() => this.props.isSelf ? '-1px 2px 2px #ddd' : '1px 2px 2px #ddd'};
-  `
+    box-shadow: ${(props) => this.props.isSelf
+    ? `1px 2px 2px ${props.theme.name === 'light' ? '#ddd' : '#111'}`
+    : `-1px 2px 2px ${props.theme.name === 'light' ? '#ddd' : '#111'}`};
+    `
 
   Accent = styled.div`
     position: absolute;
@@ -26,7 +28,7 @@ class MessageBox extends React.Component {
     left: -15px;
     width: 20px;
     height: 20px;
-    background-color: ${props => this.props.isSelf ? '#eee' : props.theme.background};
+    background-color: ${props => this.props.isSelf ? props.theme.accent : props.theme.background};
     clip-path: polygon(100% 0, 0 0, 100% 100%);
   `
 
@@ -36,7 +38,7 @@ class MessageBox extends React.Component {
     left: 10px;
     width: 20px;
     height: 20px;
-    background-color: #ddd;
+    background-color: ${props => props.theme.name === 'light' ? '#ddd' : '#111'};
     clip-path: polygon(100% 0, 0 0, 100% 100%);
     filter: blur(10px);
   `
@@ -48,8 +50,9 @@ class MessageBox extends React.Component {
   `
 
   Text = styled.p`
-    color: ${props => props.theme.text};
+    color: ${props => this.props.isSelf ? '#333' : props.theme.text};
     font-size: 0.85rem;
+    font-weight: ${props => props.theme.fontWeight};
     line-height: 1.2rem;
     height: 1.2rem;
     margin: 0;
@@ -91,7 +94,7 @@ class MessageBox extends React.Component {
         <AccentShadow/>
         <Box>
           <Accent/>
-          {!isSelf && <Name>{data.user_id.username}</Name>}
+          {!isSelf && <Name>{data.user.username}</Name>}
           {data.text.split('\n').map((line, i) => {
             const interpolated = this.interpolateLinks(line)
             return <Text key={i}>{interpolated.map(frag => (
