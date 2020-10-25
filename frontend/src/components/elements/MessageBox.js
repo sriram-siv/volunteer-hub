@@ -56,16 +56,39 @@ class MessageBox extends React.Component {
     width: 100%;
     transform: ${() => this.props.isSelf ? 'scaleX(-1)' : 'none'};
   `
+
+  Link = styled.a`
+    background-color: pink;
+  `
+  
   render() {
     const { data, isSelf } = this.props
-    const { Wrapper, Accent, AccentShadow, Box, Text, Name } = this
+    const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link } = this
+    const linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+
     return (
       <Wrapper>
         <AccentShadow/>
         <Box>
           <Accent/>
           {!isSelf && <Name>{data.user}</Name>}
-          {data.text.split('\n').map((line, i) => <Text key={i}>{line}</Text>)}
+          {data.text.split('\n').map((line, i) => {
+            // const links = line.match(linkMatch)
+            // const plain = line.split(linkMatch).filter(res => res)
+            // const startsPlain = line.startsWith(plain[0])
+            // const joined = plain.concat(links.reverse())
+            // const inter = []
+            // let getStart = startsPlain
+            // while (joined.length > 0) {
+            //   if (getStart) inter.push(joined.shift())
+            //   else inter.push(joined.pop())
+            //   getStart = !getStart
+            // }
+            // console.log(line)
+            // console.log(inter)
+            // return <Text key={i}>{inter.map(val => val.match(linkMatch) ? <Link href={val}>{val}</Link> : val)}</Text>
+            return <Text key={i}>{line}</Text>
+          })}
         </Box>
       </Wrapper>
     )
