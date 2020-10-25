@@ -56,3 +56,8 @@ export const removeProfileSkill = (profileId, formData) => axios.delete(`${baseU
 export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
 export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
+
+
+export const getAllRooms = () => axios.get(`${baseUrl}/rooms/`)
+
+export const getSingleRoom = roomId => axios.get(`${baseUrl}/rooms/${roomId}`)
