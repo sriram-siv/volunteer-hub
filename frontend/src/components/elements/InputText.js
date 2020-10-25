@@ -42,22 +42,17 @@ const Highlight = styled.div`
   left: 1px;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
-  transition: all 0
+  transition: all 0;
 `
 
 class InputField extends React.Component {
 
-  /* Add docstring to say that returnValue and name must always be provided */
-
   state = {
-    value: '',
     focus: false
   }
 
   handleChange = event => {
-    this.setState({ value: event.target.value })
-    // Return the value to parent if needed
-    if (this.props.returnValue) this.props.returnValue({ name: this.props.name, value: event.target.value })
+    this.props.returnValue(event)
   }
   handleFocus = () => {
     this.setState({ focus: true })
@@ -67,11 +62,11 @@ class InputField extends React.Component {
   }
 
   render() {
-    const { value, focus } = this.state
-    const { label, width } = this.props
+    const { focus } = this.state
+    const { label, width, value, name } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} value={value} onChange={this.handleChange} spellCheck="false"  />
+        <Input ref={input => this.input = input} name={name} value={value} onChange={this.handleChange} spellCheck="false"  />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>

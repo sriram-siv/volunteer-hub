@@ -39,6 +39,7 @@ const Highlight = styled.div`
   transition: all 0;
 `
 
+/** my oducmentation for this class */
 class InputField extends React.Component {
 
   /* Add docstring to say that returnValue and name must always be provided */

@@ -2,6 +2,7 @@ import React from 'react'
 
 import Button from '../elements/Button'
 import MessageBox from '../elements/MessageBox'
+import ChatWindow from '../elements/ChatWindow' 
 import InputArea from '../elements/InputArea'
 
 class Room extends React.Component {
@@ -24,7 +25,6 @@ class Room extends React.Component {
 
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      data.message.text = data.message.text.split('\n').map(line => <>{line}<br /></>)
       this.setState({ messages: [...this.state.messages, data.message] })
       this.chatWindow.scrollTop = this.chatWindow.scrollHeight
     }
@@ -35,8 +35,9 @@ class Room extends React.Component {
 
   sendMessage = event => {
     event.preventDefault()
+    if (!this.state.draft) return
     this.chatSocket.send(JSON.stringify({
-      'text': this.state.draft,
+      'text': this.state.draft.trim(),
       'user': 'volunteer_55'
     }))
     this.setState({ draft: '' })
@@ -50,9 +51,10 @@ class Room extends React.Component {
     const { messages, draft } = this.state
     return (
       <>
-        <div ref={ref => this.chatWindow = ref} style={{ backgroundColor: 'papayawhip', height: 'calc(100vh - 7rem - 20px', overflowY: 'scroll' }}>
+        {/* <div ref={ref => this.chatWindow = ref} style={{ backgroundColor: 'papayawhip', height: 'calc(100vh - 7rem - 20px', overflowY: 'scroll' }}>
           {messages.map((message, i) => <MessageBox key={i} data={message} isSelf={i % 2 === 0} />)}
-        </div>
+        </div> */}
+        <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages}/>
         <div style={{ margin: '10px' }}>
           <InputArea
             width="100%"
