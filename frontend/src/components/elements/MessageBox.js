@@ -65,13 +65,13 @@ class MessageBox extends React.Component {
     const { data, isSelf } = this.props
     const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link } = this
     const linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
-
+    // const isSelf = localStorage.getItem('user_id') === data.user_id.id
     return (
       <Wrapper>
         <AccentShadow/>
         <Box>
           <Accent/>
-          {!isSelf && <Name>{data.user}</Name>}
+          {!isSelf && <Name>{data.user_id.id}</Name>}
           {data.text.split('\n').map((line, i) => {
             // const links = line.match(linkMatch)
             // const plain = line.split(linkMatch).filter(res => res)

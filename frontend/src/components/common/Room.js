@@ -1,9 +1,10 @@
 import React from 'react'
 
-import Button from '../elements/Button'
-import MessageBox from '../elements/MessageBox'
+import { getSingleRoom } from '../../lib/api'
+
 import ChatWindow from '../elements/ChatWindow' 
 import InputArea from '../elements/InputArea'
+import ChatController from '../elements/ChatControl'
 
 class Room extends React.Component {
 
@@ -35,17 +36,20 @@ class Room extends React.Component {
     console.log(this.chatSocket)
   }
 
-  getChatHistory = () => {
+  getChatHistory = async () => {
     // get request to room (id)
-    console.log('fetching history..')
+    const response = await getSingleRoom(this.props.match.params.room)
+    const { members, messages } = response.data
+    this.setState({ members, messages })
   }
 
   sendMessage = event => {
     event.preventDefault()
     if (!this.state.draft) return
     this.chatSocket.send(JSON.stringify({
+      'room_id': this.props.match.params.room,
       'text': this.state.draft.trim(),
-      'user': 'volunteer_55'
+      'user_id': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTYwNDIzNzI2MX0.-fJN_cdpfJ1jUal5E4lTjsnAb0UUOO2GY1MWi1QeJqM"
     }))
     this.setState({ draft: '' })
   }
@@ -66,6 +70,7 @@ class Room extends React.Component {
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
+          <ChatController />
         </div>
       </>
     )

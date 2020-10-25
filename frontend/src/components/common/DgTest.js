@@ -22,7 +22,7 @@ class DgTest extends React.Component {
   handleChange = (e) => {
     const formData = {
       ...this.state.formData,
-      [e.name]: e.value
+      [e.target.name]: e.target.value
     }
     this.setState({ formData })
   }

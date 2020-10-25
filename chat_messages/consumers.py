@@ -1,6 +1,12 @@
 import json
+import jwt
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.conf import settings
+from django.contrib.auth import get_user_model
+User = get_user_model()
+
+from .serializers.common import ChatMessageSerializer 
 
 class ChatMessageConsumer(WebsocketConsumer):
     def connect(self):
@@ -26,8 +32,29 @@ class ChatMessageConsumer(WebsocketConsumer):
     def receive(self, text_data):
         text_data_json = json.loads(text_data)
 
+        token = text_data_json["user_id"].replace('Bearer ', '')
+
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
+            user = User.objects.get(pk=payload.get('sub'))
+        except jwt.exceptions.InvalidTokenError:
+            raise PermissionDenied(detail='Invalid Authorization Token')
+        except User.DoesNotExist:
+            raise PermissionDenied(detail='User Not Found')
+
+        text_data_json["user_id"] = user.username
+
         #TODO Add message to DB
-        print(text_data_json)
+        message_to_save = {
+            "text": text_data_json["text"],
+            "user_id": user.id,
+            "room_id": text_data_json["room_id"],
+        }
+        serialized_message = ChatMessageSerializer(data=message_to_save)
+        if serialized_message.is_valid():
+            serialized_message.save()
+        
+
 
         # Send message to room group
         async_to_sync(self.channel_layer.group_send)(
