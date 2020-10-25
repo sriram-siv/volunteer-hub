@@ -36,7 +36,7 @@ class Room extends React.Component {
   }
 
   getChatHistory = () => {
-    // TODO api request for message history
+    // get request to room (id)
     console.log('fetching history..')
   }
 
