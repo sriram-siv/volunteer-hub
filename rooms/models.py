@@ -6,6 +6,11 @@ class Room(models.Model):
         'jwt_auth.User',
         related_name='message_rooms'
     )
+    campaign = models.ForeignKey(
+        'campaigns.Campaign',
+        related_name='message_rooms',
+        on_delete=models.CASCADE
+    )
 
     def __str__(self):
         return f'{self.name}'
