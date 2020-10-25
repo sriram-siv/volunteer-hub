@@ -24,6 +24,7 @@ button {
   height: 3rem;
   background-color: #fef15e;
   position: relative;
+  z-index: 10;
 
   .user {
     margin-right: 5px;

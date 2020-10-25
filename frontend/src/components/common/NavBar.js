@@ -4,11 +4,21 @@ import { withTheme } from 'styled-components'
 import Select from 'react-select'
 
 import icons from '../elements/Icons'
+import UserForms from '../elements/UserForms'
 
 class NavBar extends React.Component {
 
+  state = {
+    showForm: false
+  }
+
   selectSection = (e) => {
     this.props.history.push(e.value)
+  }
+
+  openProfile = () => {
+    // check if logged in. if not open form
+    this.setState({ showForm: !this.state.showForm })
   }
 
   render() {
@@ -31,23 +41,28 @@ class NavBar extends React.Component {
       })
     }
     return (
-      <div className="navigation">
-        <div className="left">
-          <span onClick={this.props.changeTheme}>
-            {this.props.theme.name === 'light' ? icons.sun() : icons.moon()}
-          </span>
-          {icons.user()}
+      <>
+        {this.state.showForm && <UserForms />}
+        <div className="navigation">
+          <div className="left">
+            <span onClick={this.props.changeTheme}>
+              {this.props.theme.name === 'light' ? icons.sun() : icons.moon()}
+            </span>
+            <span onClick={this.openProfile}>
+              {icons.user()}
+            </span>
+          </div>
+          <div className="center">Volunteer.io</div>
+          <div className="user">
+            <Select
+              styles={colourStyles}
+              options={options}
+              defaultValue={{ value: '/campaigns', label: 'Campaign Index' }}
+              onChange={this.selectSection}
+            />
+          </div>
         </div>
-        <div className="center">Volunteer.io</div>
-        <div className="user">
-          <Select
-            styles={colourStyles}
-            options={options}
-            defaultValue={{ value: '/campaigns', label: 'Campaign Index' }}
-            onChange={this.selectSection}
-          />
-        </div>
-      </div>
+      </>
     )
   }
 }
