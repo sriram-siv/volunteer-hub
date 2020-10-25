@@ -1,12 +1,22 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk } from '../elements/Split'
 import campaigns from '../../images/campaigns.jpg'
 
+const Hero = styled.div`
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-family: 'Montserrat Alternates', sans-serif;
+`
+
 const Landing = () => {
   return (
     <>
-      <div className="hero">Welcome to Volunteer.io</div>
+      <Hero>Welcome to Volunteer.io</Hero>
       <SplitContain>
         <SplitRow>
           <div>

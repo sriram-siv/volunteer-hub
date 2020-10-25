@@ -3,7 +3,7 @@ import { withRouter } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
 import Select from 'react-select'
 
-import icons from '../elements/Icons'
+import icons from '../../lib/icons'
 import UserForms from '../elements/UserForms'
 
 const NavBarContainer = styled.div`
@@ -31,35 +31,38 @@ class NavBar extends React.Component {
     this.setState({ showForm: !this.state.showForm })
   }
 
+  selectStyles = {
+    control: styles => ({
+      ...styles,
+      backgroundColor: this.props.theme.background,
+      borderRadius: '2px',
+      borderColor: this.props.theme.shadow,
+      height: 'calc(2rem)'
+    }),
+    singleValue: (styles) => ({
+      ...styles,
+      color: this.props.theme.text,
+      fontWeight: this.props.theme.fontWeight,
+      letterSpacing: this.props.theme.letterSpacing,
+      fontSize: '0.85rem'
+    })
+  }
+
   render() {
     const options = [
       { value: '/campaigns/35fs3', label: 'My Campaign' },
       { value: '/campaigns', label: 'Campaign Index' },
       { value: 'newCampaign', label: 'New Campaign' }
     ]
-    const colourStyles = {
-      control: styles => ({
-        ...styles,
-        backgroundColor: this.props.theme.background,
-        borderRadius: '2px',
-        borderColor: this.props.theme.shadow,
-        height: 'calc(2rem)'
-      }),
-      singleValue: (styles) => ({
-        ...styles,
-        color: this.props.theme.text,
-        fontWeight: this.props.theme.fontWeight,
-        letterSpacing: this.props.theme.letterSpacing,
-        fontSize: '0.85rem'
-      })
-    }
+    const { changeTheme, theme } = this.props
+    
     return (
       <>
         {this.state.showForm && <UserForms />}
         <NavBarContainer>
           <div className="nav-left">
-            <span onClick={this.props.changeTheme}>
-              {this.props.theme.name === 'light' ? icons.sun() : icons.moon()}
+            <span onClick={changeTheme}>
+              {theme.name === 'light' ? icons.sun() : icons.moon()}
             </span>
             <span onClick={this.openProfile}>
               {icons.user()}
@@ -68,7 +71,7 @@ class NavBar extends React.Component {
           <div className="nav-center">Volunteer.io</div>
           <div className="nav-right">
             <Select
-              styles={colourStyles}
+              styles={this.selectStyles}
               options={options}
               defaultValue={{ value: '/campaigns', label: 'Campaign Index' }}
               onChange={this.selectSection}

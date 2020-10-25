@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import icons from './Icons'
+import icons from '../../lib/icons'
 
 // position: ${props => props.isHidden ? 'relative' : 'absolute'};
 // top: 0;
