@@ -4,7 +4,7 @@ from skills.serializers.nested import NestedSkillSerializer
 from rooms.serializers.nested import NestedRoomSerializer
 
 class PopulatedUserSerializer(UserSerializer):
-    coord_campaigns = CampaignSerializer(many=True)
+    owned_campaigns = CampaignSerializer(many=True)
     pend_campaigns = CampaignSerializer(many=True)
     conf_campaigns = CampaignSerializer(many=True)
     user_skills = NestedSkillSerializer(many=True)

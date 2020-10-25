@@ -8,9 +8,9 @@ class Campaign(models.Model):
     longitude = models.CharField(max_length=20)
     start_date = models.DateTimeField()
     active = models.BooleanField(default=True)
-    coordinator = models.ForeignKey(
+    owner = models.ForeignKey(
         'jwt_auth.User',
-        related_name='coord_campaigns',
+        related_name='owned_campaigns',
         on_delete=models.CASCADE
     )
     pend_volunteers = models.ManyToManyField(
