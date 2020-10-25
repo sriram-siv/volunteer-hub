@@ -82,7 +82,7 @@ class CampaignVolunteerView(CampaignDetailView):
         campaign_to_update.pend_volunteers.remove(volunteer_id)
         campaign_to_update.conf_volunteers.add(volunteer_id)
         campaign_to_update.save()
-        return Response({ 'message': f'Volunteer {volunteer_id} confirmed' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Volunteer confirmed' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER OR USER CAN REMOVE THEMSELVES FROM PROJECT
     def delete(self, request, pk):
@@ -94,8 +94,28 @@ class CampaignVolunteerView(CampaignDetailView):
             campaign_to_update.conf_volunteers.remove(volunteer_id)
             campaign_to_update.save()
             return Response(
-                { 'message': f'Volunteer {volunteer_id} removed from campaign {campaign_to_update.id}.' }, status=status.HTTP_202_ACCEPTED)
+                { 'message': 'Volunteer removed from campaign' }, status=status.HTTP_202_ACCEPTED)
         return Response({ 'message': 'Must be user or owner to perform this action.' })
+
+class CampaignCoordinatorView(CampaignDetailView):
+    ''' Handles requests to /campaigns/:campaign_id/coordinators '''
+
+    # OWNER ADDS/REMOVES COORDINATOR
+    def post(self, request, pk):
+        campaign_to_add_coord = self.get_campaign(pk=pk)
+        self.is_owner(campaign_to_add_coord, request.user)
+        coordinator_id = request.data['coordinator_id']
+        campaign_to_add_coord.coordinators.add(coordinator_id)
+        campaign_to_add_coord.save()
+        return Response({ 'message': 'Coordinator added to campaign' }, status=status.HTTP_202_ACCEPTED)
+
+    def delete(self, request, pk):
+        campaign_to_add_coord = self.get_campaign(pk=pk)
+        self.is_owner(campaign_to_add_coord, request.user)
+        coordinator_id = request.data['coordinator_id']
+        campaign_to_add_coord.coordinators.remove(coordinator_id)
+        campaign_to_add_coord.save()
+        return Response({ 'message': 'Coordinator removed from campaign' }, status=status.HTTP_202_ACCEPTED)
 
 class CampaignSkillView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/skills '''
