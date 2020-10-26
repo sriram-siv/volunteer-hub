@@ -111,6 +111,9 @@ class CampaignCoordinatorView(CampaignDetailView):
         campaign_coord_room = Room.objects.get(name='Coordinators')
         campaign_coord_room.members.add(coordinator_id)
         campaign_coord_room.save()
+        campaign_all_room = Room.objects.get(name='All')
+        campaign_all_room.members.add(coordinator_id)
+        campaign_all_room.save()
         return Response({ 'message': 'Coordinator added to campaign & Coordinators Chat Room' }, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request, pk):
@@ -119,6 +122,12 @@ class CampaignCoordinatorView(CampaignDetailView):
         coordinator_id = request.data['coordinator_id']
         campaign_to_add_coord.coordinators.remove(coordinator_id)
         campaign_to_add_coord.save()
+        campaign_coord_room = Room.objects.get(name='Coordinators')
+        campaign_coord_room.members.remove(coordinator_id)
+        campaign_coord_room.save()
+        campaign_all_room = Room.objects.get(name='All')
+        campaign_all_room.members.remove(coordinator_id)
+        campaign_all_room.save()
         return Response({ 'message': 'Coordinator removed from campaign' }, status=status.HTTP_202_ACCEPTED)
 
 class CampaignSkillView(CampaignDetailView):
