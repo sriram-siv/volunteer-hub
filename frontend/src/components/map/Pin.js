@@ -68,6 +68,7 @@ class Pin extends React.Component {
     this.setState({ alt: !this.state.alt })
   }
 
+  // Will need to move latlng to state if dragging allowed
   dragPin = event => {
     const latitude = event.lngLat[1]
     const longitude = event.lngLat[0]
@@ -79,6 +80,8 @@ class Pin extends React.Component {
     const { latitude, longitude, draggable, number } = this.props
     const { Wrapper, Base, Point, Inner, Dot, Label } = this
     if (!latitude) return null
+
+    console.log(this.props)
 
     return (
       <Marker

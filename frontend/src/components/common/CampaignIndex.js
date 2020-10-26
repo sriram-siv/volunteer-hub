@@ -32,8 +32,10 @@ class CampaignIndex extends React.Component {
   }
 
   componentDidMount = async () => {
-    const campaigns = await getAllCampaigns()
-    console.log(campaigns)
+    const response = await getAllCampaigns()
+    const campaigns = response.data
+    this.setState({ campaigns })
+    // console.log(campaigns)
   }
 
   handleChange = event => {
@@ -59,10 +61,7 @@ class CampaignIndex extends React.Component {
   }
 
   render() {
-    const { tags, flyTo } = this.state
-    const campaigns = [
-      { latitude: 51.5, longitude: 0, color: '#222', size: 20 }
-    ]
+    const { campaigns, tags, flyTo } = this.state
     return (
       <Wrapper onKeyDown={this.getResults}>
         <SearchFields>

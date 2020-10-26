@@ -19,16 +19,8 @@ const NavBarContainer = styled.div`
 class NavBar extends React.Component {
 
   state = {
-    showForm: false
-  }
-
-  selectSection = (e) => {
-    this.props.history.push(e.value)
-  }
-
-  openProfile = () => {
-    // check if logged in. if not open form
-    this.setState({ showForm: !this.state.showForm })
+    showForm: false,
+    isLoggedIn: false
   }
 
   selectStyles = {
@@ -48,6 +40,19 @@ class NavBar extends React.Component {
     })
   }
 
+  selectSection = (event) => {
+    this.props.history.push(event.value)
+  }
+
+  openProfile = () => {
+    // check if logged in. if not open form
+    if (!this.state.isLoggedIn) this.setState({ showForm: !this.state.showForm })
+  }
+
+  handleLogin = () => {
+    this.setState({ isLoggedIn: true, showForm: false })
+  }
+
   render() {
     const options = [
       { value: '/campaigns/35fs3', label: 'My Campaign' },
@@ -55,10 +60,11 @@ class NavBar extends React.Component {
       { value: 'newCampaign', label: 'New Campaign' }
     ]
     const { changeTheme, theme } = this.props
+    const { showForm } = this.state
     
     return (
       <>
-        {this.state.showForm && <UserForms />}
+        <UserForms visible={showForm} onLogin={this.handleLogin}/>
         <NavBarContainer>
           <div className="nav-left">
             <span onClick={changeTheme}>

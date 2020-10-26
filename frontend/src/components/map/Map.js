@@ -51,7 +51,7 @@ class Map extends React.Component {
           onViewportChange={this.setViewport}
         >
           <MapHelper onMount={this.onMapLoad} />
-          {pins.map((pin, i) => <Pin key={i} {...pin} number={i + 1} clickPin={this.setViewport} />)}
+          {pins && pins.map((pin, i) => <Pin key={i} {...pin} color={'#222'} alt={false} size={20} number={i + 1} clickPin={this.setViewport} />)}
         </MapGL>
       </>
     )
