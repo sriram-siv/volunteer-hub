@@ -9,7 +9,7 @@ import campaigns from '../../images/campaigns.jpg'
 
 const Hero = styled.div`
   display: flex;
-  height: 100vh;
+  height: 75vh;
   justify-content: center;
   align-items: center;
   font-size: 2.5rem;
