@@ -29,26 +29,24 @@ const Body = styled.div`
   font-size: 0.7rem;
 `
 
-
-
 const Open = styled.button`
   float: right;
   height: 2rem;
   width: 100px;
-  border: 2px solid ${props => props.theme.primary};
+  border: 1px solid ${props => props.theme.primary};
   border-radius: 2px;
   color: ${props => props.theme.text};
   background-color: ${props => props.theme.background};
 `
 
-const ResultsItem = ({ visible, expanded, showDetails, id, position, name, description }) => {
+const ResultsItem = ({ visible, expanded, showDetails, id, position, name, description, signUp }) => {
   return (
     <Wrapper visible={visible} expanded={expanded} position={position} onClick={() => showDetails(id)}>
       {name}<br />skills list..
       <Body>
         {description}
       </Body>
-      <Open expanded={expanded}>Sign Up</Open>
+      <Open expanded={expanded} onClick={() => signUp(id)}>Sign Up</Open>
     </Wrapper>
   )
 }
