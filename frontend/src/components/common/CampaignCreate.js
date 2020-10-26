@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import BannerImage from '../elements/BannerImage'
 import InputText from '../elements/InputText'
 import InputArea from '../elements/InputArea'
+import Button from '../elements/Button'
 import Geocoder from '../map/Geocoder'
 
 const Wrapper = styled.div`
@@ -36,7 +37,12 @@ class CampaignCreate extends React.Component{
     this.setState({ formData })
   }
 
+  handleSubmit = event => {
+    console.log(this.state.formData)
+  }
+
   inputWidth = '80%'
+  buttonWidth = '60%'
 
   render(){
 
@@ -49,6 +55,7 @@ class CampaignCreate extends React.Component{
           <InputArea width={this.inputWidth} name='description' returnValue={this.handleChange} />
           <InputText width={this.inputWidth} label='Replace with geocoder' returnValue={this.handleChange} />
           <InputText width={this.inputWidth} type='datetime-local' label='When does your campaign start?' name='start_date' returnValue={this.handleChange} />
+          <Button width={this.buttonWidth} label='Save your campaign' onClick={this.handleSubmit}/>
         </Wrapper>
       </>
     )
