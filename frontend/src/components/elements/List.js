@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import icons from './Icons'
+import icons from '../../lib/icons'
 
 // position: ${props => props.isHidden ? 'relative' : 'absolute'};
 // top: 0;
@@ -22,8 +22,9 @@ const ListScroll = styled.div`
 `
 
 const ItemDetail = styled.div`
-  height: 3rem;
-  line-height: 3rem;
+  height: 2.4rem;
+  line-height: 2.4rem;
+  font-size: 0.8rem;
   text-align: center;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
@@ -36,6 +37,7 @@ const Title = styled.div`
   line-height: 30px;
   padding-top: 5px;
   color: #333;
+  font-size: 0.85rem;
   ::selection {
     background-color: transparent;
   }

@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk } from '../elements/Split'
 import Button from '../elements/Button'
@@ -6,13 +7,22 @@ import { Link } from 'react-router-dom'
 
 import campaigns from '../../images/campaigns.jpg'
 
+const Hero = styled.div`
+  display: flex;
+  height: 100vh;
+  justify-content: center;
+  align-items: center;
+  font-size: 2.5rem;
+  font-family: 'Montserrat Alternates', sans-serif;
+`
+
 const Landing = () => {
 
   const width = '40%'
 
   return (
     <>
-      <div className="hero">Welcome to Volunteer.io</div>
+      <Hero>Welcome to Volunteer.io</Hero>
       <SplitContain>
         <SplitRow>
           <div>

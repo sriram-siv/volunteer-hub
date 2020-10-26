@@ -1,8 +1,7 @@
 @import "~bootstrap/scss/bootstrap";
 @import url('https://fonts.googleapis.com/css2?family=Ubuntu+Mono:wght@400;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@300;400&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,400;0,600;1,400;1,600&display=swap');
-
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&display=swap');
 
 body {
   font-family: 'Open Sans', sans-serif;
@@ -17,35 +16,15 @@ button {
   font-family: 'Montserrat Alternates', sans-serif;
 }
 
-.navigation {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  height: 3rem;
-  background-color: #fef15e;
-  position: relative;
+.nav-right {
+  margin-right: 5px;
+  width: 200px;
+}
 
-  .user {
-    margin-right: 5px;
-    width: 200px;
-  }
-
-  .left {
-    margin-left: 20px;
-    > * {
-      margin-right: 10px;
-    }
-  }
-
-  .center {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    font-family: 'Montserrat Alternates', sans-serif;
-    font-size: 1.1rem;
-    &::selection {
-      background-color: transparent;
-    }
+.nav-left {
+  margin-left: 20px;
+  > * {
+    margin-right: 10px;
   }
 }
 
@@ -55,16 +34,16 @@ button {
   justify-content: center;
   align-items: center;
   font-size: 2.5rem;
+  
+.nav-center {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   font-family: 'Montserrat Alternates', sans-serif;
-}
-
-// Campaign Index
-
-.campaign-index-map {
-  position: relative;
-  height: calc(100vh - 3rem);
-  width: 100vw;
-  margin: auto;
+  font-size: 1.1rem;
+  &::selection {
+    background-color: transparent;
+  }
 }
 
 

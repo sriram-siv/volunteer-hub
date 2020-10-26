@@ -23,7 +23,7 @@ const Input = styled.input`
     background-color: ${props => props.theme.primary};
     color: #444;
   }
-  `
+`
   
 const Label = styled.div`
   position: absolute;
@@ -31,6 +31,8 @@ const Label = styled.div`
   left: 11px;
   color: ${props => props.theme.text};
   font-size: ${props => props.focus ? '0.7rem' : '1rem'};
+  font-weight: ${props => props.theme.fontWeight};
+  letter-spacing: ${props => props.theme.letterSpacing};
 `
 
 const Highlight = styled.div`
@@ -42,7 +44,7 @@ const Highlight = styled.div`
   left: 1px;
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
-  transition: all 0
+  transition: all 0;
 `
 
 class InputField extends React.Component {
@@ -51,11 +53,8 @@ class InputField extends React.Component {
     focus: false
   }
 
-  handleFocus = () => {
-    this.setState({ focus: true })
-  }
-  handleBlur = () => {
-    this.setState({ focus: false })
+  toggleFocus = () => {
+    this.setState({ focus: !this.state.focus })
   }
 
   render() {
@@ -63,7 +62,7 @@ class InputField extends React.Component {
     const { label, width, geocoderProps } = this.props
     const value = this.input ? this.input.value : ''
     return (
-      <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
+      <Wrapper width={width} onFocus={this.toggleFocus} onBlur={this.toggleFocus}>
         <Input ref={input => this.input = input} {...geocoderProps} spellCheck="false"  />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />

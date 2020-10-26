@@ -14,6 +14,7 @@ const Input = styled.input`
   height: 3.1rem;
   width: 100%;
   font-size: 1rem;
+  font-weight: ${props => props.theme.fontWeight};
   border: 1px solid ${props => props.theme.shadow};
   padding: calc(12px + 0.7rem) 10px 5px;
   &:focus {
@@ -31,7 +32,10 @@ const Label = styled.div`
   left: 11px;
   color: ${props => props.theme.text};
   font-size: ${props => props.focus ? '0.7rem' : '1rem'};
-`
+  font-weight: ${props => props.theme.fontWeight};
+  letter-spacing: ${props => props.theme.letterSpacing};
+  pointer-events: none;
+  `
 
 const Highlight = styled.div`
   height: ${props => props.focus ? '3px' : 0};
@@ -63,10 +67,10 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { label, width, value, name } = this.props
+    const { label, width, value, name, type } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} name={name} value={value} onChange={this.handleChange} spellCheck="false"  />
+        <Input ref={input => this.input = input} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>

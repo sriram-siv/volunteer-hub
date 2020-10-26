@@ -1,28 +1,74 @@
 import React from 'react'
+import styled from 'styled-components'
 import { Marker } from '@urbica/react-map-gl'
+
 
 class Pin extends React.Component {
 
   state = {
-    latitude: 0,
-    longitude: 0,
-    number: 0,
-    color: '#050',
-    alt: false,
-    draggable: false,
-    size: 20
+    alt: false
   }
+  
+  Wrapper = styled.div`
+    position: relative;
+    width: ${() => `${this.props.size}px`};
+    height: ${() => `${this.props.size}px`};
+    cursor: pointer;
+    top: ${() => `-${this.props.size - 2}px`};
+  `
+  Base = styled.div`
+    width: 100%;
+    height: 100%;
+    clip-path: circle();
+    background-color: ${() => this.props.color};
+  `
+  Point = styled.div`
+    background-color: ${() => this.props.color};
+    clip-path: polygon(50% 100%, 0% 0%, 100% 0%);
+    position: absolute;
+    top: 70%;
+    left: 5%;
+    width: 90%;
+    height: 65%;
+  `
+  Inner = styled.div`
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    width: 80%;
+    height: 80%;
+    clip-path: circle();
+    background-color: ${() => this.state.alt && this.props.number > 0 ? this.props.color : '#f8f6f3'};
+  `
+  Dot = styled.div`
+    position: absolute;
+    top: 12.5%;
+    left: 12.5%;
+    width: 75%;
+    height: 75%;
+    background-color: ${() => this.props.color};
+    clip-path: circle();
+  `
+  Label = styled.div`
+    width: 100%;
+    background-color: transparent;
+    color: ${() => this.state.alt ? 'white' : '#333'};
+    font-size: ${() => `${this.props.size * 0.6}px`};
+    line-height: ${() => `${this.props.size * 0.8}px`};
+    font-family: 'Ubuntu Mono', monospace;
+    text-align: center;
+    font-weight: ${() => this.state.alt ? 400 : 700};
+  `
 
   componentDidMount = () => {
-    const { latitude, longitude, number, color, alt, draggable, size } = this.props
-    console.log(this.props)
-    this.setState({ latitude, longitude, number, color, alt, draggable, size })
+    this.setState({ alt: this.props.alt })
   }
 
   hoverPin = () => {
     this.setState({ alt: !this.state.alt })
   }
 
+  // Will need to move latlng to state if dragging allowed
   dragPin = event => {
     const latitude = event.lngLat[1]
     const longitude = event.lngLat[0]
@@ -31,60 +77,11 @@ class Pin extends React.Component {
 
   render() {
 
-    const { latitude, longitude, number, color, alt, draggable, size } = this.state
+    const { latitude, longitude, draggable, number } = this.props
+    const { Wrapper, Base, Point, Inner, Dot, Label } = this
     if (!latitude) return null
 
-    const container = {
-      position: 'relative',
-      width: `${size}px`,
-      height: `${size}px`,
-      cursor: 'pointer',
-      top: `-${size - 2}px`
-    }
-    const border = {
-      width: '100%',
-      height: '100%',
-      clipPath: 'circle()',
-      backgroundColor: color
-    }
-    const point = {
-      backgroundColor: color,
-      clipPath: 'polygon(50% 100%, 0% 0%, 100% 0%)',
-      position: 'absolute',
-      top: '70%',
-      left: '5%',
-      width: '90%',
-      height: '65%'
-    }
-    const inner = {
-      position: 'absolute',
-      top: '10%',
-      left: '10%',
-      width: '80%',
-      height: '80%',
-      clipPath: 'circle()',
-      backgroundColor: alt && number > 0 ? color : '#f8f6f3'
-    }
-    const dot = {
-      position: 'absolute',
-      top: '12.5%',
-      left: '12.5%',
-      width: '75%',
-      height: '75%',
-      backgroundColor: color,
-      clipPath: 'circle()'
-    }
-    const label = {
-      width: '100%',
-      backgroundColor: 'transparent',
-      color: alt ? 'white' : '#333',
-      // fontSize: '14px',
-      fontSize: `${size * 0.6}px`,
-      lineHeight: `${size * 0.8}px`,
-      fontFamily: '\'Ubuntu Mono\', monospace',
-      textAlign: 'center',
-      fontWeight: alt ? 400 : 700
-    }
+    console.log(this.props)
 
     return (
       <Marker
@@ -92,19 +89,15 @@ class Pin extends React.Component {
         longitude={longitude}
         draggable={draggable}
         onClick={() => this.props.clickPin({ latitude, longitude, zoom: 15 })}
+        onDrag={() => console.log('draggin pin..')}
       >
-        <div style={container}
-          onMouseEnter={this.hoverPin}
-          onMouseLeave={this.hoverPin}
-        >
-          <div style={border} />
-          <div style={point} />
-          <div style={inner}>
-            {number > 0
-              ? <div style={label}>{number}</div>
-              : <div style={dot} />}
-          </div>
-        </div>
+        <Wrapper onMouseEnter={this.hoverPin} onMouseLeave={this.hoverPin}>
+          <Base/>
+          <Point/>
+          <Inner>
+            {number > 0 ? <Label>{number}</Label> : <Dot/>}
+          </Inner>
+        </Wrapper>
       </Marker>
     )
   }

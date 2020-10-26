@@ -1,16 +1,23 @@
 import React from 'react'
+import styled from 'styled-components'
 
 import { getSingleRoom } from '../../lib/api'
 
 import ChatWindow from '../elements/ChatWindow' 
 import InputArea from '../elements/InputArea'
-import ChatController from '../elements/ChatControl'
+import ChatControl from '../elements/ChatControl'
+
+const ControlWrapper = styled.div`
+  background-color: ${props => props.theme.panels};
+  padding: 10px;
+`
 
 class Room extends React.Component {
 
   state = {
     messages: [],
-    draft: ''
+    draft: '',
+    historyLoaded: false
   }
 
   componentDidMount = () => {
@@ -28,6 +35,7 @@ class Room extends React.Component {
 
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
+      console.log(data.message)
       this.setState({ messages: [...this.state.messages, data.message] })
       this.chatWindow.scrollTop = this.chatWindow.scrollHeight
     }
@@ -40,7 +48,11 @@ class Room extends React.Component {
     // get request to room (id)
     const response = await getSingleRoom(this.props.match.params.room)
     const { members, messages } = response.data
-    this.setState({ members, messages })
+    console.log(members) //redirect here
+    this.setState({ members, messages }, () => {
+      this.chatWindow.scrollTop = this.chatWindow.scrollHeight
+      this.setState({ historyLoaded: true })
+    })
   }
 
   sendMessage = event => {
@@ -49,7 +61,7 @@ class Room extends React.Component {
     this.chatSocket.send(JSON.stringify({
       'room_id': this.props.match.params.room,
       'text': this.state.draft.trim(),
-      'user_id': "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOjIsImV4cCI6MTYwNDIzNzI2MX0.-fJN_cdpfJ1jUal5E4lTjsnAb0UUOO2GY1MWi1QeJqM"
+      'user': localStorage.getItem('token')
     }))
     this.setState({ draft: '' })
   }
@@ -59,19 +71,19 @@ class Room extends React.Component {
   }
 
   render() {
-    const { messages, draft } = this.state
+    const { messages, draft, historyLoaded } = this.state
     return (
       <>
-        <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages}/>
-        <div style={{ margin: '10px' }}>
+        <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages} historyLoaded={historyLoaded}/>
+        <ControlWrapper>
           <InputArea
             width="100%"
             name="draft" value={draft}
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
-          <ChatController />
-        </div>
+          <ChatControl />
+        </ControlWrapper>
       </>
     )
   }

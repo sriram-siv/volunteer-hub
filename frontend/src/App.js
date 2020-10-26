@@ -20,17 +20,25 @@ class App extends React.Component {
   themes = {
     dark: {
       name: 'dark',
-      primary: '#fef715',
+      primary: '#ffff50',
       shadow: '#aeb4ba',
-      background: '#333',
-      text: '#ccc'
+      background: '#222',
+      text: '#ccc',
+      fontWeight: 300,
+      letterSpacing: '-0.002rem',
+      accent: '#999',
+      panels: '#131d25'
     },
     light: {
       name: 'light',
-      primary: '#fef715',
+      primary: '#ffff50',
       shadow: '#aeb4ba',
       background: '#fff',
-      text: '#333'
+      text: '#333',
+      fontWeight: 400,
+      letterSpacing: 0,
+      accent: '#eee',
+      panels: 'papayawhip'
     }
   }
 
