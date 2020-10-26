@@ -38,6 +38,8 @@ class CampaignCreate extends React.Component{
   }
 
   handleSubmit = event => {
+    // format latitude/longitude into formdata
+    // send to backend
     console.log(this.state.formData)
   }
 
