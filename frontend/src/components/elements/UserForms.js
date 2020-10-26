@@ -68,6 +68,8 @@ class UserForms extends React.Component {
       email: this.state.formData.email,
       password: this.state.formData.password
     }
+
+    console.log(this.state.formData)
     
     if (this.state.mode === 'register') {
       const response = await registerUser(this.state.formData)
@@ -79,7 +81,7 @@ class UserForms extends React.Component {
 
     localStorage.setItem('token', response.data.token)
     localStorage.setItem('user_id', response.data.id)
-    if (response.status === 200) this.props.onLogin()
+    if (response.status === 200) this.props.onLogin(response.data.id)
   }
 
   render() {
