@@ -54,18 +54,14 @@ class NavBar extends React.Component {
 
   openProfile = () => {
     if (!this.state.isLoggedIn) this.setState({ showForm: !this.state.showForm })
-    else {
-      localStorage.removeItem('user_id')
-      this.setState({ isLoggedIn: false })
-    }
+    else this.props.history.push('/profile')
   }
 
   handleLogin = async (id) => {
     this.setState({ isLoggedIn: true, showForm: false })
     const response = await getSingleProfile(id)
     const userCampaigns = response.data.conf_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
-    this.setState({ userCampaigns })
-    console.log(response.data)
+    this.setState({ userCampaigns })  
   }
 
   render() {
