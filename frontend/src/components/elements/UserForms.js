@@ -73,7 +73,7 @@ class UserForms extends React.Component {
     
     if (this.state.mode === 'register') {
       const response = await registerUser(this.state.formData)
-      console.log(response)
+      console.log(response.data.errors)
       if (response.status !== 200) return
     }
 

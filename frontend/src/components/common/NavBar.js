@@ -69,7 +69,7 @@ class NavBar extends React.Component {
     const options = [
       ...this.state.userCampaigns,
       { value: '/campaigns', label: 'Campaign Index' },
-      { value: 'newCampaign', label: 'New Campaign' }
+      { value: '/campaigns/new', label: 'New Campaign' }
     ]
     const { changeTheme, theme } = this.props
     const { showForm } = this.state
