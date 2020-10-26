@@ -18,26 +18,28 @@ class CampaignShow extends React.Component {
 
   state = {
     campaignData: null,
+    members: null,
     rooms: null
   }
   
   componentDidMount = async () => {
     const response = await getSingleCampaign(this.props.match.params.id)
     this.setState({ campaignData: response.data })
-    console.log(response.data.message_rooms)
+    console.log(response.data)
 
-    const rooms = response.data.message_rooms.map(room => {
-      console.log(room)
-    })
+    let items = response.data.message_rooms.filter(room => {
+      const userID = Number(localStorage.getItem('user_id'))
+      return room.members.includes(userID)
+    }).map(room => room.name)
+    const rooms = { title: 'groups', items }
+
+    items = response.data.conf_volunteers.map(volunteer => volunteer.username)
+    const members = { title: 'members', items }
+    this.setState({ rooms, members })
   }
 
   render() {
-
-    // Might be more flexible if we passed in an array of the item components
-    const members = 
-      { title: 'members', items: ['sri', 'don', 'charlotte', 'jack'] }
-    const groups = 
-      { title: 'groups', items: [ 'coordinators', 'team', 'Don' ] }
+    
     
     const multiListStyle = {
       position: 'absolute',
@@ -45,14 +47,14 @@ class CampaignShow extends React.Component {
       right: '5px'
     }
 
-    const { campaignData } = this.state
+    const { campaignData, members, rooms } = this.state
 
-    if (!campaignData) return null
+    if (!campaignData || !members || !rooms ) return null
 
     return (
       <Wrapper>
         <BannerImage />
-        <MultiList containerStyle={multiListStyle} lists={[members, groups]} />
+        <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
         <div style={{ display: 'flex' }}>
           <div style={{ width: '600px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>{campaignData.description}</div>          
           <div style={{ width: '100%', margin: '10px', padding: '20px', border: '2px solid #fef715', backgroundColor: '#aeb4ba', color: '#333', textAlign: 'center' }}>

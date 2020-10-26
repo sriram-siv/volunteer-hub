@@ -53,8 +53,11 @@ class NavBar extends React.Component {
   }
 
   openProfile = () => {
-    // check if logged in. if not open form
     if (!this.state.isLoggedIn) this.setState({ showForm: !this.state.showForm })
+    else {
+      localStorage.removeItem('user_id')
+      this.setState({ isLoggedIn: false })
+    }
   }
 
   handleLogin = async (id) => {
@@ -79,7 +82,7 @@ class NavBar extends React.Component {
     return (
       <>
         <UserForms visible={showForm} onLogin={this.handleLogin}/>
-        <NavBarContainer>
+        <NavBarContainer onKeyDown={this.logout}>
           <div className="nav-left">
             <span onClick={changeTheme}>
               {theme.name === 'light' ? icons.sun() : icons.moon()}

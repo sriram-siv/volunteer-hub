@@ -63,7 +63,12 @@ class CampaignIndex extends React.Component {
 
   state = {
     campaigns: null,
+    filteredResults: null,
     tags: '',
+    bounds: {
+      _ne: { lat: 90, lng: 180 },
+      _sw: { lat: -90, lng: -180 }
+    },
     flyTo: null,
     showNotification: false
   }
@@ -71,8 +76,7 @@ class CampaignIndex extends React.Component {
   componentDidMount = async () => {
     const response = await getAllCampaigns()
     const campaigns = response.data
-    this.setState({ campaigns })
-    // console.log(campaigns)
+    this.setState({ campaigns }, this.getResults)
   }
 
   handleChange = event => {
@@ -81,16 +85,34 @@ class CampaignIndex extends React.Component {
 
   setMapRef = ref => {
     this.map = ref
+    this.map.getMap().on('moveend', this.getBounds)
   }
   
   setGeocoderInputRef = ref => {
     this.geocoder = ref
   }
 
-  getResults = (e) => {
-    if (e.keyCode !== 16) return
+  getResults = () => {
     console.log(this.geocoder.state.inputValue)
-    console.log(this.map.getMap().getBounds())
+
+    if (!this.state.campaigns) return
+
+    const { campaigns, tags, bounds } = this.state
+
+    const filteredResults = campaigns
+      // Filter by visible area of map
+      .filter(result => {
+        const inLat = result.latitude > bounds._sw.lat && result.latitude < bounds._ne.lat
+        const inLng = result.longitude > bounds._sw.lng && result.longitude < bounds._ne.lng
+        return inLat && inLng
+      })
+      // // Filter by tags
+      // .filter(result => result.theme === theme || theme === 'All')
+    this.setState({ filteredResults })
+  }
+
+  getBounds = () => {
+    this.setState({ bounds: this.map.getMap().getBounds() }, this.getResults)
   }
 
   selectGeocoderItem = location => {
@@ -106,9 +128,9 @@ class CampaignIndex extends React.Component {
   dismissNotification = () => this.setState({ showNotification: false })
 
   render() {
-    const { campaigns, tags, flyTo, showNotification } = this.state
+    const { filteredResults, tags, flyTo, showNotification } = this.state
     return (
-      <Wrapper onKeyDown={this.getResults}>
+      <Wrapper>
         <Notification visible={showNotification}>
           <Message>
             Thanks<br />
@@ -119,9 +141,9 @@ class CampaignIndex extends React.Component {
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
           <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
-          <ResultsList campaigns={campaigns} signUp={this.signUpToCampaign}/>
+          <ResultsList campaigns={filteredResults} signUp={this.signUpToCampaign}/>
         </SearchFields>
-        <Map pins={campaigns} flyTo={flyTo} setRef={this.setMapRef} />
+        <Map pins={filteredResults} flyTo={flyTo} setRef={this.setMapRef} />
       </Wrapper>
     )
   }
