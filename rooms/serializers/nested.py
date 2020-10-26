@@ -5,4 +5,4 @@ class NestedRoomSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Room
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'campaign')

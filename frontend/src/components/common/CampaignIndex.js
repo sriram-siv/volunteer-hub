@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 
 import Map from '../map/Map'
 import Geocoder from '../map/Geocoder'
@@ -23,12 +23,49 @@ const SearchFields = styled.div`
   > * { margin-bottom: 5px; }
 `
 
+const Notification = styled.div`
+  opacity: ${props => props.visible ? 1 : 0};
+  pointer-events: ${props => props.visible ? 'all' : 'none'};
+  display: flex;
+  justify-content: center;
+  position: absolute;
+  top: 0;
+  height: calc(100vh - 3rem);
+  width: 100vw;
+  z-index: 10;
+  background-color: #aaaa;
+  transition: all 0.2s;
+`
+
+const Message = styled.div`
+  position: absolute;
+  top: 100px;
+  width: 300px;
+  height: 150px;
+  background-color: ${props => props.theme.panels};
+  border-radius: 2px;
+  border: 1px solid ${props => props.theme.shadow};
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 15px;
+`
+
+const Dismiss = styled.button`
+  height: 2rem;
+  width: 100px;
+  border: 1px solid ${props => props.theme.primary};
+  border-radius: 2px;
+  color: ${props => props.theme.text};
+  background-color: ${props => props.theme.background};
+`
+
 class CampaignIndex extends React.Component {
 
   state = {
     campaigns: null,
     tags: '',
-    flyTo: null
+    flyTo: null,
+    showNotification: false
   }
 
   componentDidMount = async () => {
@@ -63,12 +100,22 @@ class CampaignIndex extends React.Component {
   signUpToCampaign = id => {
     console.log(id)
     // TODO call api for add to pending
+    this.setState({ showNotification: true })
   }
 
+  dismissNotification = () => this.setState({ showNotification: false })
+
   render() {
-    const { campaigns, tags, flyTo } = this.state
+    const { campaigns, tags, flyTo, showNotification } = this.state
     return (
       <Wrapper onKeyDown={this.getResults}>
+        <Notification visible={showNotification}>
+          <Message>
+            Thanks<br />
+            You&apos;ll be notified when the coordinators have approved you to join<br/><br/>
+            <Dismiss onClick={this.dismissNotification}>ok</Dismiss>
+          </Message>
+        </Notification>
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
           <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
@@ -80,4 +127,4 @@ class CampaignIndex extends React.Component {
   }
 }
 
-export default CampaignIndex
+export default withTheme(CampaignIndex)

@@ -6,6 +6,8 @@ import Select from 'react-select'
 import icons from '../../lib/icons'
 import UserForms from '../elements/UserForms'
 
+import { getSingleProfile } from '../../lib/api'
+
 const NavBarContainer = styled.div`
   display: flex;
   align-items: center;
@@ -20,7 +22,8 @@ class NavBar extends React.Component {
 
   state = {
     showForm: false,
-    isLoggedIn: false
+    isLoggedIn: false,
+    userCampaigns: []
   }
 
   selectStyles = {
@@ -40,6 +43,11 @@ class NavBar extends React.Component {
     })
   }
 
+  componentDidMount = () => {
+    const user_id = localStorage.getItem('user_id')
+    if (user_id) this.handleLogin(user_id)
+  }
+
   selectSection = (event) => {
     this.props.history.push(event.value)
   }
@@ -49,18 +57,24 @@ class NavBar extends React.Component {
     if (!this.state.isLoggedIn) this.setState({ showForm: !this.state.showForm })
   }
 
-  handleLogin = () => {
+  handleLogin = async (id) => {
     this.setState({ isLoggedIn: true, showForm: false })
+    const response = await getSingleProfile(id)
+    const userCampaigns = response.data.conf_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
+    this.setState({ userCampaigns })
+    console.log(response.data)
   }
 
   render() {
     const options = [
-      { value: '/campaigns/35fs3', label: 'My Campaign' },
+      ...this.state.userCampaigns,
       { value: '/campaigns', label: 'Campaign Index' },
       { value: 'newCampaign', label: 'New Campaign' }
     ]
     const { changeTheme, theme } = this.props
     const { showForm } = this.state
+
+    if (this.props.location.pathname === '/') return null
     
     return (
       <>

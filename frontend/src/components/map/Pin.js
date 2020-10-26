@@ -81,8 +81,6 @@ class Pin extends React.Component {
     const { Wrapper, Base, Point, Inner, Dot, Label } = this
     if (!latitude) return null
 
-    console.log(this.props)
-
     return (
       <Marker
         latitude={latitude}
