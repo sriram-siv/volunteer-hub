@@ -7,6 +7,7 @@ import Home from './components/common/Home'
 import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
+import CampaignCreate from './components/common/CampaignCreate'
 
 import Tests from './components/common/Tests'
 import DgTest from './components/common/DgTest'
@@ -61,6 +62,7 @@ class App extends React.Component {
             <Route exact path="/" component={Home} />
             <Route path="/chat/:room" component={Room} />
             {/* path /campaign/:id/coordinator -> volunteer view panel */}
+            <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' component={CampaignIndex} />
           </Switch>
