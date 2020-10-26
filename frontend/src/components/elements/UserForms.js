@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { loginUser } from '../../lib/api'
+import { loginUser, registerUser } from '../../lib/api'
 
 import InputText from './InputText'
 import Button from './Button'
@@ -23,13 +23,35 @@ const Wrapper = styled.form`
   }
 `
 
+const ChangeMode = styled.p`
+  font-size: 0.7rem;
+  text-align: center;
+  color: ${props => props.theme.text};
+  cursor: pointer;
+`
+
 class UserForms extends React.Component {
 
   state = {
+    mode: 'login',
     formData: {
+      username: '',
       email: '',
-      password: ''
+      password: '',
+      password_confirmation: '',
+      first_name: '',
+      last_name: '',
+      phone: ''
     }
+  }
+
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.visible !== this.props.visible) this.setState({ mode: 'login' })
+  }
+  
+  switchMode = () => {
+    const mode = this.state.mode === 'login' ? 'register' : 'login'
+    this.setState({ mode })
   }
 
   handleChange = event => {
@@ -42,8 +64,18 @@ class UserForms extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault()
-    const response = await loginUser(this.state.formData)
-    console.log(response)
+    const loginData = {
+      email: this.state.formData.email,
+      password: this.state.formData.password
+    }
+    
+    if (this.state.mode === 'register') {
+      const response = await registerUser(this.state.formData)
+      console.log(response)
+      if (response.status !== 200) return
+    }
+
+    const response = await loginUser(loginData)
 
     localStorage.setItem('token', response.data.token)
     localStorage.setItem('user_id', response.data.id)
@@ -51,12 +83,19 @@ class UserForms extends React.Component {
   }
 
   render() {
-    const { email, password } = this.state.formData
+    const { mode } = this.state
+    const { username, email, password, password_confirmation, first_name, last_name, phone } = this.state.formData
     return (
       <Wrapper visible={this.props.visible} onSubmit={this.handleSubmit}>
+        {mode === 'register' && <InputText label="username" name="username" value={username} returnValue={this.handleChange} />}
+        {mode === 'register' && <InputText label="first name" name="first_name" value={first_name} returnValue={this.handleChange} />}
+        {mode === 'register' && <InputText label="last name" name="last_name" value={last_name} returnValue={this.handleChange} />}
         <InputText label="email" name="email" value={email} returnValue={this.handleChange}/>
+        {mode === 'register' && <InputText label="phone" name="phone" value={phone} returnValue={this.handleChange} />}
         <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange}/>
-        <Button label="login" width="calc(100% - 10px)" />
+        {mode === 'register' && <InputText label="confirm password" name="password_confirmation" value={password_confirmation} type="password" returnValue={this.handleChange} />}
+        <Button label={mode} width="calc(100% - 10px)" />
+        <ChangeMode onClick={this.switchMode}>{mode === 'login' ? 'new user' : ' I have an account'}</ChangeMode>
       </Wrapper>
     )
   }
