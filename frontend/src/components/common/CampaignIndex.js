@@ -85,7 +85,11 @@ class CampaignIndex extends React.Component {
 
   setMapRef = ref => {
     this.map = ref
-    this.map.getMap().on('moveend', this.getBounds)
+    try {
+      this.map.getMap().on('moveend', this.getBounds)
+    } catch (err) {
+      console.log(err)
+    }
   }
   
   setGeocoderInputRef = ref => {
