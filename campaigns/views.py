@@ -95,7 +95,6 @@ class CampaignVolunteerView(CampaignDetailView):
 
     # OWNER MOVES VOLUNTEER FROM PENDING TO CONFIRMED
     def put(self, request, pk):
-        print('here')
         campaign_to_update = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_update, request.user)
         volunteer_id = request.data['volunteer_id']

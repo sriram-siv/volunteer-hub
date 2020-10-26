@@ -11,7 +11,7 @@ import { getAllCampaigns, addPendVolunteer } from '../../lib/api'
 const Wrapper = styled.main`
   position: relative;
   height: calc(100vh - 3rem);
-  overflow: scroll;
+  overflow: hidden;
 `
 
 const SearchFields = styled.div`
