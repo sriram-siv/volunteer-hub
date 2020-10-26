@@ -1,0 +1,124 @@
+[
+{
+  "model": "rooms.room",
+  "pk": 1,
+  "fields": {
+    "name": "All",
+    "campaign": 1,
+    "members": [
+      2,
+      3,
+      6,
+      7,
+      8,
+      14
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 2,
+  "fields": {
+    "name": "Coordinators",
+    "campaign": 1,
+    "members": [
+      2,
+      3,
+      14
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 3,
+  "fields": {
+    "name": "All",
+    "campaign": 2,
+    "members": [
+      5,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 4,
+  "fields": {
+    "name": "Coordinators",
+    "campaign": 2,
+    "members": [
+      5,
+      9,
+      10
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 5,
+  "fields": {
+    "name": "All",
+    "campaign": 3,
+    "members": [
+      8,
+      10,
+      11,
+      12,
+      20,
+      21,
+      22,
+      23
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 6,
+  "fields": {
+    "name": "Coordinators",
+    "campaign": 3,
+    "members": [
+      8,
+      10,
+      11,
+      12
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 7,
+  "fields": {
+    "name": "All",
+    "campaign": 4,
+    "members": [
+      9,
+      10,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 8,
+  "fields": {
+    "name": "Coordinators",
+    "campaign": 4,
+    "members": [
+      16,
+      19,
+      20
+    ]
+  }
+}
+]
