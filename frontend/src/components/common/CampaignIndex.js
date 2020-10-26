@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 
 import Map from '../map/Map'
 import Geocoder from '../map/Geocoder'
@@ -21,6 +21,13 @@ const SearchFields = styled.div`
   width: 350px;
   z-index: 1;
   > * { margin-bottom: 5px; }
+`
+
+const Notification = styled.div`
+  position: absolute;
+  top: 0;
+  height: calc(100vh - 3rem);
+  background-color: #050a;
 `
 
 class CampaignIndex extends React.Component {
@@ -63,12 +70,14 @@ class CampaignIndex extends React.Component {
   signUpToCampaign = id => {
     console.log(id)
     // TODO call api for add to pending
+    console.log(this.props.theme)
   }
 
   render() {
     const { campaigns, tags, flyTo } = this.state
     return (
       <Wrapper onKeyDown={this.getResults}>
+        <Notification/>
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
           <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
@@ -80,4 +89,4 @@ class CampaignIndex extends React.Component {
   }
 }
 
-export default CampaignIndex
+export default withTheme(CampaignIndex)

@@ -47,12 +47,14 @@ class App extends React.Component {
     this.setState({ theme })
   }
 
+  notify = content => console.log(content)
+
   render() {
     const path = window.location.pathname
     const { theme } = this.state
     // TODO if unauthorized redirect to landing page
     return (
-      <ThemeProvider theme={this.themes[theme]}>
+      <ThemeProvider theme={this.themes[theme]} testy="this.is a testy:(">
         <BrowserRouter>
           {path !== '/' && <NavBar changeTheme={this.changeTheme}/>}
           <Switch>
