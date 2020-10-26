@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import Campaign
 from .serializers.common import CampaignSerializer
 from .serializers.populated import PopulatedCampaignSerializer
+from rooms.models import Room
 
 class CampaignListView(APIView):
     ''' Handles Requests to /campaigns '''
@@ -107,7 +108,10 @@ class CampaignCoordinatorView(CampaignDetailView):
         coordinator_id = request.data['coordinator_id']
         campaign_to_add_coord.coordinators.add(coordinator_id)
         campaign_to_add_coord.save()
-        return Response({ 'message': 'Coordinator added to campaign' }, status=status.HTTP_202_ACCEPTED)
+        campaign_coord_room = Room.objects.get(name='Coordinators')
+        campaign_coord_room.members.add(coordinator_id)
+        campaign_coord_room.save()
+        return Response({ 'message': 'Coordinator added to campaign & Coordinators Chat Room' }, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request, pk):
         campaign_to_add_coord = self.get_campaign(pk=pk)
