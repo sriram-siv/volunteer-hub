@@ -14,6 +14,8 @@ const Input = styled.textarea`
   height: 4rem;
   width: 100%;
   font-size: 0.85rem;
+  font-weight: ${props => props.theme.fontWeight};
+  letter-spacing: ${props => props.theme.letterSpacing};
   border: 1px solid ${props => props.theme.shadow};
   padding: 8px 10px;
   margin-bottom: -7px;

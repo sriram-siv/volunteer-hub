@@ -10,36 +10,38 @@ class Map extends React.Component {
   state = {
     viewport: {
       zoom: 1,
-      latitude: 0,
+      latitude: 50,
       longitude: 0
     },
     bounds: null,
     mapReady: false
   }
 
-  setViewport = newViewport => {
-    const viewport = { ...this.state.viewport, ...newViewport }
-    const bounds = this.mapRef ? { ...this.mapRef.getMap().getBounds() } : null
-    this.setState({ viewport, bounds })
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.flyTo !== this.props.flyTo) {
+      const { latitude, longitude } = this.props.flyTo
+      const zoom = this.props.flyTo.zoom + 10
+      this.setViewport({ latitude, longitude, zoom })
+    }
   }
 
-  setMapRef = map => {
-    this.mapRef = map
-    // map.getMap().on('idle', console.log('load map'))
+  setViewport = newViewport => {
+    const viewport = { ...this.state.viewport, ...newViewport }
+    this.setState({ viewport })
   }
 
   onMapLoad = () => {
-    this.setState({ mapReady: true })
+    if (!this.state.mapReady) this.setState({ mapReady: true })
   }
 
   render() {
-    const { pins } = this.props
-    const  { mapReady } = this.state
+    const { pins, setRef } = this.props
+    const { mapReady } = this.state
     return (
       <>
         {!mapReady && <div style={{ textAlign: 'center', lineHeight: '100vh' }}>Map Loading</div>}
         <MapGL
-          ref={this.setMapRef}
+          ref={setRef}
           mapStyle='mapbox://styles/mapbox/streets-v11'
           style={{ width: '100%', height: mapReady ? '100%' : 0 }}
           cursorStyle="default"
@@ -48,8 +50,8 @@ class Map extends React.Component {
           viewportChangeMethod="flyTo"
           onViewportChange={this.setViewport}
         >
-          <MapHelper onMount={this.onMapLoad}/>
-          {pins.map((pin, i) => <Pin key={i} {...pin} number={i + 1} clickPin={this.setViewport} />)}
+          <MapHelper onMount={this.onMapLoad} />
+          {pins && pins.map((pin, i) => <Pin key={i} {...pin} color={'#222'} alt={false} size={20} number={i + 1} clickPin={this.setViewport} />)}
         </MapGL>
       </>
     )

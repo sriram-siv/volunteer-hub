@@ -3,4 +3,4 @@ from ..serializers.common import ChatMessageSerializer
 from jwt_auth.serializers.nested import NestedUserSerializer
 
 class NestedChatMessageSerializer(ChatMessageSerializer):
-    user_id = NestedUserSerializer()
+    user = NestedUserSerializer()

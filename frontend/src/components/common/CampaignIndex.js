@@ -2,12 +2,11 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Map from '../map/Map'
+import Geocoder from '../map/Geocoder'
 import InputText from '../elements/InputText'
-import Geocoder from '../elements/Geocoder'
-import SearchFields from '../elements/SearchFields'
+import ResultsList from '../elements/ResultsList'
 
 import { getAllCampaigns } from '../../lib/api'
-// import icons from '../elements/Icons'
 
 const Wrapper = styled.main`
   position: relative;
@@ -15,39 +14,62 @@ const Wrapper = styled.main`
   overflow: scroll;
 `
 
+const SearchFields = styled.div`
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  width: 350px;
+  z-index: 1;
+  > * { margin-bottom: 5px; }
+`
+
 class CampaignIndex extends React.Component {
 
   state = {
     campaigns: null,
-    tags: ''
+    tags: '',
+    flyTo: null
   }
 
   componentDidMount = async () => {
-    const campaigns = await getAllCampaigns()
-    console.log(campaigns)
+    const response = await getAllCampaigns()
+    const campaigns = response.data
+    this.setState({ campaigns })
+    // console.log(campaigns)
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  setMapRef = ref => {
+    this.map = ref
+  }
+  
+  setGeocoderInputRef = ref => {
+    this.geocoder = ref
+  }
+
   getResults = (e) => {
     if (e.keyCode !== 16) return
-    console.log(this.geocoder.geoRef.state.inputValue)
+    console.log(this.geocoder.state.inputValue)
+    console.log(this.map.getMap().getBounds())
+  }
+
+  selectGeocoderItem = location => {
+    this.setState({ flyTo: location })
   }
 
   render() {
-    const { tags } = this.state
-    const campaigns = [
-      { latitude: 51.5, longitude: 0, color: '#222', size: 20 }
-    ]
+    const { campaigns, tags, flyTo } = this.state
     return (
       <Wrapper onKeyDown={this.getResults}>
         <SearchFields>
-          <Geocoder ref={geocoder => this.geocoder = geocoder} />
-          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange}/>
+          <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
+          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
+          <ResultsList campaigns={campaigns}/>
         </SearchFields>
-        <Map pins={campaigns} />
+        <Map pins={campaigns} flyTo={flyTo} setRef={this.setMapRef} />
       </Wrapper>
     )
   }
