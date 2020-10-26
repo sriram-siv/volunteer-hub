@@ -37,11 +37,7 @@ export const deleteCampaign = campaignId => axios.delete(`${baseUrlCampaigns}/${
 
 
 // USER ADDS SELF AS PENDING VOLUNTEER
-export const addPendVolunteer = campaignId => {
-  const header = withHeaders()
-  console.log(header)
-  axios.post(`${baseUrlCampaigns}/${campaignId}/volunteers/`, header)
-}
+export const addPendVolunteer = campaignId => axios.post(`${baseUrlCampaigns}/${campaignId}/volunteers/`, null, withHeaders())
 
 // CAMPAIGN COORDINATOR MOVES PENDING VOLUNTEER TO CONFIRMED, REQUEST BODY NEEDS TO INCLUDE 'volunteer_id': id
 export const confirmVolunteer = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/`, formData, withHeaders())

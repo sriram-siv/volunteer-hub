@@ -11,6 +11,7 @@ import CampaignCreate from './components/common/CampaignCreate'
 
 import Tests from './components/common/Tests'
 import DgTest from './components/common/DgTest'
+import AdminView from './components/common/AdminView'
 
 class App extends React.Component {
 
@@ -62,7 +63,7 @@ class App extends React.Component {
             <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
             <Route path="/chat/:room" component={Room} />
-            {/* path /campaign/:id/coordinator -> volunteer view panel */}
+            <Route path="/campaigns/:id/coordinator" component={AdminView} />
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' component={CampaignIndex} />

@@ -101,7 +101,7 @@ class CampaignIndex extends React.Component {
 
     if (!this.state.campaigns) return
 
-    const { campaigns, tags, bounds } = this.state
+    const { campaigns, bounds } = this.state
 
     const filteredResults = campaigns
       // Filter by visible area of map
@@ -126,7 +126,7 @@ class CampaignIndex extends React.Component {
   signUpToCampaign = async id => {
     console.log(id)
     const response = await addPendVolunteer(id)
-    // console.log(response)
+    console.log(response)
     this.setState({ showNotification: true })
   }
 
