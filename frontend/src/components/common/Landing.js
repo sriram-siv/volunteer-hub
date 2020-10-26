@@ -2,11 +2,14 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk } from '../elements/Split'
+import Button from '../elements/Button'
+import { Link } from 'react-router-dom'
+
 import campaigns from '../../images/campaigns.jpg'
 
 const Hero = styled.div`
   display: flex;
-  height: 100vh;
+  height: 75vh;
   justify-content: center;
   align-items: center;
   font-size: 2.5rem;
@@ -14,19 +17,20 @@ const Hero = styled.div`
 `
 
 const Landing = () => {
+
+  const width = '40%'
+
   return (
     <>
       <Hero>Welcome to Volunteer.io</Hero>
       <SplitContain>
         <SplitRow>
           <div>
-            <SplitTitle>Find a Volunteer Opportunity</SplitTitle>
+            <SplitTitle>Find a Campaign</SplitTitle>
             <p>
-              Browse the best volunteer opportunities near you and even match with those looking for someone with your skills.
+              Browse the best volunteer opportunities near you and even match with those looking for someone with your skills. Your community needs your help, what are you waiting for?
             </p>
-            <p>
-              Your community needs your help, what are you waiting for?
-            </p>
+            <Link to='/campaigns'><Button width={width} label='Search Campaigns'/></Link>
           </div>
           <div>
             <SplitImg src={campaigns} alt='' />
@@ -38,10 +42,11 @@ const Landing = () => {
             <SplitImg src={campaigns} alt=''/>
           </div>
           <div>
-            <SplitTitle>Create Volunteer Opportunities</SplitTitle>
+            <SplitTitle>Create a Campaign</SplitTitle>
             <p>
             Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting a campaign.
             </p>
+            <Link to='/campaigns/new-campaign'><Button width={width} label='Start a Campaign' /></Link>
           </div>
         </SplitRow>
         <SplitBrk/>
