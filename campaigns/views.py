@@ -8,6 +8,7 @@ from .models import Campaign
 from .serializers.common import CampaignSerializer
 from .serializers.populated import PopulatedCampaignSerializer
 from rooms.models import Room
+from rooms.serializers.common import RoomSerializer
 
 class CampaignListView(APIView):
     ''' Handles Requests to /campaigns '''
@@ -24,6 +25,13 @@ class CampaignListView(APIView):
         campaign_to_create = CampaignSerializer(data=request.data)
         if campaign_to_create.is_valid():
             campaign_to_create.save()
+            rooms_to_create = [
+                {'name': 'All', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']},
+                {'name': 'Coordinators', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']}
+            ]
+            serialized_rooms = RoomSerializer(data=rooms_to_create, many=True)
+            if serialized_rooms.is_valid():
+                serialized_rooms.save()
             return Response(campaign_to_create.data, status=status.HTTP_201_CREATED)
         return Response(campaign_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
