@@ -82,8 +82,11 @@ class CampaignVolunteerView(CampaignDetailView):
         volunteer_id = request.data['volunteer_id']
         campaign_to_update.pend_volunteers.remove(volunteer_id)
         campaign_to_update.conf_volunteers.add(volunteer_id)
+        campaign_all_room = Room.objects.get(name='All')
+        campaign_all_room.members.add(volunteer_id)
+        campaign_all_room.save()
         campaign_to_update.save()
-        return Response({ 'message': 'Volunteer confirmed' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Volunteer confirmed & added to message room.' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER OR USER CAN REMOVE THEMSELVES FROM PROJECT
     def delete(self, request, pk):
@@ -93,9 +96,11 @@ class CampaignVolunteerView(CampaignDetailView):
         if (request.user.id == campaign_to_update.owner.id or request.user.id == volunteer_id):
             campaign_to_update.pend_volunteers.remove(volunteer_id)
             campaign_to_update.conf_volunteers.remove(volunteer_id)
+            campaign_all_room = Room.objects.get(name='All')
+            campaign_all_room.members.remove(volunteer_id)
+            campaign_all_room.save()
             campaign_to_update.save()
-            return Response(
-                { 'message': 'Volunteer removed from campaign' }, status=status.HTTP_202_ACCEPTED)
+            return Response({ 'message': 'Volunteer removed from campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
         return Response({ 'message': 'Must be user or owner to perform this action.' })
 
 class CampaignCoordinatorView(CampaignDetailView):
@@ -114,7 +119,7 @@ class CampaignCoordinatorView(CampaignDetailView):
         campaign_all_room = Room.objects.get(name='All')
         campaign_all_room.members.add(coordinator_id)
         campaign_all_room.save()
-        return Response({ 'message': 'Coordinator added to campaign & Coordinators Chat Room' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Coordinator added to campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
 
     def delete(self, request, pk):
         campaign_to_add_coord = self.get_campaign(pk=pk)
@@ -128,7 +133,7 @@ class CampaignCoordinatorView(CampaignDetailView):
         campaign_all_room = Room.objects.get(name='All')
         campaign_all_room.members.remove(coordinator_id)
         campaign_all_room.save()
-        return Response({ 'message': 'Coordinator removed from campaign' }, status=status.HTTP_202_ACCEPTED)
+        return Response({ 'message': 'Coordinator removed from campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
 
 class CampaignSkillView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/skills '''
