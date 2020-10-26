@@ -1,7 +1,8 @@
 import styled from 'styled-components'
 
 export const SplitContain = styled.section`
-  
+  width: 90vw;
+  margin: 0 auto;
 `
 export const SplitRow = styled.div`
   display: grid;
