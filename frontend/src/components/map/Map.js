@@ -10,7 +10,7 @@ class Map extends React.Component {
   state = {
     viewport: {
       zoom: 1,
-      latitude: 0,
+      latitude: 50,
       longitude: 0
     },
     bounds: null,

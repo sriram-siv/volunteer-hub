@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Map from '../map/Map'
 import Geocoder from '../map/Geocoder'
 import InputText from '../elements/InputText'
+import ResultsList from '../elements/ResultsList'
 
 import { getAllCampaigns } from '../../lib/api'
 
@@ -17,7 +18,6 @@ const SearchFields = styled.div`
   position: absolute;
   top: 10px;
   left: 10px;
-  height: 2rem;
   width: 350px;
   z-index: 1;
   > * { margin-bottom: 5px; }
@@ -66,7 +66,8 @@ class CampaignIndex extends React.Component {
       <Wrapper onKeyDown={this.getResults}>
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
-          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange}/>
+          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
+          <ResultsList campaigns={campaigns}/>
         </SearchFields>
         <Map pins={campaigns} flyTo={flyTo} setRef={this.setMapRef} />
       </Wrapper>

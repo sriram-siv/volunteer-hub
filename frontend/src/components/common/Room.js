@@ -16,7 +16,8 @@ class Room extends React.Component {
 
   state = {
     messages: [],
-    draft: ''
+    draft: '',
+    historyLoaded: false
   }
 
   componentDidMount = () => {
@@ -47,7 +48,11 @@ class Room extends React.Component {
     // get request to room (id)
     const response = await getSingleRoom(this.props.match.params.room)
     const { members, messages } = response.data
-    this.setState({ members, messages }, () => this.chatWindow.scrollTop = this.chatWindow.scrollHeight)
+    console.log(members) //redirect here
+    this.setState({ members, messages }, () => {
+      this.chatWindow.scrollTop = this.chatWindow.scrollHeight
+      this.setState({ historyLoaded: true })
+    })
   }
 
   sendMessage = event => {
@@ -66,10 +71,10 @@ class Room extends React.Component {
   }
 
   render() {
-    const { messages, draft } = this.state
+    const { messages, draft, historyLoaded } = this.state
     return (
       <>
-        <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages}/>
+        <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages} historyLoaded={historyLoaded}/>
         <ControlWrapper>
           <InputArea
             width="100%"

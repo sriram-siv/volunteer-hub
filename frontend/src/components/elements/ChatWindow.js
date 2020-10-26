@@ -7,14 +7,14 @@ const Wrapper = styled.section`
   height: calc(100vh - 7rem - 50px);
   overflow-y: scroll;
   background-color: ${props => props.theme.panels};
-  scroll-behavior: smooth;
+  scroll-behavior: ${props => props.historyLoaded ? 'smooth' : 'auto'};
 `
 
-const ChatWindow = ({ messages, setRef }) => {
+const ChatWindow = ({ messages, setRef, historyLoaded }) => {
   const userID = Number(localStorage.getItem('user_id'))
   return (
-    <Wrapper ref={ref => setRef(ref)}>
-      {messages.map((message, i) => <MessageBox key={i} data={message} isSelf={message.user.id === userID} />)}
+    <Wrapper ref={ref => setRef(ref)} historyLoaded={historyLoaded}>
+      {messages.map((message, i) => <MessageBox key={i} prevMessage={messages[i - 1]} data={message} isSelf={message.user.id === userID} />)}
     </Wrapper>
   )
 }

@@ -54,7 +54,6 @@ class MessageBox extends React.Component {
     font-size: 0.85rem;
     font-weight: ${props => props.theme.fontWeight};
     line-height: 1.2rem;
-    height: 1.2rem;
     margin: 0;
     width: 100%;
     transform: ${() => this.props.isSelf ? 'scaleX(-1)' : 'none'};
@@ -90,14 +89,17 @@ class MessageBox extends React.Component {
   }
   
   render() {
-    const { data, isSelf } = this.props
+    const { data, isSelf, prevMessage } = this.props
     const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link, linkMatch } = this
+    const consecutiveMessage = prevMessage
+      ? prevMessage.user.id === data.user.id : false
+    console.log(consecutiveMessage)
     return (
-      <Wrapper>
+      <Wrapper consecutive={consecutiveMessage}>
         <AccentShadow/>
         <Box>
           <Accent/>
-          {!isSelf && <Name>{data.user.username}</Name>}
+          {!isSelf && !consecutiveMessage && <Name>{data.user.username}</Name>}
           {data.text.split('\n').map((line, i) => {
             const interpolated = this.interpolateLinks(line)
             return <Text key={i}>{interpolated.map(frag => (
