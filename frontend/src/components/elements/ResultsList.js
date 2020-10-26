@@ -60,7 +60,7 @@ class ResultsList extends React.Component {
 
   render() {
     const { isHidden, resultShowingDetail } = this.state
-    const { campaigns } = this.props
+    const { campaigns, signUp } = this.props
     console.log(campaigns)
     return (
       <Wrapper isHidden={isHidden}>
@@ -77,6 +77,7 @@ class ResultsList extends React.Component {
                 expanded={expanded}
                 visible={expanded || resultShowingDetail === -1}
                 showDetails={this.showDetails}
+                signUp={signUp}
               />
             )
           })}

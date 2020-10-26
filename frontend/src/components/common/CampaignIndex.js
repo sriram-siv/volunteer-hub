@@ -60,6 +60,11 @@ class CampaignIndex extends React.Component {
     this.setState({ flyTo: location })
   }
 
+  signUpToCampaign = id => {
+    console.log(id)
+    // TODO call api for add to pending
+  }
+
   render() {
     const { campaigns, tags, flyTo } = this.state
     return (
@@ -67,7 +72,7 @@ class CampaignIndex extends React.Component {
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
           <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
-          <ResultsList campaigns={campaigns}/>
+          <ResultsList campaigns={campaigns} signUp={this.signUpToCampaign}/>
         </SearchFields>
         <Map pins={campaigns} flyTo={flyTo} setRef={this.setMapRef} />
       </Wrapper>
