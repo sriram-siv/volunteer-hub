@@ -15,7 +15,8 @@ class DgTest extends React.Component {
       email: null,
       phone: null,
       password: null,
-      password_confirmation: null
+      password_confirmation: null,
+      profile_image: null
     }
   }
 
@@ -37,6 +38,22 @@ class DgTest extends React.Component {
     }
   }
 
+  showWidget = () => {
+    const widget = window.cloudinary.createUploadWidget(
+      { 
+        cloudName: 'dmhj1vjdf',
+        uploadPreset: 'jisx4gi0',
+        showUploadMoreButton: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') { 
+          const formData = { ...this.state.formData, profile_image: result.info.url }
+          this.setState({ formData })
+        }
+      })
+    widget.open()
+  }
+
   render() {
     return (
       <div style={{ backgroundColor: 'papayawhip', width: '200px' }}>
@@ -48,6 +65,7 @@ class DgTest extends React.Component {
           <InputText label='Phone' name='phone' returnValue={this.handleChange}/>
           <InputText label='Password' name='password' returnValue={this.handleChange}/>
           <InputText label='Confirm Password' name='password_confirmation' returnValue={this.handleChange}/>
+          <div onClick={this.showWidget}>Upload an Image</div>
           <Button width='100%' label='submit' onClick={this.handleSubmit}/>
         </form>
       </div>

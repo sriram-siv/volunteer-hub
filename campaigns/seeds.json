@@ -1,0 +1,118 @@
+[
+{
+  "model": "campaigns.campaign",
+  "pk": 1,
+  "fields": {
+    "name": "Feed the Royals",
+    "volunteer_count": 5,
+    "description": "5 volunteers needed to prepare and distribute food to the needy members of the royal family",
+    "latitude": "51.505345",
+    "longitude": "0.187769",
+    "start_date": "2020-10-31T07:30:51Z",
+    "active": true,
+    "owner": 14,
+    "coordinators": [
+      2,
+      3
+    ],
+    "pend_volunteers": [
+      4,
+      5
+    ],
+    "conf_volunteers": [
+      6,
+      7,
+      8
+    ]
+  }
+},
+{
+  "model": "campaigns.campaign",
+  "pk": 2,
+  "fields": {
+    "name": "Clean the Square",
+    "volunteer_count": 10,
+    "description": "10 volunteers needed to pick up waste in Trafalgar Square",
+    "latitude": "51.508169",
+    "longitude": "0.127941",
+    "start_date": "2020-11-01T07:42:36Z",
+    "active": true,
+    "owner": 5,
+    "coordinators": [
+      9,
+      10
+    ],
+    "pend_volunteers": [
+      2,
+      3,
+      4
+    ],
+    "conf_volunteers": [
+      11,
+      12,
+      13,
+      14
+    ]
+  }
+},
+{
+  "model": "campaigns.campaign",
+  "pk": 3,
+  "fields": {
+    "name": "Repair Big Ben",
+    "volunteer_count": 8,
+    "description": "We need 8 volunteers to help repair Big Ben",
+    "latitude": "51.500720",
+    "longitude": "0.124647",
+    "start_date": "2020-10-29T07:48:17Z",
+    "active": true,
+    "owner": 10,
+    "coordinators": [
+      8,
+      11,
+      12
+    ],
+    "pend_volunteers": [
+      2,
+      3,
+      5
+    ],
+    "conf_volunteers": [
+      20,
+      21,
+      22,
+      23
+    ]
+  }
+},
+{
+  "model": "campaigns.campaign",
+  "pk": 4,
+  "fields": {
+    "name": "Concert at the Zoo",
+    "volunteer_count": 20,
+    "description": "We need 20 volunteers to help direct crowds at the zoo's concert.",
+    "latitude": "51.535613",
+    "longitude": "0.153458",
+    "start_date": "2020-12-01T07:55:28Z",
+    "active": true,
+    "owner": 16,
+    "coordinators": [
+      19,
+      20
+    ],
+    "pend_volunteers": [
+      2,
+      3,
+      4
+    ],
+    "conf_volunteers": [
+      9,
+      10,
+      15,
+      17,
+      18
+    ]
+  }
+}
+]
