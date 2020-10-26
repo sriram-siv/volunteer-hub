@@ -6,7 +6,7 @@ import Geocoder from '../map/Geocoder'
 import InputText from '../elements/InputText'
 import ResultsList from '../elements/ResultsList'
 
-import { getAllCampaigns } from '../../lib/api'
+import { getAllCampaigns, addPendVolunteer } from '../../lib/api'
 
 const Wrapper = styled.main`
   position: relative;
@@ -123,9 +123,10 @@ class CampaignIndex extends React.Component {
     this.setState({ flyTo: location })
   }
 
-  signUpToCampaign = id => {
+  signUpToCampaign = async id => {
     console.log(id)
-    // TODO call api for add to pending
+    const response = await addPendVolunteer(id)
+    // console.log(response)
     this.setState({ showNotification: true })
   }
 
