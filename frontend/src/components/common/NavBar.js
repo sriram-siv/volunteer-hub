@@ -44,8 +44,7 @@ class NavBar extends React.Component {
   }
 
   componentDidMount = () => {
-    const user_id = localStorage.getItem('user_id')
-    if (user_id) this.handleLogin(user_id)
+    
   }
 
   selectSection = (event) => {
@@ -53,27 +52,26 @@ class NavBar extends React.Component {
   }
 
   openProfile = () => {
-    if (!this.state.isLoggedIn) this.setState({ showForm: !this.state.showForm })
+    if (!localStorage.getItem('user_id')) this.setState({ showForm: !this.state.showForm })
     else this.props.history.push('/profile')
   }
 
   handleLogin = async (id) => {
-    this.setState({ isLoggedIn: true, showForm: false })
-    const response = await getSingleProfile(id)
-    const userCampaigns = response.data.conf_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
-    this.setState({ userCampaigns })  
+    this.props.app.getUser(id)
+    this.setState({ showForm: false })
   }
 
   render() {
-    const options = [
-      ...this.state.userCampaigns,
+    let options = [
       { value: '/campaigns', label: 'Campaign Index' },
       { value: '/campaigns/new', label: 'New Campaign' }
     ]
-    const { changeTheme, theme } = this.props
+    const { changeTheme, theme, campaignList } = this.props
     const { showForm } = this.state
 
     if (this.props.location.pathname === '/') return null
+
+    if (campaignList) options = [...campaignList, ...options] 
     
     return (
       <>
