@@ -1,9 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
+
+import BannerImage from '../elements/BannerImage'
 
 import { getSingleProfile, getAllSkills } from '../../lib/api'
 
-class Profile extends React.Component {
+const Wrapper = styled.div`
+  height: calc(100vh - 3rem);
+  overflow-y: scroll;
+  background-color: papayawhip;
+`
 
+
+
+class Profile extends React.Component {
+  
   state = {
     userData: null,
     skills: null
@@ -28,7 +39,9 @@ class Profile extends React.Component {
   render() {
 
     return (
-      'get list of skills'
+      <Wrapper>
+        <BannerImage/>
+      </Wrapper>
     )
   }
 }
