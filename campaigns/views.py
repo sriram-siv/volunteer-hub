@@ -51,6 +51,14 @@ class CampaignDetailView(APIView):
         if campaign.owner.id != user.id:
             raise PermissionDenied()
 
+    def is_member(self, campaign, user):
+        is_pending = user in campaign.pend_volunteers.all()
+        is_confirmed = user in campaign.conf_volunteers.all()
+        is_coord = user in campaign.coordinators.all()
+        is_owner = user == campaign.owner
+        if not (is_pending or is_confirmed or is_coord or is_owner):
+            raise PermissionDenied()
+
     def add_to_room(self, room_name, campaign_id, member_id):
         room_to_add_member = Room.objects.get(name=room_name, campaign=campaign_id)
         room_to_add_member.members.add(member_id)
@@ -63,6 +71,7 @@ class CampaignDetailView(APIView):
 
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
+        self.is_member(campaign, request.user)
         serialized_campaign = PopulatedCampaignSerializer(campaign)
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
 
@@ -159,6 +168,7 @@ class CampaignSkillView(CampaignDetailView):
         campaign_to_delete_skill.campaign_skills.remove(request.data['skill_id'])
         campaign_to_delete_skill.save()
         return Response({ 'message': 'Skill removed from campaign' }, status=status.HTTP_204_NO_CONTENT)
-    
+
+
 
 
