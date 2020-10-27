@@ -23,19 +23,24 @@ class CampaignShow extends React.Component {
   }
   
   componentDidMount = async () => {
-    const response = await getSingleCampaign(this.props.match.params.id)
-    this.setState({ campaignData: response.data })
-    console.log(response.data)
-
-    let items = response.data.message_rooms.filter(room => {
-      const userID = Number(localStorage.getItem('user_id'))
-      return room.members.includes(userID)
-    }).map(room => room.name)
-    const rooms = { title: 'groups', items }
-
-    items = response.data.conf_volunteers.map(volunteer => volunteer.username)
-    const members = { title: 'members', items }
-    this.setState({ rooms, members })
+    try {
+      const response = await getSingleCampaign(this.props.match.params.id)
+      this.setState({ campaignData: response.data })
+      console.log(response.data)
+  
+      let items = response.data.message_rooms.filter(room => {
+        const userID = Number(localStorage.getItem('user_id'))
+        return room.members.includes(userID)
+      }).map(room => room.name)
+      const rooms = { title: 'groups', items }
+  
+      items = response.data.conf_volunteers.map(volunteer => volunteer.username)
+      const members = { title: 'members', items }
+      this.setState({ rooms, members })
+    } catch (err) {
+      console.log(err.response)
+      this.props.history.goBack()
+    }
   }
 
   render() {

@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 
 const Input = styled.input`
   background-color: ${props => props.theme.background};
-  color: ${props => props.theme.text};
+  color: ${props => props.focus ? props.theme.text : 'transparent'};
   border-radius: 2px;
   height: 3.1rem;
   width: 100%;
@@ -35,7 +35,7 @@ const Label = styled.div`
   font-weight: ${props => props.theme.fontWeight};
   letter-spacing: ${props => props.theme.letterSpacing};
   pointer-events: none;
-  `
+`
 
 const Highlight = styled.div`
   height: ${props => props.focus ? '3px' : 0};
@@ -47,6 +47,17 @@ const Highlight = styled.div`
   border-bottom-left-radius: 2px;
   border-bottom-right-radius: 2px;
   transition: all 0;
+`
+
+const Error = styled.div`
+  position: absolute;
+  top: 6px;
+  right: 11px;
+  color: palevioletred;
+  font-size: 0.7rem;
+  font-weight: ${props => props.theme.fontWeight};
+  letter-spacing: ${props => props.theme.letterSpacing};
+  pointer-events: none;
 `
 
 class InputField extends React.Component {
@@ -67,11 +78,12 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { label, width, value, name, type } = this.props
+    const { label, width, value, name, type, error } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
+        <Input ref={input => this.input = input} focus={focus || value} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
         <Label focus={focus || value}>{label}</Label>
+        <Error>{error}</Error>
         <Highlight focus={focus} />
       </Wrapper>
     )
