@@ -85,7 +85,7 @@ class CampaignShow extends React.Component {
 
     const { campaignData, members, rooms, admin } = this.state
 
-    if (!campaignData || !members || !rooms ) return null
+    if (!campaignData || !members || !rooms) return null
 
     return (
       <Wrapper>
