@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'chat_messages',
     'channels',
     'notices',
+    'shifts',
 ]
 
 MIDDLEWARE = [

@@ -6,6 +6,7 @@ import Button from '../elements/Button'
 import { Link } from 'react-router-dom'
 
 import campaigns from '../../images/campaigns.jpg'
+import chat2 from '../../images/chat2.jpg'
 
 const Hero = styled.div`
   display: flex;

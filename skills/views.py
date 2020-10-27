@@ -12,6 +12,5 @@ class SkillsListView(APIView):
 
     def get(self, _request):
         skill_list = Skill.objects.all()
-        print(skill_list)
         serialized_skill_list = SkillSerializer(skill_list, many=True)
         return Response(serialized_skill_list.data, status=status.HTTP_200_OK)

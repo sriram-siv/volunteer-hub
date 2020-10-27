@@ -57,6 +57,13 @@ export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlC
 
 export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
+// SKILL POST & DELETE REQUESTS REQUIRE 'shift_id' IN REQUEST BODY
+export const getAllShifts = () => axios.get(`${baseUrl}/shifts/`)
+
+export const addProfileShift = (profileId, formData) => axios.post(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
+
+export const removeProfileShift = (profileId, formData) => axios.delete(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
+
 
 export const addCampaignNotice = formData => axios.post(`${baseUrl}/notices/`, formData, withHeaders())
 
