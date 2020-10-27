@@ -9,7 +9,7 @@ const Wrapper = styled.div`
 
 const Input = styled.input`
   background-color: ${props => props.theme.background};
-  color: ${props => props.theme.text};
+  color: ${props => props.focus ? props.theme.text : 'transparent'};
   border-radius: 2px;
   height: 3.1rem;
   width: 100%;
@@ -81,7 +81,7 @@ class InputField extends React.Component {
     const { label, width, value, name, type, error } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
+        <Input ref={input => this.input = input} focus={focus || value} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
         <Label focus={focus || value}>{label}</Label>
         <Error>{error}</Error>
         <Highlight focus={focus} />

@@ -45,3 +45,14 @@ button {
   position: absolute;
   z-index: 2;
 }
+
+// SCROLLBAR
+
+::-webkit-scrollbar {
+  width: 5px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #aeb4ba;
+}
