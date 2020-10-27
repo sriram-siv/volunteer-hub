@@ -6,11 +6,28 @@ import BannerImage from '../elements/BannerImage'
 import { getSingleProfile, getAllSkills } from '../../lib/api'
 
 const Wrapper = styled.div`
+  position: relative;
   height: calc(100vh - 3rem);
   overflow-y: scroll;
   background-color: papayawhip;
 `
 
+const ProfilePic = styled.img`
+  position: absolute;
+  top: 70px;
+  left: 50px;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  border: 1px solid red;
+`
+
+const Username = styled.h1`
+  position: absolute;
+  top: 150px;
+  left: calc(50% + 50px);
+  transform: translate(-50%, -50%);
+`
 
 
 class Profile extends React.Component {
@@ -40,7 +57,10 @@ class Profile extends React.Component {
 
     return (
       <Wrapper>
-        <BannerImage/>
+        <BannerImage>
+          <ProfilePic src='https://mondrian.mashable.com/lead-img-anti-racist-curriculum.jpg' />
+          <Username>volunteer55</Username>
+        </BannerImage>
       </Wrapper>
     )
   }
