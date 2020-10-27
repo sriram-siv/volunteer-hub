@@ -65,13 +65,13 @@ class App extends React.Component {
     const response = await getSingleProfile(id)
     console.log(response.data, id)
     this.setState({ userData: response.data }, this.getUserCampaigns)
-    this.showNotification(`welcome back ${response.data.username}`, 1)
+    this.showNotification(`welcome back ${response.data.username}`)
   }
 
   logout = () => {
     localStorage.removeItem('user_id')
     this.setState({ userData: null, userCampaigns: null })
-    this.showNotification('you are now logged out', 0)
+    this.showNotification('you are now logged out')
   }
 
   getUserCampaigns = () => {

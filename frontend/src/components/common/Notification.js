@@ -19,17 +19,7 @@ const Wrapper = styled.div`
   border-radius: 2px;
   background-color: ${props => props.theme.panels};
   color: ${props => props.theme.text};
-  animation-name: ${props => {
-    if (!props.notification) return 'none'
-    switch (props.notification.auto) {
-      case 0:
-        return 'toastAuto'
-      case 1:
-        return 'toastShow'
-      case -1:
-        return 'toastHide'
-    }
-  }};
+  animation-name: toastAuto;
   animation-duration: 4s;
   animation-fill-mode: forwards;
 `
@@ -40,28 +30,28 @@ class Notification extends React.Component {
     notification: null
   }
   
-  componentDidUpdate = () => {
-    if (!this.props.notification.message) return
-    if (!this.state.notification) {
-      this.setState({ notification: this.props.notification })
-      return
-    }
-    if (this.props.notification.message !== this.state.notification.message) {
-      this.setState({ notification: this.props.notification })
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.notification !== this.props.notification) {
+      this.showNotification()
+      setTimeout(this.hideNotification, 4000)
     }
   }
 
-  hideNotifcation = () => {
-    const notification = this.state.notification
-    notification.auto = -1
-    this.setState({ notification })
-    setTimeout(() => this.setState({ notification: null }), 4000)
+  showNotification = () => {
+    const { notification } = this.props
+    this.setState({ notification: <Wrapper>{notification.message}</Wrapper> })
   }
 
+  hideNotification = () => {
+    this.setState({ notification: null })
+  }
+  
   render() {
     const { notification } = this.state
+    console.log(notification)
+    if (!notification) return null
     return (
-      <Wrapper notification={notification} onClick={this.hideNotifcation} >{notification && notification.message}</Wrapper>
+      <>{notification}</>
     )
   }
 }
