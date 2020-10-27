@@ -112,3 +112,20 @@ class ProfileSkillsView(ProfileDetailView):
         profile_to_delete_skill.user_skills.remove(request.data['skill_id'])
         profile_to_delete_skill.save()
         return Response({ 'message': 'Skill removed from profile' }, status=status.HTTP_204_NO_CONTENT)
+
+class ProfileShiftView(ProfileDetailView):
+    ''' handles requests to /profiles/:profile_id/shifts '''
+
+    def post(self, request, pk):
+        profile_to_add_shift = self.get_profile(pk=pk)
+        self.is_user(profile_to_add_shift, request.user)
+        profile_to_add_shift.user_shifts.add(request.data['shift_id'])
+        profile_to_add_shift.save()
+        return Response({ 'message': 'Shift added to profile' }, status=status.HTTP_202_ACCEPTED)
+
+    def delete(self, request, pk):
+        profile_to_delete_shift = self.get_profile(pk=pk)
+        self.is_user(profile_to_delete_shift, request.user)
+        profile_to_delete_shift.user_shifts.remove(request.data['shift_id'])
+        profile_to_delete_shift.save()
+        return Response({ 'message': 'Shift removed from profile' }, status=status.HTTP_204_NO_CONTENT)
