@@ -49,7 +49,8 @@ class CampaignShow extends React.Component {
       }).map(room => ({ name: room.name, id: room.id, onClick: () => this.openChatRoom(room.id) }))
       const rooms = { title: 'groups', items: roomItems }
   
-      const memberItems = response.data.conf_volunteers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
+      const allMembers = [ response.data.owner, ...response.data.coordinators, ...response.data.conf_volunteers ]
+      const memberItems = allMembers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
       const members = { title: 'members', items: memberItems }
       this.setState({ rooms, members })
     } catch (err) {
@@ -84,7 +85,7 @@ class CampaignShow extends React.Component {
 
     const { campaignData, members, rooms, admin } = this.state
 
-    if (!campaignData || !members || !rooms ) return null
+    if (!campaignData || !members || !rooms) return null
 
     return (
       <Wrapper>
