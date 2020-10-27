@@ -5,6 +5,7 @@ import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
 
 import DgTest from '../common/DgTest'
+import NoticeBox from '../common/NoticeBox'
 
 
 import { getSingleCampaign } from '../../lib/api'
@@ -45,14 +46,16 @@ class CampaignShow extends React.Component {
       console.log(err.response)
       this.props.history.goBack()
     }
-    this.setState({ admin: this.is_admin() })
+    this.setState({ admin: this.isAdmin() })
   }
 
-  is_admin = () => {
-    const userId = Number(localStorage.getItem('user_id'))
-    const isOwner = this.state.campaignData.owner.id === userId
-    const isCoord = this.state.campaignData.coordinators.includes(userId)
-    return (isOwner || isCoord)
+  isAdmin = () => {
+    if (this.state.campaignData) {
+      const userId = Number(localStorage.getItem('user_id'))
+      const isOwner = this.state.campaignData.owner.id === userId
+      const isCoord = this.state.campaignData.coordinators.includes(userId)
+      return (isOwner || isCoord)
+    }
   }
 
 
@@ -75,9 +78,8 @@ class CampaignShow extends React.Component {
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
         <div style={{ display: 'flex' }}>
           <div style={{ width: '600px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>{campaignData.description}</div>          
-          <div style={{ width: '100%', margin: '10px', padding: '20px', border: '2px solid #fef715', backgroundColor: '#aeb4ba', color: '#333', textAlign: 'center' }}>
-            Notices
-          </div>
+          {/* <div style={{ width: '100%', margin: '10px', padding: '20px', border: '2px solid #fef715', backgroundColor: '#aeb4ba', color: '#333', textAlign: 'center' }}></div> */}
+          <NoticeBox campaignData={campaignData} admin={admin} />
         </div>
         {admin && <DgTest campaignData={campaignData}/>}
       </Wrapper>
