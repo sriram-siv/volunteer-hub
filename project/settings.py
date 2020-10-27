@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'campaigns',
     'chat_messages',
     'channels',
+    'notices',
 ]
 
 MIDDLEWARE = [
