@@ -44,7 +44,7 @@ class CampaignShow extends React.Component {
       this.setState({ rooms, members })
     } catch (err) {
       console.log(err.response)
-      this.props.history.goBack()
+      // this.props.history.goBack()
     }
     this.setState({ admin: this.isAdmin() })
   }

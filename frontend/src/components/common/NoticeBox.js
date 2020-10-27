@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { addCampaignNotice } from '../../lib/api'
+import { addCampaignNotice, deleteCampaignNotice } from '../../lib/api'
 
 import Button from '../elements/Button'
 import InputArea from '../elements/InputArea'
@@ -22,11 +22,17 @@ const NoticeContain = styled.div`
   height: 100px;
 `
 
-const NoticeText = styled.p`
+const NoticeText = styled.div`
   width: 80%;
   font-style: italic;
   margin: 0;
   padding: 5px;
+`
+
+const NoticeDelete = styled.div`
+  display: inline;
+  font-size: 10px;
+  color: red;
 `
 
 const NoticeForm = styled.form`
@@ -37,11 +43,14 @@ class NoticeBox extends React.Component {
   
   state = {
     campaignData: null,
-    noticeText: ''
+    noticeText: '',
+    notices: null
   }
 
   componentDidMount = () => {
-    this.setState({ campaignData: this.props.campaignData })
+    const campaignData = {...this.props.campaignData}
+    const notices = [...campaignData.campaign_notices]
+    this.setState({ campaignData, notices })
   }
 
   handleChange = event => {
@@ -57,22 +66,37 @@ class NoticeBox extends React.Component {
         campaign: this.state.campaignData.id
       }
       const response = await addCampaignNotice(newNotice)
-      console.log(response)
-      this.setState({ noticeText: '' })
+      const notices = [...this.state.notices]
+      notices.push(response.data)
+      this.setState({ noticeText: '', notices })
+    } catch (err) {
+      console.log(err.response.data)
+    }
+  }
+
+  handleDelete = async event => {
+    try {
+      const response = await deleteCampaignNotice(event.target.id)
+      let notices = [...this.state.notices]
+      console.log('notices before filter: ', notices)
+      console.log('id: ', event.target.id)
+      notices = notices.filter(notice => notice.id != event.target.id)
+      console.log('notices after filter: ', notices)
+      this.setState({ notices })
     } catch (err) {
       console.log(err.response.data)
     }
   }
 
   render () {
-    const { campaignData, noticeText } = this.state
+    const { campaignData, noticeText, notices } = this.state
     if (!campaignData) return null
 
     return (
       <Wrapper>
         <NoticeContain>
-          { campaignData.campaign_notices.map(notice => (
-            <NoticeText key={notice.id}>{notice.text}</NoticeText>
+          { notices.map(notice => (
+            <NoticeText key={notice.id}>{notice.text} {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}</NoticeText>
           )) }
         </NoticeContain>
         {this.props.admin &&
