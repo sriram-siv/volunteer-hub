@@ -43,14 +43,14 @@ class CampaignShow extends React.Component {
       this.setState({ campaignData: response.data })
       console.log(response.data)
   
-      let items = response.data.message_rooms.filter(room => {
+      const roomItems = response.data.message_rooms.filter(room => {
         const userID = Number(localStorage.getItem('user_id'))
         return room.members.includes(userID)
-      }).map(room => room.name)
-      const rooms = { title: 'groups', items }
+      }).map(room => ({ name: room.name, id: room.id, onClick: () => this.openChatRoom(room.id) }))
+      const rooms = { title: 'groups', items: roomItems }
   
-      items = response.data.conf_volunteers.map(volunteer => volunteer.username)
-      const members = { title: 'members', items }
+      const memberItems = response.data.conf_volunteers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
+      const members = { title: 'members', items: memberItems }
       this.setState({ rooms, members })
     } catch (err) {
       console.log(err.response)
@@ -59,7 +59,9 @@ class CampaignShow extends React.Component {
     this.setState({ admin: this.isAdmin() })
   }
 
-  
+  openChatRoom = roomID => {
+    this.props.history.push(`/chat/${roomID}`)
+  }
 
   isAdmin = () => {
     if (this.state.campaignData) {

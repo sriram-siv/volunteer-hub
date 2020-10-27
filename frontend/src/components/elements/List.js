@@ -70,7 +70,7 @@ class List extends React.Component {
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right()}</Toggle>
         <Title>{title}</Title>
         <ListScroll>
-          {items.map((item, i) => <ItemDetail key={i}>{item}</ItemDetail>)}
+          {items.map((item, i) => <ItemDetail key={i} onClick={item.onClick}>{item.name}</ItemDetail>)}
         </ListScroll>
       </Wrapper>
     )
