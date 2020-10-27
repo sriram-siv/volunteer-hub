@@ -5,8 +5,7 @@ import Select from 'react-select'
 
 import icons from '../../lib/icons'
 import UserForms from '../elements/UserForms'
-
-import { getSingleProfile } from '../../lib/api'
+import UserPanel from '../elements/UserPanel'
 
 const NavBarContainer = styled.div`
   display: flex;
@@ -41,7 +40,7 @@ class NavBar extends React.Component {
       fontSize: '0.85rem'
     })
   }
-
+  
   componentDidMount = () => {
     
   }
@@ -50,14 +49,22 @@ class NavBar extends React.Component {
     this.props.history.push(event.value)
   }
 
-  openProfile = () => {
+  openUserPanel = () => {
     if (!localStorage.getItem('user_id')) this.setState({ showForm: !this.state.showForm })
-    else this.props.history.push('/profile')
+    else this.setState({ showUserOptions: !this.state.showUserOptions })
   }
+
+  openProfile = () => this.props.history.push('/profile')
 
   handleLogin = async (id) => {
     this.props.app.getUser(id)
     this.setState({ showForm: false })
+  }
+
+  handleLogout = () => {
+    this.props.app.logout()
+    this.setState({ showUserOptions: false })
+    this.props.history.push('/campaigns')
   }
 
   render() {
@@ -66,21 +73,22 @@ class NavBar extends React.Component {
       { value: '/campaigns/new', label: 'New Campaign' }
     ]
     const { changeTheme, theme, campaignList } = this.props
-    const { showForm } = this.state
+    const { showForm, showUserOptions } = this.state
 
     if (this.props.location.pathname === '/') return null
 
-    if (campaignList) options = [...campaignList, ...options] 
+    if (campaignList) options = [...campaignList, ...options]
     
     return (
       <>
-        <UserForms visible={showForm} onLogin={this.handleLogin}/>
-        <NavBarContainer onKeyDown={this.logout}>
+        <UserPanel visible={showUserOptions} openProfile={this.openProfile} logout={this.handleLogout} />
+        <UserForms visible={showForm} onLogin={this.handleLogin} />
+        <NavBarContainer>
           <div className="nav-left">
             <span onClick={changeTheme}>
               {theme.name === 'light' ? icons.sun() : icons.moon()}
             </span>
-            <span onClick={this.openProfile}>
+            <span onClick={this.openUserPanel}>
               {icons.user()}
             </span>
           </div>

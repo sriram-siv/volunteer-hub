@@ -51,6 +51,7 @@ class Profile extends React.Component {
   getProfile = async () => {
     const userID = localStorage.getItem('user_id')
     const response = await getSingleProfile(userID)
+    console.log(response.data)
     
     const formData = { ...this.state.formData, user_skills: response.data.user_skills }
     
@@ -83,6 +84,23 @@ class Profile extends React.Component {
     const { app } = this.props
     const { skills } = this.state
     const { schedule } = this.state.formData
+
+    const selectStyles = {
+      control: styles => ({
+        ...styles,
+        backgroundColor: this.props.theme.background,
+        borderRadius: '2px',
+        borderColor: this.props.theme.shadow,
+        height: 'calc(2rem)'
+      }),
+      singleValue: (styles) => ({
+        ...styles,
+        color: this.props.theme.text,
+        fontWeight: this.props.theme.fontWeight,
+        letterSpacing: this.props.theme.letterSpacing,
+        fontSize: '0.85rem'
+      })
+    }
 
     if (!this.state.formData.user_skills) return null
 
