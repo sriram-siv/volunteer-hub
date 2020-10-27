@@ -92,7 +92,12 @@ class CampaignShow extends React.Component {
         <BannerImage />
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
         <div style={{ display: 'flex' }}>
-          <div style={{ width: '600px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>{campaignData.description}</div>          
+          <div style={{ width: '600px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
+            {campaignData.description}
+            <br /><br />more campaign details here
+            <br /><br />blah
+            <br /><br />blah
+          </div>          
           {/* <div style={{ width: '100%', margin: '10px', padding: '20px', border: '2px solid #fef715', backgroundColor: '#aeb4ba', color: '#333', textAlign: 'center' }}></div> */}
           <NoticeBox campaignData={campaignData} admin={admin} />
         </div>

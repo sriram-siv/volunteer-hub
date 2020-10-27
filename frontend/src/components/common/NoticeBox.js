@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import { addCampaignNotice, deleteCampaignNotice } from '../../lib/api'
 
-import Button from '../elements/Button'
+import ChatControl from '../elements/ChatControl'
 import InputArea from '../elements/InputArea'
 
 const Wrapper = styled.div`
@@ -12,27 +12,43 @@ const Wrapper = styled.div`
 `
 
 const NoticeContain = styled.div`
+  position: relative;
   border: 1px solid ${props => props.theme.shadow};
+  border-bottom: none;
   background-color: ${props => props.theme.panels};
   overflow-y: scroll;
+  overflow-x: hidden;
   height: 300px;
 `
 
 const NoticeText = styled.div`
-  width: 80%;
+  position: relative;
+  margin: 5px;
+  margin-right: 2px;
+  padding: 15px;
+  padding-bottom: calc(15px + 1rem);
+  background-color: ${props => props.theme.background};
   font-style: italic;
-  margin: 0;
-  padding: 5px;
+  color: ${props => props.theme.text};
 `
 
 const NoticeDelete = styled.div`
-  display: inline;
-  font-size: 10px;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  font-size: 0.7rem;
+  padding-top: 9px;
   color: red;
+  cursor: pointer;
 `
 
-const NoticeForm = styled.form`
-  display: flex;
+const User = styled.div`
+  position: absolute;
+  right: calc(10px + 3rem);
+  bottom: 10px;
+  font-size: 0.7rem;
+  padding-top: 10px;
+  color: ${props => props.theme.text};
 `
 
 class NoticeBox extends React.Component {
@@ -75,6 +91,7 @@ class NoticeBox extends React.Component {
       const notices = [...this.state.notices]
       notices.push(response.data)
       this.setState({ noticeText: '', notices })
+      this.noticeboard.scrollTop = this.noticeboard.scrollHeight
     } catch (err) {
       console.log(err.response.data)
     }
@@ -97,18 +114,20 @@ class NoticeBox extends React.Component {
 
     return (
       <Wrapper>
-        <NoticeContain>
+        <NoticeContain ref={ref => this.noticeboard = ref}>
           { notices.map(notice => (
             <NoticeText key={notice.id}>
-              {notice.text}
+              {notice.text}<br />
+              <User>{notice.owner.username}</User>
               {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}
             </NoticeText>
           )) }
         </NoticeContain>
         {this.props.admin &&
-          <NoticeForm><InputArea width='60%' submit={this.handleSubmit} name='textArea' value={noticeText} returnValue={this.handleChange}/>
-            <Button width='10%' label='POST' onClick={this.handleSubmit}/>
-          </NoticeForm>}
+          <>
+            <InputArea width='100%' submit={this.handleSubmit} name='textArea' value={noticeText} returnValue={this.handleChange} />
+            <ChatControl send={this.handleSubmit} />
+          </>}
       </Wrapper>
     )
   }

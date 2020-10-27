@@ -11,30 +11,41 @@ export const MemberDetail = styled.div`
   text-align: center;
 `
 
+const Title = styled.div`
+  padding: 10px;
+  font-size: 1rem;
+`
+
 class PendingList extends React.Component {
 
   state = {
-    campaignData: null
+    campaignID: null,
+    pending: null
   }
 
   componentDidMount = () => {
-    this.setState({ campaignData: this.props.campaignData })
+    const { id, pend_volunteers: pending } = this.props.campaignData
+    this.setState({ id, pending })
   }
 
-  confirmVolunteer = async id => {
-    console.log(id)
-    const response = await confirmVolunteer(this.state.campaignData.id, { volunteer_id: id })
+  confirmVolunteer = async volunteerID => {
+    const response = await confirmVolunteer(this.state.id, { volunteer_id: volunteerID })
+    const pending = this.state.pending.filter(volunteer => volunteer.id !== volunteerID)
     console.log(response)
+    this.setState({ pending })
   }
 
   render() {
-    const { campaignData } = this.state
-    if (!campaignData) return null
+    const { pending } = this.state
+    if (!pending) return null
     
     return (
       <>
-        {campaignData.pend_volunteers.map((volunteer, i) => (
-          <MemberDetail key={i} onClick={() => this.confirmVolunteer(volunteer.id)}>{volunteer.username}</MemberDetail>
+        <Title>Pending Volunteers</Title>
+        {pending.map((volunteer, i) => (
+          <MemberDetail key={i} onClick={() => this.confirmVolunteer(volunteer.id)}>
+            {volunteer.username}
+          </MemberDetail>
         ))}
       </>
     )

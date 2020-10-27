@@ -29,11 +29,11 @@ const IconSpan = styled.span`
   transform: rotateZ(90deg);
 `
 
-const ChatControl = () => {
+const ChatControl = ({ send, showMembers }) => {
   return (
     <Wrapper>
-      <Button position="left" corner>members</Button>
-      <Button position="right" corner><IconSpan>{icons.send('#232323', 16)}</IconSpan></Button>
+      {showMembers && <Button position="left" corner>members</Button>}
+      <Button position="right" corner onClick={send}><IconSpan>{icons.send('#232323', 16)}</IconSpan></Button>
       <Button position="right">😀</Button>
     </Wrapper>
   )
