@@ -4,6 +4,9 @@ import styled from 'styled-components'
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
 
+import DgTest from '../common/DgTest'
+
+
 import { getSingleCampaign } from '../../lib/api'
 
 const Wrapper = styled.div`
@@ -19,7 +22,8 @@ class CampaignShow extends React.Component {
   state = {
     campaignData: null,
     members: null,
-    rooms: null
+    rooms: null,
+    admin: false
   }
   
   componentDidMount = async () => {
@@ -41,6 +45,14 @@ class CampaignShow extends React.Component {
       console.log(err.response)
       this.props.history.goBack()
     }
+    this.setState({ admin: this.is_admin() })
+  }
+
+  is_admin = () => {
+    const userId = Number(localStorage.getItem('user_id'))
+    const isOwner = this.state.campaignData.owner.id === userId
+    const isCoord = this.state.campaignData.coordinators.includes(userId)
+    return (isOwner || isCoord)
   }
 
 
@@ -53,7 +65,7 @@ class CampaignShow extends React.Component {
       right: '5px'
     }
 
-    const { campaignData, members, rooms } = this.state
+    const { campaignData, members, rooms, admin } = this.state
 
     if (!campaignData || !members || !rooms ) return null
 
@@ -67,6 +79,7 @@ class CampaignShow extends React.Component {
             Notices
           </div>
         </div>
+        {admin && <DgTest campaignData={campaignData}/>}
       </Wrapper>
     )
   }
