@@ -8,18 +8,14 @@ import InputArea from '../elements/InputArea'
 
 const Wrapper = styled.div`
   width: 100%;
-  margin: '10px';
-  padding: '20px';
-  border: '2px solid #fef715';
-  background-color: '#aeb4ba';
-  color: '#333';
-  text-align: 'center';
+  padding: 20px;
 `
 
 const NoticeContain = styled.div`
-  border: 1px solid yellow;
+  border: 1px solid ${props => props.theme.shadow};
+  background-color: ${props => props.theme.panels};
   overflow-y: scroll;
-  height: 100px;
+  height: 300px;
 `
 
 const NoticeText = styled.div`
