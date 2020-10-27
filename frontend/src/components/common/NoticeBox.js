@@ -99,7 +99,10 @@ class NoticeBox extends React.Component {
       <Wrapper>
         <NoticeContain>
           { notices.map(notice => (
-            <NoticeText key={notice.id}>{notice.text} {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}</NoticeText>
+            <NoticeText key={notice.id}>
+              {notice.text}
+              {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}
+            </NoticeText>
           )) }
         </NoticeContain>
         {this.props.admin &&
