@@ -22,8 +22,7 @@ class NavBar extends React.Component {
 
   state = {
     showForm: false,
-    isLoggedIn: false,
-    userCampaigns: []
+    showUserOptions: false
   }
 
   selectStyles = {
