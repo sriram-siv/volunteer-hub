@@ -27,7 +27,17 @@ class CampaignShow extends React.Component {
     admin: false
   }
   
-  componentDidMount = async () => {
+  componentDidMount = () => {
+    this.getCampaign()
+  }
+
+  componentDidUpdate = prevProps => {
+    if (this.props.match.params.id !== prevProps.match.params.id) {
+      this.getCampaign()
+    }
+  }
+
+  getCampaign = async () => {
     try {
       const response = await getSingleCampaign(this.props.match.params.id)
       this.setState({ campaignData: response.data })
@@ -44,10 +54,12 @@ class CampaignShow extends React.Component {
       this.setState({ rooms, members })
     } catch (err) {
       console.log(err.response)
-      // this.props.history.goBack()
+      this.props.history.goBack()
     }
     this.setState({ admin: this.isAdmin() })
   }
+
+  
 
   isAdmin = () => {
     if (this.state.campaignData) {

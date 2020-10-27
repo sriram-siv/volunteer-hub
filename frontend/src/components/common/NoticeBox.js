@@ -48,7 +48,7 @@ class NoticeBox extends React.Component {
   }
 
   componentDidMount = () => {
-    const campaignData = {...this.props.campaignData}
+    const campaignData = { ...this.props.campaignData }
     const notices = [...campaignData.campaign_notices]
     this.setState({ campaignData, notices })
   }
@@ -76,12 +76,9 @@ class NoticeBox extends React.Component {
 
   handleDelete = async event => {
     try {
-      const response = await deleteCampaignNotice(event.target.id)
+      await deleteCampaignNotice(event.target.id)
       let notices = [...this.state.notices]
-      console.log('notices before filter: ', notices)
-      console.log('id: ', event.target.id)
-      notices = notices.filter(notice => notice.id != event.target.id)
-      console.log('notices after filter: ', notices)
+      notices = notices.filter(notice => notice.id !== Number(event.target.id))
       this.setState({ notices })
     } catch (err) {
       console.log(err.response.data)
