@@ -22,7 +22,8 @@ class App extends React.Component {
   state = {
     theme: 'light',
     userData: null,
-    userCampaigns: null
+    userCampaigns: null,
+    notification: {}
   }
 
   themes = {
@@ -60,18 +61,17 @@ class App extends React.Component {
     this.setState({ theme })
   }
 
-  notify = content => console.log(content)
-
   getUser = async (id) => {
     const response = await getSingleProfile(id)
     console.log(response.data, id)
     this.setState({ userData: response.data }, this.getUserCampaigns)
+    this.showNotification(`welcome back ${response.data.username}`, 1)
   }
 
   logout = () => {
     localStorage.removeItem('user_id')
     this.setState({ userData: null, userCampaigns: null })
-    console.log('logged out')
+    this.showNotification('you are now logged out', 0)
   }
 
   getUserCampaigns = () => {
@@ -82,18 +82,24 @@ class App extends React.Component {
     this.setState({ userCampaigns: [...ownedCampaigns, ...coordCampaigns, ...confCampaigns] }, () => console.log(this.state.userCampaigns))  
   }
 
+  // TODO docstring here 0: auto, 1:show and wait
+  showNotification = (message, auto = 0) => {
+    this.setState({ notification: { message, auto } })
+  }
+
   app = {
     getUser: this.getUser,
-    logout: this.logout
+    logout: this.logout,
+    showNotification: this.showNotification
   }
 
   render() {
-    const { theme, userCampaigns } = this.state
+    const { theme, userCampaigns, notification } = this.state
     // TODO if unauthorized redirect to landing page
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
-          <Notification/>
+          <Notification notification={notification}/>
           <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
             <Route path='/tests' component={Tests} />

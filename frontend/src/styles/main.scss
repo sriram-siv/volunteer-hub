@@ -62,11 +62,27 @@ button {
   background-color: #aeb4ba;
 }
 
-@keyframes toast {
-  0%, 100% {
-    top: 0
+@keyframes toastShow {
+0% {
+  top: 0
   }
-  50% {
+  50%, 100% {
+    top: calc(3rem - 2px);
+  }
+}
+@keyframes toastHide {
+  0% {
+    top: calc(3rem - 2px);
+  }
+  50%, 100% {
+    top: 0;
+  }
+}
+@keyframes toastAuto {
+  0%, 100% {
+    top: 0;
+  }
+  25%, 75% {
     top: calc(3rem - 2px);
   }
 }
