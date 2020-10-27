@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { MemberDetail } from '../common/PedingList'
+import { MemberDetail } from '../common/PendingList'
 
 class ConfirmedList extends React.Component{
   

@@ -1,5 +1,5 @@
 import React from 'react'
-import PedingList from './PendingList'
+import PendingList from './PendingList'
 import ConfirmedList from './ConfirmedList'
 
 class DgTest extends React.Component{
@@ -11,7 +11,7 @@ class DgTest extends React.Component{
       <>
         <div>Manage your Volunteers</div>
         <div>Pending List</div>
-        <PedingList campaignData={this.props.campaignData} />
+        <PendingList campaignData={this.props.campaignData} />
         <div>Confirmed List</div>
         <ConfirmedList campaignData={this.props.campaignData} />
       </>
