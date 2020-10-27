@@ -6,12 +6,12 @@ import Geocoder from '../map/Geocoder'
 import InputText from '../elements/InputText'
 import ResultsList from '../elements/ResultsList'
 
-import { getAllCampaigns } from '../../lib/api'
+import { getAllCampaigns, addPendVolunteer } from '../../lib/api'
 
 const Wrapper = styled.main`
   position: relative;
   height: calc(100vh - 3rem);
-  overflow: scroll;
+  overflow: hidden;
 `
 
 const SearchFields = styled.div`
@@ -85,7 +85,11 @@ class CampaignIndex extends React.Component {
 
   setMapRef = ref => {
     this.map = ref
-    this.map.getMap().on('moveend', this.getBounds)
+    try {
+      this.map.getMap().on('moveend', this.getBounds)
+    } catch (err) {
+      console.log(err)
+    }
   }
   
   setGeocoderInputRef = ref => {
@@ -97,7 +101,7 @@ class CampaignIndex extends React.Component {
 
     if (!this.state.campaigns) return
 
-    const { campaigns, tags, bounds } = this.state
+    const { campaigns, bounds } = this.state
 
     const filteredResults = campaigns
       // Filter by visible area of map
@@ -119,9 +123,10 @@ class CampaignIndex extends React.Component {
     this.setState({ flyTo: location })
   }
 
-  signUpToCampaign = id => {
+  signUpToCampaign = async id => {
     console.log(id)
-    // TODO call api for add to pending
+    const response = await addPendVolunteer(id)
+    console.log(response)
     this.setState({ showNotification: true })
   }
 
