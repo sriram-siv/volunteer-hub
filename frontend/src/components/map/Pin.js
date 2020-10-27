@@ -77,19 +77,25 @@ class Pin extends React.Component {
 
   render() {
 
-    const { latitude, longitude, draggable, number } = this.props
+    const { latitude, longitude, number, id } = this.props
     const { Wrapper, Base, Point, Inner, Dot, Label } = this
     if (!latitude) return null
 
+    const zoomToPin = () => {
+      this.props.dblClickPin({ latitude, longitude, zoom: 15 })
+    }
+    const openDetails = () => {
+      this.props.clickPin(id)
+    }
     return (
       <Marker
         latitude={latitude}
         longitude={longitude}
-        draggable={draggable}
-        onClick={() => this.props.clickPin({ latitude, longitude, zoom: 15 })}
-        onDrag={() => console.log('draggin pin..')}
+        // draggable={draggable}
+        onClick={openDetails}
+        // onDrag={() => console.log('draggin pin..')}
       >
-        <Wrapper onMouseEnter={this.hoverPin} onMouseLeave={this.hoverPin}>
+        <Wrapper onDoubleClick={zoomToPin} onMouseEnter={this.hoverPin} onMouseLeave={this.hoverPin}>
           <Base/>
           <Point/>
           <Inner>

@@ -1,25 +1,56 @@
 import React from 'react'
+import styled from 'styled-components'
 
-const NotificationContext = React.createContext()
+const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 50vw;
+  height: 2rem;
+  width: 300px;
+  max-width: 95vw;
+  transform: translateX(-50%);
+  z-index: 5;
 
-class NotificationProvider extends React.Component {
+  text-align: center;
+  font-size: 0.85rem;
+  line-height: 2rem;
+
+  border: 1px solid ${props => props.theme.primary};
+  border-radius: 2px;
+  background-color: ${props => props.theme.panels};
+  color: ${props => props.theme.text};
+  animation-name: toastAuto;
+  animation-duration: 4s;
+  animation-fill-mode: forwards;
+`
+
+class Notification extends React.Component {
 
   state = {
-
+    notification: null
+  }
+  
+  componentDidUpdate = (prevProps) => {
+    if (prevProps.notification !== this.props.notification) {
+      this.showNotification()
+      setTimeout(this.hideNotification, 4000)
+    }
   }
 
-  testNotify = (val) => {
-    console.log(val)
+  showNotification = () => {
+    const { notification } = this.props
+    this.setState({ notification: <Wrapper>{notification.message}</Wrapper> })
   }
 
+  hideNotification = () => {
+    this.setState({ notification: null })
+  }
+  
   render() {
-    return (
-      'hi'
-      // <NotificationContext.Provider value="testttingingin">
-      //   {this.props.children}
-      // </NotificationContext.Provider>
-    )
+    const { notification } = this.state
+    if (!notification) return null
+    return <>{notification}</>
   }
 }
 
-export { NotificationProvider, NotificationContext }
+export default Notification

@@ -54,10 +54,19 @@ button {
 // SCROLLBAR
 
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
   height: 10px;
 }
 
 ::-webkit-scrollbar-thumb {
   background-color: #aeb4ba;
+}
+
+@keyframes toastAuto {
+  0%, 100% {
+    top: 0;
+  }
+  25%, 75% {
+    top: calc(3rem - 2px);
+  }
 }

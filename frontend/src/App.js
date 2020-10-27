@@ -5,6 +5,8 @@ import { ThemeProvider } from 'styled-components'
 import { getSingleProfile } from './lib/api'
 
 import NavBar from './components/common/NavBar'
+import Notification from './components/common/Notification'
+
 import Home from './components/common/Home'
 import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
@@ -20,7 +22,8 @@ class App extends React.Component {
   state = {
     theme: 'light',
     userData: null,
-    userCampaigns: null
+    userCampaigns: null,
+    notification: {}
   }
 
   themes = {
@@ -58,18 +61,17 @@ class App extends React.Component {
     this.setState({ theme })
   }
 
-  notify = content => console.log(content)
-
   getUser = async (id) => {
     const response = await getSingleProfile(id)
     console.log(response.data, id)
     this.setState({ userData: response.data }, this.getUserCampaigns)
+    this.showNotification(`welcome back ${response.data.username}`)
   }
 
   logout = () => {
     localStorage.removeItem('user_id')
     this.setState({ userData: null, userCampaigns: null })
-    console.log('logged out')
+    this.showNotification('you are now logged out')
   }
 
   getUserCampaigns = () => {
@@ -80,27 +82,34 @@ class App extends React.Component {
     this.setState({ userCampaigns: [...ownedCampaigns, ...coordCampaigns, ...confCampaigns] }, () => console.log(this.state.userCampaigns))  
   }
 
+  /* auto options: 0 autohide, 1 wait to dismiss */
+  showNotification = (message, auto = 0) => {
+    this.setState({ notification: { message, auto } })
+  }
+
   app = {
     getUser: this.getUser,
-    logout: this.logout
+    logout: this.logout,
+    showNotification: this.showNotification
   }
 
   render() {
-    const { theme, userCampaigns } = this.state
+    const { theme, userCampaigns, notification } = this.state
     // TODO if unauthorized redirect to landing page
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
+          <Notification notification={notification}/>
           <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
             <Route path='/tests' component={Tests} />
             <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
-            <Route path="/profile" render={() => <Profile app={this.app}/>} />
+            <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
-            <Route path='/campaigns' component={CampaignIndex} />
+            <Route path='/campaigns' render={() => <CampaignIndex app={this.app}/>} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

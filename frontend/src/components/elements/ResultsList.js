@@ -49,19 +49,26 @@ class ResultsList extends React.Component {
     resultShowingDetail: -1
   }
 
+  componentDidUpdate = () => {
+    
+    if (this.props.resultShowingDetail !== this.state.resultShowingDetail) {
+      this.setState({ isHidden: false, resultShowingDetail: this.props.resultShowingDetail })
+    }
+  }
+
   toggleView = () => {
     this.setState({ isHidden: !this.state.isHidden })
   }
 
-  showDetails = id => {
+  showDetail = id => {
     const resultShowingDetail = this.state.resultShowingDetail === id ? -1 : id
-    this.setState({ resultShowingDetail })
+    this.props.showDetail(resultShowingDetail)
   }
 
   render() {
     const { isHidden, resultShowingDetail } = this.state
     const { campaigns, signUp } = this.props
-    console.log(campaigns)
+
     return (
       <Wrapper isHidden={isHidden}>
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>
@@ -76,7 +83,7 @@ class ResultsList extends React.Component {
                 {...campaign}
                 expanded={expanded}
                 visible={expanded || resultShowingDetail === -1}
-                showDetails={this.showDetails}
+                showDetails={this.showDetail}
                 signUp={signUp}
               />
             )
