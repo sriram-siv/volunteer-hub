@@ -82,7 +82,7 @@ class App extends React.Component {
     this.setState({ userCampaigns: [...ownedCampaigns, ...coordCampaigns, ...confCampaigns] }, () => console.log(this.state.userCampaigns))  
   }
 
-  // TODO docstring here 0: auto, 1:show and wait
+  /* auto options: 0 autohide, 1 wait to dismiss */
   showNotification = (message, auto = 0) => {
     this.setState({ notification: { message, auto } })
   }
