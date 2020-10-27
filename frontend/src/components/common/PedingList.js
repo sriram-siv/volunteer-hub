@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { getSingleCampaign, confirmVolunteer } from '../../lib/api'
+import { confirmVolunteer } from '../../lib/api'
 
-const MemberDetail = styled.div`
+export const MemberDetail = styled.div`
   margin: 5px;
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -11,21 +11,19 @@ const MemberDetail = styled.div`
   text-align: center;
 `
 
-class AdminView extends React.Component {
+class PedingList extends React.Component {
 
   state = {
     campaignData: null
   }
 
-  componentDidMount = async () => {
-    const response = await getSingleCampaign(this.props.match.params.id)
-    this.setState({ campaignData: response.data })
-    console.log(response.data)
+  componentDidMount = () => {
+    this.setState({ campaignData: this.props.campaignData })
   }
 
   confirmVolunteer = async id => {
     console.log(id)
-    const response = await confirmVolunteer(this.props.match.params.id, { volunteer_id: id })
+    const response = await confirmVolunteer(this.state.campaignData.id, { volunteer_id: id })
     console.log(response)
   }
 
@@ -43,4 +41,4 @@ class AdminView extends React.Component {
   }
 }
 
-export default AdminView
+export default PedingList
