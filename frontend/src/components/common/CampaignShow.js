@@ -55,6 +55,7 @@ class CampaignShow extends React.Component {
     return (isOwner || isCoord)
   }
 
+
   render() {
     
     

@@ -11,7 +11,7 @@ export const MemberDetail = styled.div`
   text-align: center;
 `
 
-class PedingList extends React.Component {
+class PendingList extends React.Component {
 
   state = {
     campaignData: null
@@ -41,4 +41,4 @@ class PedingList extends React.Component {
   }
 }
 
-export default PedingList
+export default PendingList

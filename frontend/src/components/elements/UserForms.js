@@ -83,7 +83,6 @@ class UserForms extends React.Component {
     localStorage.setItem('token', response.data.token)
     localStorage.setItem('user_id', response.data.id)
     if (response.status === 200) this.props.onLogin(response.data.id)
-    console.log(localStorage.getItem('user_id'))
   }
 
   render() {

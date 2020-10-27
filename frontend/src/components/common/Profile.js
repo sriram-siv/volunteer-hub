@@ -54,6 +54,7 @@ class Profile extends React.Component {
   }
 
   render() {
+    const { app } = this.props
 
     return (
       <Wrapper>
@@ -61,6 +62,7 @@ class Profile extends React.Component {
           <ProfilePic src='https://mondrian.mashable.com/lead-img-anti-racist-curriculum.jpg' />
           <Username>volunteer55</Username>
         </BannerImage>
+        <button onClick={app.logout}>Logout</button>
       </Wrapper>
     )
   }

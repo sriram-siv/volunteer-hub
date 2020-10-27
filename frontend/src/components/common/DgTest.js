@@ -1,5 +1,5 @@
 import React from 'react'
-import PedingList from './PedingList'
+import PedingList from './PendingList'
 import ConfirmedList from './ConfirmedList'
 
 class DgTest extends React.Component{

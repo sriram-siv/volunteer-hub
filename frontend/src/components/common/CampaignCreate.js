@@ -13,6 +13,7 @@ import { createCampaign } from '../../lib/api'
 const Wrapper = styled.div`
   height: calc(100vh - 3rem);
   overflow-y: scroll;
+  background-color: ${props => props.theme.panels};
 `
 
 const Form = styled.div`
