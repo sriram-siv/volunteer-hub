@@ -44,16 +44,18 @@ class CampaignShow extends React.Component {
       this.setState({ rooms, members })
     } catch (err) {
       console.log(err.response)
-      // this.props.history.goBack()
+      this.props.history.goBack()
     }
     this.setState({ admin: this.isAdmin() })
   }
 
   isAdmin = () => {
-    const userId = Number(localStorage.getItem('user_id'))
-    const isOwner = this.state.campaignData.owner.id === userId
-    const isCoord = this.state.campaignData.coordinators.includes(userId)
-    return (isOwner || isCoord)
+    if (this.state.campaignData) {
+      const userId = Number(localStorage.getItem('user_id'))
+      const isOwner = this.state.campaignData.owner.id === userId
+      const isCoord = this.state.campaignData.coordinators.includes(userId)
+      return (isOwner || isCoord)
+    }
   }
 
 
