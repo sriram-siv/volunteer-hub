@@ -1,0 +1,114 @@
+[
+{
+  "model": "shifts.shift",
+  "pk": 1,
+  "fields": {
+    "name": "Monday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 2,
+  "fields": {
+    "name": "Monday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 3,
+  "fields": {
+    "name": "Tuesday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 4,
+  "fields": {
+    "name": "Tuesday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 5,
+  "fields": {
+    "name": "Wednesday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 6,
+  "fields": {
+    "name": "Wednesday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 7,
+  "fields": {
+    "name": "Thursday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 8,
+  "fields": {
+    "name": "Thursday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 9,
+  "fields": {
+    "name": "Friday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 10,
+  "fields": {
+    "name": "Friday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 11,
+  "fields": {
+    "name": "Saturday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 12,
+  "fields": {
+    "name": "Saturday PM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 13,
+  "fields": {
+    "name": "Sunday AM",
+    "users": []
+  }
+},
+{
+  "model": "shifts.shift",
+  "pk": 14,
+  "fields": {
+    "name": "Sunday PM",
+    "users": []
+  }
+}
+]
