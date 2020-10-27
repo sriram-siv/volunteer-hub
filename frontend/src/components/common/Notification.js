@@ -1,8 +1,23 @@
 import React from 'react'
+import styled from 'styled-components'
 
-const NotificationContext = React.createContext()
+const Wrapper = styled.div`
+  position: absolute;
+  top: 0;
+  left: 50vw;
+  height: 3rem;
+  width: 300px;
+  max-width: 95vw;
+  transform: translateX(-50%);
+  z-index: 5;
 
-class NotificationProvider extends React.Component {
+  border: 1px solid ${props => props.theme.primary};
+  border-radius: 2px;
+  background-color: pink;
+  animation: toast 3s infinite;
+`
+
+class Notification extends React.Component {
 
   state = {
 
@@ -14,12 +29,9 @@ class NotificationProvider extends React.Component {
 
   render() {
     return (
-      'hi'
-      // <NotificationContext.Provider value="testttingingin">
-      //   {this.props.children}
-      // </NotificationContext.Provider>
+      <Wrapper>hello</Wrapper>
     )
   }
 }
 
-export { NotificationProvider, NotificationContext }
+export default Notification

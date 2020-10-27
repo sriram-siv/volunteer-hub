@@ -5,6 +5,8 @@ import { ThemeProvider } from 'styled-components'
 import { getSingleProfile } from './lib/api'
 
 import NavBar from './components/common/NavBar'
+import Notification from './components/common/Notification'
+
 import Home from './components/common/Home'
 import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
@@ -91,12 +93,13 @@ class App extends React.Component {
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
+          <Notification/>
           <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
             <Route path='/tests' component={Tests} />
             <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
-            <Route path="/profile" render={() => <Profile app={this.app}/>} />
+            <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />

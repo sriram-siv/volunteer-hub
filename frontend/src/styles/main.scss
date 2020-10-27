@@ -61,3 +61,12 @@ button {
 ::-webkit-scrollbar-thumb {
   background-color: #aeb4ba;
 }
+
+@keyframes toast {
+  0%, 100% {
+    top: 0
+  }
+  50% {
+    top: calc(3rem - 2px);
+  }
+}
