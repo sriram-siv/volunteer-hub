@@ -48,11 +48,8 @@ class Notification extends React.Component {
   
   render() {
     const { notification } = this.state
-    console.log(notification)
     if (!notification) return null
-    return (
-      <>{notification}</>
-    )
+    return <>{notification}</>
   }
 }
 

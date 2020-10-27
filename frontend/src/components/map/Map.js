@@ -35,7 +35,7 @@ class Map extends React.Component {
   }
 
   render() {
-    const { pins, setRef } = this.props
+    const { pins, setRef, clickPin } = this.props
     const { mapReady } = this.state
     return (
       <>
@@ -49,9 +49,10 @@ class Map extends React.Component {
           {...this.state.viewport}
           viewportChangeMethod="flyTo"
           onViewportChange={this.setViewport}
+          doubleClickZoom={false}
         >
           <MapHelper onMount={this.onMapLoad} />
-          {pins && pins.map((pin, i) => <Pin key={i} {...pin} color={'#222'} alt={false} size={20} number={i + 1} clickPin={this.setViewport} />)}
+          {pins && pins.map((pin, i) => <Pin key={i} {...pin} color={'#222'} alt={false} size={20} number={i + 1} clickPin={clickPin} dblClickPin={this.setViewport} />)}
         </MapGL>
       </>
     )

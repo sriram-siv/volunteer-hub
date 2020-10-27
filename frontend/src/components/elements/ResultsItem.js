@@ -3,8 +3,8 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   margin: 5px;
-  margin-right: 0;
-  padding: 10px;
+  margin-right: 2px;
+  padding: 5px;
   position: relative;
   top: ${props => props.expanded ? `calc(-${props.position * 3.4}rem - ${props.position * 15}px)` : 0};
   height: ${props => props.expanded ? 'calc(100% - 10px)' : 'calc(3.4rem + 10px)'};
@@ -19,6 +19,12 @@ const Wrapper = styled.div`
   color: ${props => props.theme.text};
   font-weight: ${props => props.theme.fontWeight};
   overflow-y: hidden;
+`
+
+const Title = styled.div`
+  height: 4rem;
+  margin: -5px;
+  padding: 10px;
 `
 
 const Body = styled.div`
@@ -42,8 +48,10 @@ const Open = styled.button`
 
 const ResultsItem = ({ visible, expanded, showDetails, id, position, name, description, signUp }) => {
   return (
-    <Wrapper visible={visible} expanded={expanded} position={position} onClick={() => showDetails(id)}>
-      {name}<br />skills list..
+    <Wrapper visible={visible} expanded={expanded} position={position}>
+      <Title onClick={() => showDetails(id)}>
+        {name}<br />skills list..
+      </Title>
       <Body>
         {description}
       </Body>

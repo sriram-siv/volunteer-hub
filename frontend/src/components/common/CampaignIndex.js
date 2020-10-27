@@ -70,7 +70,8 @@ class CampaignIndex extends React.Component {
       _sw: { lat: -90, lng: -180 }
     },
     flyTo: null,
-    showNotification: false
+    showNotification: false,
+    resultShowingDetail: -1
   }
 
   componentDidMount = async () => {
@@ -124,16 +125,24 @@ class CampaignIndex extends React.Component {
   }
 
   signUpToCampaign = async id => {
-    console.log(id)
+    const userID = localStorage.getItem('user_id')
+    if (!userID) {
+      this.props.app.showNotification('please login to sign up')
+      return
+    }
     const response = await addPendVolunteer(id)
-    console.log(response)
     this.setState({ showNotification: true })
   }
 
   dismissNotification = () => this.setState({ showNotification: false })
 
+  showDetail = id => {
+    console.log(id)
+    this.setState({ resultShowingDetail: id })
+  }
+
   render() {
-    const { filteredResults, tags, flyTo, showNotification } = this.state
+    const { filteredResults, tags, flyTo, showNotification, resultShowingDetail } = this.state
     return (
       <Wrapper>
         <Notification visible={showNotification}>
@@ -146,9 +155,9 @@ class CampaignIndex extends React.Component {
         <SearchFields>
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
           <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
-          <ResultsList campaigns={filteredResults} signUp={this.signUpToCampaign}/>
+          <ResultsList campaigns={filteredResults} signUp={this.signUpToCampaign} showDetail={this.showDetail} resultShowingDetail={resultShowingDetail} />
         </SearchFields>
-        <Map pins={filteredResults} flyTo={flyTo} setRef={this.setMapRef} />
+        <Map pins={filteredResults} flyTo={flyTo} setRef={this.setMapRef} clickPin={this.showDetail} />
       </Wrapper>
     )
   }

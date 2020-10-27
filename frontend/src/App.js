@@ -109,7 +109,7 @@ class App extends React.Component {
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
-            <Route path='/campaigns' component={CampaignIndex} />
+            <Route path='/campaigns' render={() => <CampaignIndex app={this.app}/>} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>
