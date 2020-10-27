@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, PermissionDenied
 
 from .models import Room
 from .serializers.common import RoomSerializer
@@ -31,7 +31,13 @@ class RoomDetailView(APIView):
         except Room.DoesNotExist:
             raise NotFound()
 
+    def is_member(self, room, user):
+        if user not in room.members.all():
+            raise PermissionDenied()
+
+
     def get(self, request, pk):
         room = self.get_room(pk=pk)
+        self.is_member(room, request.user)
         serialized_room = PopulatedRoomSerializer(room)
         return Response(serialized_room.data, status=status.HTTP_200_OK)
