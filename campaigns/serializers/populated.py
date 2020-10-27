@@ -3,6 +3,7 @@ from ..serializers.common import CampaignSerializer
 from jwt_auth.serializers.nested import NestedUserSerializer
 from skills.serializers.nested import NestedSkillSerializer
 from rooms.serializers.common import RoomSerializer
+from notices.serializers.nested import NestedNoticeSerializer
 
 class PopulatedCampaignSerializer(CampaignSerializer):
 
@@ -12,3 +13,4 @@ class PopulatedCampaignSerializer(CampaignSerializer):
     campaign_skills = NestedSkillSerializer(many=True)
     message_rooms = RoomSerializer(many=True)
     coordinators = NestedUserSerializer(many=True)
+    campaign_notices = NestedNoticeSerializer(many=True)

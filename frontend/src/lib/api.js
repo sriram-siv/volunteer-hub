@@ -58,6 +58,11 @@ export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlC
 export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
 
+export const addCampaignNotice = formData => axios.post(`${baseUrl}/notices/`, formData, withHeaders())
+
+export const deleteCampaignNotice = noticeId => axios.delete(`${baseUrl}/notices/${noticeId}/`, withHeaders())
+
+
 export const getAllRooms = () => axios.get(`${baseUrl}/rooms/`)
 
 export const createRoom = formData => axios.post(`${baseUrl}/rooms/`, formData)
