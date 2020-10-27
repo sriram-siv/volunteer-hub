@@ -51,6 +51,11 @@ class App extends React.Component {
 
   notify = content => console.log(content)
 
+  logout = () => {
+    localStorage.removeItem('user_id')
+    console.log('logged out')
+  }
+
   render() {
     const { theme } = this.state
     // TODO if unauthorized redirect to landing page
@@ -62,7 +67,7 @@ class App extends React.Component {
             <Route path='/tests' component={Tests} />
             <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
-            <Route path="/profile" component={Profile} />
+            <Route path="/profile" render={() => <Profile logout={this.logout}/>} />
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />

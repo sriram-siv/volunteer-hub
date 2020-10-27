@@ -11,7 +11,7 @@ const MemberDetail = styled.div`
   text-align: center;
 `
 
-class AdminView extends React.Component {
+class PendingList extends React.Component {
 
   state = {
     campaignData: null
@@ -43,4 +43,4 @@ class AdminView extends React.Component {
   }
 }
 
-export default AdminView
+export default PendingList

@@ -61,6 +61,7 @@ class Profile extends React.Component {
           <ProfilePic src='https://mondrian.mashable.com/lead-img-anti-racist-curriculum.jpg' />
           <Username>volunteer55</Username>
         </BannerImage>
+        <button onClick={this.props.logout}>Logout</button>
       </Wrapper>
     )
   }
