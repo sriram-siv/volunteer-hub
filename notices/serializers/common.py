@@ -3,5 +3,6 @@ from ..models import Notice
 
 class NoticeSerializer(serializers.ModelSerializer):
 
-    class Meta(self):
-        fields: '__all__'
+    class Meta:
+        model = Notice
+        fields = '__all__'
