@@ -29,7 +29,7 @@ export const createCampaign = formData => axios.post(`${baseUrlCampaigns}/`, for
 
 export const getAllCampaigns = () => axios.get(`${baseUrlCampaigns}/`)
 
-export const getSingleCampaign = campaignId => axios.get(`${baseUrlCampaigns}/${campaignId}/`)
+export const getSingleCampaign = campaignId => axios.get(`${baseUrlCampaigns}/${campaignId}/`, withHeaders())
 
 export const updateCampaign = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/`, formData, withHeaders())
 
@@ -62,4 +62,4 @@ export const getAllRooms = () => axios.get(`${baseUrl}/rooms/`)
 
 export const createRoom = formData => axios.post(`${baseUrl}/rooms/`, formData)
 
-export const getSingleRoom = roomId => axios.get(`${baseUrl}/rooms/${roomId}`)
+export const getSingleRoom = roomId => axios.get(`${baseUrl}/rooms/${roomId}`, withHeaders())

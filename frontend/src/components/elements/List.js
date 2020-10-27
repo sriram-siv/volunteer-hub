@@ -28,7 +28,7 @@ const ItemDetail = styled.div`
   text-align: center;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
-  margin: 0 5px 5px;
+  margin: 0 0 5px 5px;
   border-radius: 2px;
 `
 

@@ -21,7 +21,8 @@ class Room extends React.Component {
   }
 
   componentDidMount = () => {
-    this.connectToSocket()
+    // this.connectToSocket()
+    this.getChatHistory()
   }
 
   connectToSocket = () => {
@@ -31,7 +32,7 @@ class Room extends React.Component {
       `ws://${domain}/ws/chat/${this.props.match.params.room}/`
     )
 
-    this.chatSocket.addEventListener('open', this.getChatHistory())
+    // this.chatSocket.addEventListener('open', this.getChatHistory())
 
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
@@ -46,13 +47,17 @@ class Room extends React.Component {
 
   getChatHistory = async () => {
     // get request to room (id)
-    const response = await getSingleRoom(this.props.match.params.room)
-    const { members, messages } = response.data
-    console.log(members) //redirect here
-    this.setState({ members, messages }, () => {
-      this.chatWindow.scrollTop = this.chatWindow.scrollHeight
-      this.setState({ historyLoaded: true })
-    })
+    try {
+      const response = await getSingleRoom(this.props.match.params.room)
+      const { members, messages } = response.data
+      this.setState({ members, messages }, () => {
+        this.chatWindow.scrollTop = this.chatWindow.scrollHeight
+        this.setState({ historyLoaded: true })
+      })
+      this.connectToSocket()
+    } catch (err) {
+      this.props.history.goBack()
+    }
   }
 
   sendMessage = event => {
