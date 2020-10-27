@@ -48,6 +48,16 @@ class NoticeBox extends React.Component {
   }
 
   componentDidMount = () => {
+    this.loadData()
+  }
+
+  componentDidUpdate = () => {
+    if (this.props.campaignData.id !== this.state.campaignData.id) {
+      this.loadData()
+    }
+  }
+
+  loadData = () => {
     const campaignData = { ...this.props.campaignData }
     const notices = [...campaignData.campaign_notices]
     this.setState({ campaignData, notices })
