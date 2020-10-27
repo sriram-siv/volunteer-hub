@@ -41,6 +41,11 @@ button {
 
 
 // GEOCODER
+
+.react-geocoder {
+  width: 100%;
+}
+
 .react-geocoder-results {
   position: absolute;
   z-index: 2;
