@@ -131,7 +131,7 @@ class NoticeBox extends React.Component {
         </NoticeContain>
         {this.props.admin &&
           <>
-            <InputArea width='100%' submit={this.handleSubmit} name='textArea' value={noticeText} returnValue={this.handleChange} />
+            <InputArea width='100%' submit={this.handleSubmit} name='textArea' placeholder='Post a notice to the team' value={noticeText} returnValue={this.handleChange} />
             <ChatControl send={this.handleSubmit} />
           </>}
       </Wrapper>
