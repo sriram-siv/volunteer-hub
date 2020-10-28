@@ -29,6 +29,18 @@ const Input = styled.textarea`
   }
   `
 
+const Label = styled.div`
+position: absolute;
+top: ${props => props.focus ? '.2px' : '0.8rem'};
+display: ${props => props.focus ? 'none' : 'block'};
+left: 11px;
+color: ${props => props.theme.text};
+font-size: ${props => props.focus ? '0.7rem' : '1rem'};
+font-weight: ${props => props.theme.fontWeight};
+letter-spacing: ${props => props.theme.letterSpacing};
+pointer-events: none;
+`
+
 const Highlight = styled.div`
   height: ${props => props.focus ? '3px' : 0};
   width: calc(100% - 2px);
@@ -72,7 +84,7 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { name, value, width, returnValue } = this.props
+    const { name, value, width, returnValue, placeholder } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
         <Input
@@ -82,6 +94,7 @@ class InputField extends React.Component {
           onKeyDown={this.keyDown}
           onKeyUp={this.keyUp}
         />
+        <Label focus={focus || value}>{placeholder}</Label>
         <Highlight focus={focus} />
       </Wrapper>
     )
