@@ -57,8 +57,8 @@ class Profile extends React.Component {
     skills: null,
     formData: {
       user_skills: null,
-      schedule: null
-      // schedule: Array.from({ length: 14 }).fill(false)
+      // schedule: null
+      schedule: Array.from({ length: 14 }).fill(false)
     },
     editMode: false
   }
@@ -79,10 +79,10 @@ class Profile extends React.Component {
       phone: response.data.phone,
       profile_image: response.data.profile_image
     }
-    
-    console.log(userData)
-    
-    const formData = { ...this.state.formData, user_skills: response.data.user_skills, schedule: response.data.user_shifts }
+    const schedule = [...this.state.formData.schedule]
+    response.data.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
+    console.log(response.data.user_shifts)
+    const formData = { ...this.state.formData, user_skills: response.data.user_skills, schedule }
     
     this.setState({ userData, pendingUserData: userData, formData }, () => console.log(this.state.formData)) 
   }
@@ -104,7 +104,7 @@ class Profile extends React.Component {
       console.log('time to save edits to db')
       const userID = localStorage.getItem('user_id')
       console.log(this.state.pendingUserData)
-      const response = await updateProfile(userID, this.state.pendingUserData)
+      await updateProfile(userID, this.state.pendingUserData)
       this.setState({ userData: this.state.pendingUserData })
       this.handleEditMode()
     } catch (err) {
