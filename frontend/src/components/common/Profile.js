@@ -6,7 +6,7 @@ import BannerImage from '../elements/BannerImage'
 import Button from '../elements/Button'
 import InputText from '../elements/InputText'
 
-import { getSingleProfile, updateProfile, getAllSkills } from '../../lib/api'
+import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts } from '../../lib/api'
 import Schedule from '../elements/Schedule'
 import  { MemberDetail } from '../common/PendingList'
 
@@ -81,7 +81,6 @@ class Profile extends React.Component {
     }
     const schedule = [...this.state.formData.schedule]
     response.data.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
-    console.log(response.data.user_shifts)
     const formData = { ...this.state.formData, user_skills: response.data.user_skills, schedule }
     
     this.setState({ userData, pendingUserData: userData, formData }, () => console.log(this.state.formData)) 
@@ -139,6 +138,17 @@ class Profile extends React.Component {
     this.setState({ formData })
   }
 
+  saveShiftsSkills = async () => {
+    console.log( this.state.formData )
+    try {
+      const userID = localStorage.getItem('user_id')
+      const response = await updateProfileShifts(userID, { 'schedule': this.state.formData.schedule })
+      console.log(response.data.message)
+    } catch (err) {
+      console.log(err.response.data)
+    }
+  }
+
   render() {
     const { app } = this.props
     const { userData, pendingUserData, skills, editMode } = this.state
@@ -174,7 +184,7 @@ class Profile extends React.Component {
         <Schedule handleClick={this.editSchedule} schedule={schedule} />
         <Select value={user_skills} options={skills} isMulti onChange={this.editSkills}/>
         <button onClick={app.logout}>Logout</button>
-        <button>save</button>
+        <button onClick={this.saveShiftsSkills} >save</button>
         {!editMode &&
           <div>
             <MemberDetail>{userData.first_name}</MemberDetail>
