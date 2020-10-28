@@ -100,42 +100,27 @@ class ProfileSkillsView(ProfileDetailView):
 
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, pk):
-        profile_to_add_skill = self.get_profile(pk=pk)
-        self.is_user(profile_to_add_skill, request.user)
-        profile_to_add_skill.user_skills.add(request.data['skill_id'])
-        profile_to_add_skill.save()
-        return Response({ 'message': 'Skill added to profile' }, status=status.HTTP_202_ACCEPTED)
+    def put(self, request, pk):
+        profile_update_skills=self.get_profile(pk=pk)
+        self.is_user(profile_update_skills, request.user)
+        current_skills = [skill.id for skill in profile_update_skills.user_skills.all()]
+        updated_skills = request.data['user_skills']
+        for skill in updated_skills:
+            if skill not in current_skills:
+                profile_update_skills.user_skills.add(skill)
+        for skill in current_skills:
+            if skill not in updated_skills:
+                profile_update_skills.user_skills.remove(skill)
+        return Response({ 'message': 'Skills updated' })
 
-    def delete(self, request, pk):
-        profile_to_delete_skill = self.get_profile(pk=pk)
-        self.is_user(profile_to_delete_skill, request.user)
-        profile_to_delete_skill.user_skills.remove(request.data['skill_id'])
-        profile_to_delete_skill.save()
-        return Response({ 'message': 'Skill removed from profile' }, status=status.HTTP_204_NO_CONTENT)
 
 class ProfileShiftView(ProfileDetailView):
     ''' handles requests to /profiles/:profile_id/shifts '''
-
-    def post(self, request, pk):
-        profile_to_add_shift = self.get_profile(pk=pk)
-        self.is_user(profile_to_add_shift, request.user)
-        profile_to_add_shift.user_shifts.add(request.data['shift_id'])
-        profile_to_add_shift.save()
-        return Response({ 'message': 'Shift added to profile' }, status=status.HTTP_202_ACCEPTED)
-
-    def delete(self, request, pk):
-        profile_to_delete_shift = self.get_profile(pk=pk)
-        self.is_user(profile_to_delete_shift, request.user)
-        profile_to_delete_shift.user_shifts.remove(request.data['shift_id'])
-        profile_to_delete_shift.save()
-        return Response({ 'message': 'Shift removed from profile' }, status=status.HTTP_204_NO_CONTENT)
 
     def put(self, request, pk):
         profile_to_update_shifts = self.get_profile(pk=pk)
         self.is_user(profile_to_update_shifts, request.user)
         new_shifts = request.data['schedule']
-        print(new_shifts)
         for i in range(len(new_shifts)):
             if new_shifts[i]:
                 profile_to_update_shifts.user_shifts.add(i + 1)

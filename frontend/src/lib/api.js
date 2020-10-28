@@ -49,9 +49,7 @@ export const removeVolunteer = (campaignId, formData) => axios.delete(`${baseUrl
 // SKILL POST & DELETE REQUESTS REQUIRE 'skill_id' IN REQUEST BODY
 export const getAllSkills = () => axios.get(`${baseUrl}/skills/`)
 
-export const addProfileSkill = (profileId, formData) => axios.post(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
-
-export const removeProfileSkill = (profileId, formData) => axios.delete(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
+export const updateProfileSkills = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
 
 export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
@@ -61,10 +59,6 @@ export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${bas
 export const getAllShifts = () => axios.get(`${baseUrl}/shifts/`)
 
 export const updateProfileShifts = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
-
-// export const addProfileShift = (profileId, formData) => axios.post(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
-
-// export const removeProfileShift = (profileId, formData) => axios.delete(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
 
 
 export const addCampaignNotice = formData => axios.post(`${baseUrl}/notices/`, formData, withHeaders())

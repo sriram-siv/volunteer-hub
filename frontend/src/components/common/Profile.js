@@ -6,7 +6,7 @@ import BannerImage from '../elements/BannerImage'
 import Button from '../elements/Button'
 import InputText from '../elements/InputText'
 
-import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts } from '../../lib/api'
+import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
 import  { MemberDetail } from '../common/PendingList'
 
@@ -142,10 +142,12 @@ class Profile extends React.Component {
     console.log( this.state.formData )
     try {
       const userID = localStorage.getItem('user_id')
-      const response = await updateProfileShifts(userID, { 'schedule': this.state.formData.schedule })
-      console.log(response.data.message)
+      const shiftResponse = await updateProfileShifts(userID, { 'schedule': this.state.formData.schedule })
+      const skillIds = this.state.formData.user_skills.map(skill => skill.id)
+      const skillsResponse = await updateProfileSkills(userID, { 'user_skills': skillIds })
+      console.log(shiftResponse.data.message, skillsResponse.data.message)
     } catch (err) {
-      console.log(err.response.data)
+      console.log(err)
     }
   }
 
