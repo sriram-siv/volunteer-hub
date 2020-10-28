@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   position: relative;
   height: ${props => props.expanded ? '17rem' : 'calc(3.4rem + 10px)'};
   transition: all 0.2s;
-  background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.background};
+  background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.panels};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   font-size: 0.85rem;
@@ -43,7 +43,7 @@ const Button = styled.button`
   width: 100%;
   height: calc(50% - 1px);
   border: none;
-  background-color: ${props => props.isSelected ? 'transparent' : props.theme.background};
+  background-color: ${props => props.isSelected ? 'transparent' : props.theme.panels};
   transition: all 0.2s;
   &:hover {
     background-color: ${props => props.color};
@@ -119,7 +119,7 @@ class UserCard extends React.Component {
             <p>{user.user_skills.map(skill => `${skill.name}, `)}</p>
           </Details>
         </Body>
-        <div style={{ margin: '5px auto', width: 'calc(16rem + 12px)' }}>
+        <div style={{ margin: '5px auto', width: 'calc(100% - 10px)' }}>
           <Schedule schedule={schedule} />
         </div>
       </Wrapper>

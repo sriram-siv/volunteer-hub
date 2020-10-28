@@ -15,7 +15,10 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
-  min-height: calc(100vh - 3rem);
+  /* min-height: calc(100vh - 3rem); */
+  position: relative;
+  height: calc(100vh - 3rem);
+  overflow-y: scroll;
 `
 
 const MainContent = styled.div`
@@ -109,7 +112,7 @@ class CampaignShow extends React.Component {
     
     const multiListStyle = {
       position: 'absolute',
-      top: 'calc(3rem + 5px)',
+      top: '5px',
       right: '5px'
     }
 
@@ -119,7 +122,9 @@ class CampaignShow extends React.Component {
 
     return (
       <Wrapper>
-        <BannerImage />
+        <div>
+          <BannerImage />
+        </div>
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
         <MainContent>
           <div style={{ width: '400px', height: '100%', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>

@@ -2,12 +2,10 @@ import React from 'react'
 import styled from 'styled-components'
 import icons from '../../lib/icons'
 
-// position: ${props => props.isHidden ? 'relative' : 'absolute'};
-// top: 0;
 const Wrapper = styled.div`
   position: relative;
   width: 200px;
-  height: ${props => props.isHidden ? '40px' : '290px'};
+  height: ${props => props.isHidden ? '40px' : '240px'};
   background-color: ${props => `${props.theme.shadow}dd`};
   border-radius: 2px;
   border: 1px solid #999;

@@ -2,6 +2,13 @@ import React from 'react'
 import styled from 'styled-components'
 
 
+const ScheduleContainer = styled.div`
+  background-color: ${props => props.theme.panels};
+  border-radius: 2px;
+  border: 1px solid ${props => props.theme.shadow};
+  margin-bottom: 15px;
+`
+
 const Wrapper = styled.div`
   position: relative;
   margin: auto;
@@ -9,10 +16,6 @@ const Wrapper = styled.div`
   padding-left: calc(2rem + 5px);
   width: calc(16rem + 20px);
   height: calc(6rem + 20px);
-  background-color: ${props => props.theme.panels};
-  border-radius: 2px;
-  border: 1px solid ${props => props.theme.shadow};
-
 `
 
 const Grid = styled.div`
@@ -77,15 +80,17 @@ class Schedule extends React.Component {
     const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']
 
     return (
-      <Wrapper>
-        <Time>
-          {['am', 'pm'].map((time, i) => <Label key={i}>{time}</Label>)}
-        </Time>
-        {days.map((day, i) => <Label key={i}>{day}</Label>)}
-        <Grid>
-          {slots && slots.map((slot, i) => <Slot key={i} position={i} active={slot} onClick={handleClick ? () => handleClick(i) : null}/>)}
-        </Grid>
-      </Wrapper>
+      <ScheduleContainer>
+        <Wrapper>
+          <Time>
+            {['am', 'pm'].map((time, i) => <Label key={i}>{time}</Label>)}
+          </Time>
+          {days.map((day, i) => <Label key={i}>{day}</Label>)}
+          <Grid>
+            {slots && slots.map((slot, i) => <Slot key={i} position={i} active={slot} onClick={handleClick ? () => handleClick(i) : null}/>)}
+          </Grid>
+        </Wrapper>
+      </ScheduleContainer>
     )
   }
 }
