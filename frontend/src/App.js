@@ -14,7 +14,6 @@ import CampaignShow from './components/common/CampaignShow'
 import CampaignCreate from './components/common/CampaignCreate'
 
 import Tests from './components/common/Tests'
-import DgTest from './components/common/DgTest'
 import Profile from './components/common/Profile'
 
 class App extends React.Component {
@@ -103,7 +102,6 @@ class App extends React.Component {
           <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
             <Route path='/tests' component={Tests} />
-            <Route path='/dgtests' component={DgTest} />
             <Route exact path="/" component={Home} />
             <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />

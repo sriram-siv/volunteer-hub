@@ -3,7 +3,7 @@ from django.db import models
 class Campaign(models.Model):
     name = models.CharField(max_length=50)
     volunteer_count = models.IntegerField()
-    description = models.TextField(max_length=250)
+    description = models.TextField(max_length=800)
     latitude = models.CharField(max_length=20)
     longitude = models.CharField(max_length=20)
     start_date = models.DateTimeField()

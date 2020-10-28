@@ -6,7 +6,8 @@ import Button from '../elements/Button'
 import { Link } from 'react-router-dom'
 
 import campaigns from '../../images/campaigns.jpg'
-import chat2 from '../../images/chat2.jpg'
+import campPreview from '../../images/campPreview.jpg'
+import chat from '../../images/chat.jpg'
 
 const Hero = styled.div`
   display: flex;
@@ -19,7 +20,7 @@ const Hero = styled.div`
 
 const Landing = () => {
 
-  const width = '40%'
+  const width = '30%'
 
   return (
     <>
@@ -40,12 +41,12 @@ const Landing = () => {
         <SplitBrk/>
         <SplitRow>
           <div>
-            <SplitImg src={campaigns} alt=''/>
+            <SplitImg src={campPreview} alt=''/>
           </div>
           <div>
-            <SplitTitle>Create a Campaign</SplitTitle>
+            <SplitTitle>Manage a Campaign</SplitTitle>
             <p>
-            Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting a campaign.
+            Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting and managing a campaign.
             </p>
             <Link to='/campaigns/new'><Button width={width} label='Start a Campaign' /></Link>
           </div>
@@ -59,9 +60,10 @@ const Landing = () => {
             </p>
           </div>
           <div>
-            <SplitImg src={campaigns} alt=''/>
+            <SplitImg src={chat} alt=''/>
           </div>
         </SplitRow>
+        <SplitBrk />
       </SplitContain>
     </>
   )

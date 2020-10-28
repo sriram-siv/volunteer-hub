@@ -13,14 +13,18 @@ class Home extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  componentDidMount = () => {
+    const userId = localStorage.getItem('user_id')
+    if (userId){
+      this.props.history.push('/profile')
+    }
+  }
+
   render() {
-    const auth = false
+
     return (
       <>
-        {auth
-          ? 'You are logged in!'
-          : <Landing />
-        }
+        <Landing />
       </>
     )
   }
