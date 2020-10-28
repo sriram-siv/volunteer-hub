@@ -21,7 +21,7 @@ const Wrapper = styled.div`
 const ListScroll = styled.div`
   position: relative;
   margin-top: 35px;
-  height: calc(100% - 40px);
+  height: calc(100% - 75px);
   overflow-y: scroll;
 `
 

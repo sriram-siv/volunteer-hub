@@ -82,7 +82,7 @@ class Schedule extends React.Component {
         </Time>
         {days.map((day, i) => <Label key={i}>{day}</Label>)}
         <Grid>
-          {slots && slots.map((slot, i) => <Slot key={i} position={i} active={slot} onClick={() => handleClick(i)}/>)}
+          {slots && slots.map((slot, i) => <Slot key={i} position={i} active={slot} onClick={handleClick ? () => handleClick(i) : null}/>)}
         </Grid>
       </Wrapper>
     )

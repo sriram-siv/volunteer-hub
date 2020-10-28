@@ -64,6 +64,7 @@ const Body = styled.div`
 const ProfilePic = styled.img`
   width: 60px;
   height: 60px;
+  clip-path: circle();
 `
 
 const Details = styled.div`
@@ -99,7 +100,9 @@ class UserCard extends React.Component {
     const { denyActive, isSelected } = this.state
 
     const schedule = Array.from({ length: 14 }).fill(false)
-    user.user_shifts.forEach(shift => schedule[shift - 1 ] = true)
+    user.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
+
+    console.log(user.user_skills)
 
     return (
       <Wrapper expanded={expanded} isSelected={isSelected} >
@@ -115,10 +118,10 @@ class UserCard extends React.Component {
           <ProfilePic src={user.profile_image} />
           <Details>
             <p>{user.first_name} {user.last_name}</p>
-            <p>Skills as list</p>
+            <p>{user.user_skills.map(skill => `${skill.name}, `)}</p>
           </Details>
         </Body>
-        <div style={{ margin: '10px auto', width: 'calc(16rem + 12px)' }}>
+        <div style={{ margin: '5px auto', width: 'calc(16rem + 12px)' }}>
           <Schedule schedule={schedule} />
         </div>
       </Wrapper>
