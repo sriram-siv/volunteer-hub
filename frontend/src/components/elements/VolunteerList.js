@@ -1,12 +1,16 @@
 import React from 'react'
 import styled, { withTheme } from 'styled-components'
+
 import icons from '../../lib/icons'
-import ResultsItem from './ResultsItem'
+import { confirmVolunteer } from '../../lib/api'
+
+import UserCard from './UserCard'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: ${props => props.isHidden ? '40px' : 'calc(100vh - 9rem - 30px)'};
+  /* height: ${props => props.isHidden ? '40px' : 'calc(100vh - 9rem - 30px)'}; */
+  height: 100%;
   background-color: ${props => `${props.theme.background}e`};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -16,9 +20,9 @@ const Wrapper = styled.div`
 
 const ListScroll = styled.div`
   position: relative;
-  margin-top: 5px;
+  margin-top: 35px;
   height: calc(100% - 40px);
-  overflow-y: ${props => props.scroll ? 'scroll' : 'hidden'};
+  overflow-y: scroll;
 `
 
 const Title = styled.div`
@@ -42,51 +46,65 @@ const Toggle = styled.div`
   transition: all 0.2s;
 `
 
-class ResultsList extends React.Component {
+class VolunteerList extends React.Component {
 
   state = {
+    id: null,
+    users: null,
     isHidden: true,
-    resultShowingDetail: -1
+    userShowingDetail: -1
+  }
+
+  componentDidMount = () => {
+    const { campaignID: id, users } = this.props
+    this.setState({ id, users })
   }
 
   componentDidUpdate = () => {
     
-    if (this.props.resultShowingDetail !== this.state.resultShowingDetail) {
-      this.setState({ isHidden: false, resultShowingDetail: this.props.resultShowingDetail })
-    }
   }
 
   toggleView = () => {
     this.setState({ isHidden: !this.state.isHidden })
+    this.props.onToggle()
   }
 
   showDetail = id => {
-    const resultShowingDetail = this.state.resultShowingDetail === id ? -1 : id
-    this.props.showDetail(resultShowingDetail)
+    const userShowingDetail = this.state.userShowingDetail === id ? -1 : id
+    this.setState({ userShowingDetail })
   }
 
+  confirmVolunteer = async volunteerID => {
+    // API call happens in the parent component
+    const status = await this.props.actions.confirmVolunteer(volunteerID)
+    if (status !== 202) return
+    // Only alter list on a successful PUT request
+    const users = this.state.users.filter(volunteer => volunteer.id !== volunteerID)
+    this.setState({ users })
+  }
+
+  denyVolunteer = async volunteerID => {
+    // API call happens in the parent component
+    const status = await this.props.actions.denyVolunteer(volunteerID)
+    console.log(status)
+    // Only alter list on a successful PUT request
+    // const users = this.state.users.filter(volunteer => volunteer.id !== volunteerID)
+    // this.setState({ users })
+  }
+
+
   render() {
-    const { isHidden, resultShowingDetail } = this.state
-    const { campaigns, signUp, label } = this.props
+    const { isHidden, userShowingDetail, users } = this.state
+    const { label } = this.props
 
     return (
       <Wrapper isHidden={isHidden}>
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>
         <Title>{label}</Title>
-        <ListScroll scroll={resultShowingDetail === -1}>
-          {campaigns && campaigns.map((campaign, i) => {
-            const expanded = campaign.id === resultShowingDetail
-            return (
-              <ResultsItem
-                key={i}
-                position={i}
-                {...campaign}
-                expanded={expanded}
-                visible={expanded || resultShowingDetail === -1}
-                showDetails={this.showDetail}
-                signUp={signUp}
-              />
-            )
+        <ListScroll scroll={userShowingDetail === -1}>
+          {users && users.map((user, i) => {
+            const expanded = user.id === userShowingDetail
+            return <UserCard key={i} user={user} expanded={expanded} showDetail={this.showDetail} confirm={this.confirmVolunteer} deny={this.denyVolunteer} />
           })}
         </ListScroll>
       </Wrapper>
@@ -94,4 +112,4 @@ class ResultsList extends React.Component {
   }
 }
 
-export default withTheme(ResultsList)
+export default withTheme(VolunteerList)
