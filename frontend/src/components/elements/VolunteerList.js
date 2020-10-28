@@ -2,14 +2,12 @@ import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
 import icons from '../../lib/icons'
-import { confirmVolunteer } from '../../lib/api'
 
 import UserCard from './UserCard'
 
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  /* height: ${props => props.isHidden ? '40px' : 'calc(100vh - 9rem - 30px)'}; */
   height: 100%;
   background-color: ${props => `${props.theme.background}e`};
   border-radius: 2px;
@@ -61,7 +59,7 @@ class VolunteerList extends React.Component {
   }
 
   componentDidUpdate = () => {
-    
+    if (this.props.users.length !== this.state.users.length) this.setState({ users: this.props.users })
   }
 
   toggleView = () => {
@@ -97,6 +95,7 @@ class VolunteerList extends React.Component {
     const { isHidden, userShowingDetail, users } = this.state
     const { label } = this.props
 
+    console.log(users)
     return (
       <Wrapper isHidden={isHidden}>
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>

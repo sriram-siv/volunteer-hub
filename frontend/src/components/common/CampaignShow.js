@@ -3,30 +3,41 @@ import styled from 'styled-components'
 
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
-
-import DgTest from '../common/DgTest'
 import NoticeBox from '../common/NoticeBox'
-
+import MultiListVolunteer from '../elements/MultiListVolunteers'
+import CampaignInfo from '../elements/CampaignInfo'
+import FilterVolunteers from '../elements/FilterVolunteers'
 
 import { getSingleCampaign } from '../../lib/api'
-import VolunteerList from '../elements/VolunteerList'
-import MultiListVolunteer from '../elements/MultiListVolunteers'
 
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
-  min-height: calc(100vh - 3rem);
+  /* min-height: calc(100vh - 3rem); */
+  position: relative;
+  height: calc(100vh - 3rem);
+  overflow-y: scroll;
+`
+
+const MainContent = styled.div`
+  display: flex;
+`
+
+const AdminPanel = styled.div`
+  display: ${props => props.show ? 'flex' : 'none'};
 `
 
 class CampaignShow extends React.Component {
 
   state = {
     campaignData: null,
+    filteredVolunteers: null,
     members: null,
     rooms: null,
-    admin: false
+    admin: false,
+    schedule: Array.from({ length: 14 }).fill(false)
   }
   
   componentDidMount = () => {
@@ -41,21 +52,22 @@ class CampaignShow extends React.Component {
 
   getCampaign = async () => {
     try {
+      // Get campaign data and set filtered volunteer list to be all members
       const response = await getSingleCampaign(this.props.match.params.id)
-      this.setState({ campaignData: response.data })
-      console.log(response.data)
-  
+      const allMembers = [ response.data.owner, ...response.data.coordinators, ...response.data.conf_volunteers ]
+      this.setState({ campaignData: response.data, filteredVolunteers: allMembers })
+      // Format rooms to be usuable by list component
       const roomItems = response.data.message_rooms.filter(room => {
         const userID = Number(localStorage.getItem('user_id'))
         return room.members.includes(userID)
       }).map(room => ({ name: room.name, id: room.id, onClick: () => this.openChatRoom(room.id) }))
       const rooms = { title: 'groups', items: roomItems }
-  
-      const allMembers = [ response.data.owner, ...response.data.coordinators, ...response.data.conf_volunteers ]
+      // Format members for the same purpose
       const memberItems = allMembers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
       const members = { title: 'members', items: memberItems }
       this.setState({ rooms, members })
     } catch (err) {
+      // Go back a page if user is not authorized to view the page
       console.log(err.response)
       this.props.history.goBack()
     }
@@ -75,37 +87,61 @@ class CampaignShow extends React.Component {
     }
   }
 
+  selectSchedule = slot => {
+    const schedule = [...this.state.schedule]
+    schedule[slot] = !schedule[slot]
+    this.setState({ schedule }, this.filterVolunteers)
+  }
+
+  selectSkills = e => {
+    console.log(e)
+  }
+
+  filterVolunteers = () => {
+    const { schedule } = this.state
+    console.log(schedule)
+    const filteredVolunteers = [ this.state.campaignData.owner, ...this.state.campaignData.coordinators, ...this.state.campaignData.conf_volunteers ]
+      .filter(member => member.user_shifts.some(shift => schedule[shift.id - 1]) || schedule.every(slot => !slot))
+    this.setState({ filteredVolunteers })
+
+  }
+
 
   render() {
     
     
     const multiListStyle = {
       position: 'absolute',
-      top: 'calc(3rem + 5px)',
+      top: '5px',
       right: '5px'
     }
 
-    const { campaignData, members, rooms, admin } = this.state
+    const { campaignData, members, rooms, admin, schedule, filteredVolunteers } = this.state
 
     if (!campaignData || !members || !rooms) return null
 
     return (
       <Wrapper>
-        <BannerImage />
+        <div>
+          <BannerImage />
+        </div>
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
-        <div style={{ display: 'flex' }}>
-          <div style={{ width: '350px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
-            {campaignData.description}
+        <MainContent>
+          <div style={{ width: '400px', height: '100%', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
+            <CampaignInfo campaignData={campaignData}/>
           </div>
-          <div style={{ width: 'calc(100% - 350px', padding: 0 }}>
+          <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
             <NoticeBox campaignData={campaignData} admin={admin} />
           </div>
-        </div>
-        {admin &&
-          <div style={{ width: '390px', padding: '20px' }}>
-            <MultiListVolunteer campaignData={campaignData} containerStyle={{ height: '600px' }}/>
+        </MainContent>
+        <AdminPanel show={admin}>
+          <div style={{ width: '400px', padding: '20px' }}>
+            <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers} containerStyle={{ height: '600px' }}/>
           </div>
-        }
+          <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
+            <FilterVolunteers schedule={schedule} selectSchedule={this.selectSchedule} selectSkills={this.selectSkills}  />
+          </div>
+        </AdminPanel>
       </Wrapper>
     )
   }

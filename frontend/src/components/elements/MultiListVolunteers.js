@@ -9,7 +9,7 @@ import { confirmVolunteer, removeVolunteer } from '../../lib/api'
 const Wrapper = styled.div`
   overflow-y: hidden;
   position: relative;
-  margin: 5px;
+  margin: ${props => props.show ? '5px 0' : 0};
   transition: all 0.3s;
   height: ${props => {
     if (props.open) return '610px'
@@ -57,8 +57,9 @@ class MultiListVolunteer extends React.Component {
 
   render() {
     const { openList } = this.state
-    const { containerStyle, campaignData } = this.props
-    console.log(campaignData)
+    const { containerStyle, campaignData, filteredVolunteers } = this.props
+    console.log(filteredVolunteers)
+
 
     return (
       <div style={containerStyle}>
@@ -66,7 +67,7 @@ class MultiListVolunteer extends React.Component {
           <VolunteerList actions={this.volunteerActions} label="pending" campaignID={campaignData.id} users={campaignData.pend_volunteers} onToggle={() => this.onListToggle('pending')} />
         </Wrapper>
         <Wrapper position={0} show={!openList || openList === 'volunteers'} open={openList === 'volunteers' } >
-          <VolunteerList actions={this.volunteerActions} label="volunteers" campaignData={campaignData} users={campaignData.conf_volunteers} onToggle={() => this.onListToggle('volunteers')} />
+          <VolunteerList actions={this.volunteerActions} label="volunteers" campaignData={campaignData} users={filteredVolunteers} onToggle={() => this.onListToggle('volunteers')} />
         </Wrapper>
       </div>
     )
