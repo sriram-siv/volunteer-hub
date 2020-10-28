@@ -86,10 +86,10 @@ class VolunteerList extends React.Component {
   denyVolunteer = async volunteerID => {
     // API call happens in the parent component
     const status = await this.props.actions.denyVolunteer(volunteerID)
-    console.log(status)
+    if (status !== 202) return
     // Only alter list on a successful PUT request
-    // const users = this.state.users.filter(volunteer => volunteer.id !== volunteerID)
-    // this.setState({ users })
+    const users = this.state.users.filter(volunteer => volunteer.id !== volunteerID)
+    this.setState({ users })
   }
 
 
@@ -104,7 +104,17 @@ class VolunteerList extends React.Component {
         <ListScroll scroll={userShowingDetail === -1}>
           {users && users.map((user, i) => {
             const expanded = user.id === userShowingDetail
-            return <UserCard key={i} user={user} expanded={expanded} showDetail={this.showDetail} confirm={this.confirmVolunteer} deny={this.denyVolunteer} />
+            return (
+              <UserCard
+                key={i}
+                user={user}
+                expanded={expanded}
+                showDetail={this.showDetail}
+                select={label === 'volunteers' && this.props.actions.selectVolunteer}
+                confirm={label === 'pending' && this.confirmVolunteer}
+                deny={label === 'pending' && this.denyVolunteer}
+              />
+            )
           })}
         </ListScroll>
       </Wrapper>

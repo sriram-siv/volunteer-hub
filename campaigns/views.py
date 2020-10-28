@@ -96,17 +96,17 @@ class CampaignVolunteerView(CampaignDetailView):
     permission_classes = (IsAuthenticated,)
 
     # USER ADDS SELF TO PENDING VOLUNTEER 
-    def post(self, request, pk):
+    def post(self, request, pk, vol_id):
         campaign_to_volunteer = self.get_campaign(pk=pk)
         campaign_to_volunteer.pend_volunteers.add(request.user.id)
         campaign_to_volunteer.save()
         return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER MOVES VOLUNTEER FROM PENDING TO CONFIRMED
-    def put(self, request, pk):
+    def put(self, request, pk, vol_id):
         campaign_to_update = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_update, request.user)
-        volunteer_id = request.data['volunteer_id']
+        volunteer_id = vol_id
         campaign_to_update.pend_volunteers.remove(volunteer_id)
         campaign_to_update.conf_volunteers.add(volunteer_id)
         campaign_to_update.save()
@@ -114,10 +114,10 @@ class CampaignVolunteerView(CampaignDetailView):
         return Response({ 'message': 'Volunteer confirmed & added to message room.' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER OR USER CAN REMOVE THEMSELVES FROM PROJECT
-    def delete(self, request, pk):
+    def delete(self, request, pk, vol_id):
         # if owner is true OR if volunteer_id == request.user.id remove. Otherwise returned permissiondenied
         campaign_to_update = self.get_campaign(pk=pk)
-        volunteer_id = request.data['volunteer_id']
+        volunteer_id = vol_id
         if (request.user.id == campaign_to_update.owner.id or request.user.id == volunteer_id):
             campaign_to_update.pend_volunteers.remove(volunteer_id)
             campaign_to_update.conf_volunteers.remove(volunteer_id)

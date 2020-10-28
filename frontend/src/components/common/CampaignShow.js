@@ -100,7 +100,7 @@ class CampaignShow extends React.Component {
             <br /><br />blah
             <br /><br />blah
           </div>
-          <div style={{ width: 'calc(100% - 350px', padding: '20px' }}>
+          <div style={{ width: 'calc(100% - 350px', padding: 0 }}>
             <NoticeBox campaignData={campaignData} admin={admin} />
           </div>
         </div>

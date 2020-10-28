@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import VolunteerList from './VolunteerList'
 
-import { confirmVolunteer } from '../../lib/api'
+import { confirmVolunteer, removeVolunteer } from '../../lib/api'
 
 
 const Wrapper = styled.div`
@@ -31,23 +31,29 @@ class MultiListVolunteer extends React.Component {
     this.setState({ openList })
   }
 
-  confirmVolunteer = async (volunteerID) => {
+  selectVolunteer = volunteerID => {
     console.log(volunteerID)
-    const response = await confirmVolunteer(this.props.campaignData.id, { volunteer_id: volunteerID })
+  }
+
+  confirmVolunteer = async (volunteerID) => {
+    const response = await confirmVolunteer(this.props.campaignData.id, volunteerID)
     return response.status
   }
 
   denyVolunteer = async volunteerID => {
-    // TODO api call here
-    console.log(volunteerID)
+    try {
+      const response = await removeVolunteer(this.props.campaignData.id, volunteerID)
+      return response.status
+    } catch (err) {
+      console.log({ err } )
+    }
   }
 
   volunteerActions = {
+    selectVolunteer: this.selectVolunteer,
     confirmVolunteer: this.confirmVolunteer,
     denyVolunteer: this.denyVolunteer
   }
-
-
 
   render() {
     const { openList } = this.state
@@ -60,7 +66,7 @@ class MultiListVolunteer extends React.Component {
           <VolunteerList actions={this.volunteerActions} label="pending" campaignID={campaignData.id} users={campaignData.pend_volunteers} onToggle={() => this.onListToggle('pending')} />
         </Wrapper>
         <Wrapper position={0} show={!openList || openList === 'volunteers'} open={openList === 'volunteers' } >
-          <VolunteerList actions={this.volunteerActions} label="volunteers" campaignData={campaignData} onToggle={() => this.onListToggle('volunteers')} />
+          <VolunteerList actions={this.volunteerActions} label="volunteers" campaignData={campaignData} users={campaignData.conf_volunteers} onToggle={() => this.onListToggle('volunteers')} />
         </Wrapper>
       </div>
     )
