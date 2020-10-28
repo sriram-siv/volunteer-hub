@@ -43,7 +43,7 @@ const Landing = () => {
             <SplitImg src={campaigns} alt=''/>
           </div>
           <div>
-            <SplitTitle>Create a Campaign</SplitTitle>
+            <SplitTitle>Manage a Campaign</SplitTitle>
             <p>
             Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting a campaign.
             </p>
@@ -62,6 +62,7 @@ const Landing = () => {
             <SplitImg src={campaigns} alt=''/>
           </div>
         </SplitRow>
+        <SplitBrk />
       </SplitContain>
     </>
   )
