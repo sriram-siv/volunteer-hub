@@ -8,14 +8,13 @@ const Wrapper = styled.div`
   margin-right: 2px;
   position: relative;
   height: ${props => props.expanded ? '17rem' : 'calc(3.4rem + 10px)'};
-  /* opacity: ${props => props.visible ? 1 : 0}; */
   transition: all 0.2s;
   background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.background};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   font-size: 0.85rem;
   line-height: 1.5rem;
-  color: ${props => props.theme.text};
+  color: ${props => props.isSelected ? '#333' : props.theme.text};
   font-weight: ${props => props.theme.fontWeight};
   overflow-y: hidden;
 `
@@ -55,8 +54,7 @@ const Button = styled.button`
 `
 
 const Body = styled.div`
-  background-color: pink;
-  padding: 10px;
+  padding: 5px 20px;
   display: flex;
 
 `

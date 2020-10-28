@@ -32,14 +32,14 @@ class FilterVolunteers extends React.Component {
   
 
   render() {
-    const { schedule, skills, editSchedule, editSkills } = this.props
+    const { schedule, skills, selectSchedule, selectSkills } = this.props
     return (
       <Wrapper>
         <Title>Select Volunteers</Title>
         <p>show volunteers with these skills</p>
-        <Select onChange={editSkills} />
+        <Select onChange={selectSkills} />
         <p>show volunteers available on</p>
-        <Schedule schedule={schedule} handleClick={editSchedule} />
+        <Schedule schedule={schedule} handleClick={selectSchedule} />
       </Wrapper>
     )
   }

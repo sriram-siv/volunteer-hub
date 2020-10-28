@@ -84,10 +84,14 @@ class CampaignShow extends React.Component {
     }
   }
 
-  editSchedule = slot => {
+  selectSchedule = slot => {
     const schedule = [...this.state.schedule]
     schedule[slot] = !schedule[slot]
     this.setState({ schedule }, this.filterVolunteers)
+  }
+
+  selectSkills = e => {
+    console.log(e)
   }
 
   filterVolunteers = () => {
@@ -112,7 +116,7 @@ class CampaignShow extends React.Component {
     const { campaignData, members, rooms, admin, schedule, filteredVolunteers } = this.state
 
     if (!campaignData || !members || !rooms) return null
-    
+
     return (
       <Wrapper>
         <BannerImage />
@@ -130,7 +134,7 @@ class CampaignShow extends React.Component {
             <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers} containerStyle={{ height: '600px' }}/>
           </div>
           <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
-            <FilterVolunteers schedule={schedule} editSchedule={this.editSchedule} />
+            <FilterVolunteers schedule={schedule} selectSchedule={this.selectSchedule} selectSkills={this.selectSkills}  />
           </div>
         </AdminPanel>
       </Wrapper>
