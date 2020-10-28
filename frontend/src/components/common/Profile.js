@@ -6,6 +6,7 @@ import BannerImage from '../elements/BannerImage'
 
 import { getSingleProfile, getAllSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
+import  {MemberDetail } from '../common/PendingList'
 
 const Wrapper = styled.div`
   position: relative;
@@ -35,7 +36,14 @@ const Username = styled.h1`
 class Profile extends React.Component {
   
   state = {
-    userData: null,
+    userData: {
+      username: null,
+      first_name: null,
+      last_name: null,
+      email: null,
+      phone: null,
+      profile_image: null
+    },
     skills: null,
     formData: {
       user_skills: null,
@@ -51,11 +59,19 @@ class Profile extends React.Component {
   getProfile = async () => {
     const userID = localStorage.getItem('user_id')
     const response = await getSingleProfile(userID)
-    console.log(response.data)
+    const userData = {
+      username: response.data.username,
+      first_name: response.data.first_name,
+      last_name: response.data.last_name,
+      email: response.data.email,
+      phone: response.data.phone,
+      profile_image: response.data.profile_image
+    }
+    console.log(userData)
     
     const formData = { ...this.state.formData, user_skills: response.data.user_skills }
     
-    this.setState({ userData: response.data, formData }, () => console.log(this.state.formData)) 
+    this.setState({ userData, formData }, () => console.log(this.state.formData)) 
   }
 
   getSkills = async () => {
@@ -82,7 +98,7 @@ class Profile extends React.Component {
 
   render() {
     const { app } = this.props
-    const { skills } = this.state
+    const { userData, skills } = this.state
     const { schedule } = this.state.formData
 
     const selectStyles = {
@@ -109,13 +125,17 @@ class Profile extends React.Component {
     return (
       <Wrapper>
         <BannerImage>
-          <ProfilePic src='https://mondrian.mashable.com/lead-img-anti-racist-curriculum.jpg' />
-          <Username>volunteer55</Username>
+          <ProfilePic src={userData.profile_image} />
+          <Username>{userData.username}</Username>
         </BannerImage>
         <Schedule handleClick={this.editSchedule} schedule={schedule} />
         <Select value={user_skills} options={skills} isMulti onChange={this.editSkills}/>
         <button onClick={app.logout}>Logout</button>
         <button>save</button>
+        <MemberDetail>{userData.first_name}</MemberDetail>
+        <MemberDetail>{userData.last_name}</MemberDetail>
+        <MemberDetail>{userData.email}</MemberDetail>
+        <MemberDetail>{userData.phone}</MemberDetail>
       </Wrapper>
     )
   }
