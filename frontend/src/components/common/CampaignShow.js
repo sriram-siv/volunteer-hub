@@ -7,8 +7,9 @@ import NoticeBox from '../common/NoticeBox'
 import MultiListVolunteer from '../elements/MultiListVolunteers'
 import CampaignInfo from '../elements/CampaignInfo'
 import FilterVolunteers from '../elements/FilterVolunteers'
+import InputText from '../elements/InputText'
 
-import { getSingleCampaign } from '../../lib/api'
+import { getSingleCampaign, createRoom } from '../../lib/api'
 
 const Wrapper = styled.div`
   display: flex;
@@ -29,6 +30,21 @@ const AdminPanel = styled.div`
   display: ${props => props.show ? 'flex' : 'none'};
 `
 
+const Button = styled.button`
+  position: absolute;
+  bottom: 20px;
+  right: ${props => `${props.position * 210 + 30}px`};
+  width: 200px;
+  padding: 10px;
+  border-radius: 2px;
+  border: 2px solid ${props => props.theme.primary};
+  background-color: ${props => props.theme.background};
+  color: ${props => props.theme.text};
+  &:hover {
+    background-color: ${props => props.theme.primary};
+  }
+`
+
 class CampaignShow extends React.Component {
 
   state = {
@@ -38,7 +54,11 @@ class CampaignShow extends React.Component {
     rooms: null,
     admin: false,
     schedule: Array.from({ length: 14 }).fill(false),
-    skills: null
+    skills: null,
+    strictSkills: true,
+    strictSchedule: true,
+    selectedVolunteers: [],
+    newGroupName: ''
   }
   
   componentDidMount = () => {
@@ -99,26 +119,70 @@ class CampaignShow extends React.Component {
   }
 
   filterVolunteers = () => {
-    const { schedule, skills } = this.state
+    const { schedule, skills, strictSchedule, strictSkills } = this.state
 
     const isAvailableAll = user => (
       schedule.every((slot, i) => !slot || user.user_shifts.some(shift => shift.id - 1 === i))
     )
-    const isAvailableAny = user => (
-      user.user_shifts.some(shift => schedule[shift.id - 1] || schedule.every(slot => !slot))
-    )
+    const isAvailableAny = user => {
+      if (schedule.every(slot => !slot)) return true
+      return user.user_shifts.some(shift => schedule[shift.id - 1])
+    }
+    const hasSkillsAll = user => {
+      console.log(skills)
+      if (!skills || skills.length < 1) return true
+      return skills.every(skill => user.user_skills.some(userSkill => userSkill.id === skill.value))
+    }
+    const hasSkillsAny = user => {
+      if (!skills || skills.length < 1) return true
+      return user.user_skills.some(userSkill => skills.some(skill => skill.value === userSkill.id))
+    }
 
-    const filteredVolunteers = [ this.state.campaignData.owner, ...this.state.campaignData.coordinators, ...this.state.campaignData.conf_volunteers ]
+
+    let filteredVolunteers = [ this.state.campaignData.owner, ...this.state.campaignData.coordinators, ...this.state.campaignData.conf_volunteers ]
     // Filter for schedule
+    filteredVolunteers = filteredVolunteers.filter(volunteer => {
+      if (strictSchedule) return isAvailableAll(volunteer)
+      return isAvailableAny(volunteer)
+    }).filter(volunteer => {
+      if (strictSkills) return hasSkillsAll(volunteer)
+      return hasSkillsAny(volunteer)
+    })
     
-    console.log(filteredVolunteers)
     this.setState({ filteredVolunteers })
+  }
 
+  selectStrict = (event) => {
+    this.setState({ [event.target.id]: event.target.checked }, this.filterVolunteers)
+  }
+
+  editNewGroupName = (event) => {
+    this.setState({ [event.target.name]: event.target.value })
+  }
+
+  selectVolunteer = id => {
+    let selectedVolunteers = [...this.state.selectedVolunteers]
+    if (selectedVolunteers.includes(id)) selectedVolunteers = selectedVolunteers.filter(vol => vol !== id)
+    else selectedVolunteers.push(id)
+    this.setState({ selectedVolunteers })
+  }
+
+  createNewGroup = async () => {
+    const { newGroupName, selectedVolunteers, campaignData } = this.state
+    if (!newGroupName || selectedVolunteers.length === 0) return
+    const userID = Number(localStorage.getItem('user_id'))
+    if (!selectedVolunteers.includes(userID)) selectedVolunteers.unshift(userID)
+    const formData = {
+      name: newGroupName,
+      members: selectedVolunteers,
+      campaign: campaignData.id
+    }
+    const response = await createRoom(formData)
+    if (response.status === 201) this.openChatRoom(response.data.id)
   }
 
 
   render() {
-    
     
     const multiListStyle = {
       position: 'absolute',
@@ -126,7 +190,7 @@ class CampaignShow extends React.Component {
       right: '5px'
     }
 
-    const { campaignData, members, rooms, admin, schedule, filteredVolunteers, skills } = this.state
+    const { campaignData, members, rooms, admin, schedule, filteredVolunteers, skills, strictSkills, strictSchedule, newGroupName } = this.state
 
     if (!campaignData || !members || !rooms) return null
 
@@ -135,7 +199,7 @@ class CampaignShow extends React.Component {
         <div>
           <BannerImage />
         </div>
-        <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
+        <MultiList containerStyle={multiListStyle} lists={[members, rooms]}/>
         <MainContent>
           <div style={{ width: '400px', height: '100%', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
             <CampaignInfo campaignData={campaignData}/>
@@ -146,10 +210,22 @@ class CampaignShow extends React.Component {
         </MainContent>
         <AdminPanel show={admin}>
           <div style={{ width: '400px', padding: '20px' }}>
-            <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers} containerStyle={{ height: '600px' }}/>
+            <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} containerStyle={{ height: '600px' }}/>
           </div>
-          <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
-            <FilterVolunteers schedule={schedule} selectSchedule={this.selectSchedule} skills={skills} selectSkills={this.selectSkills}  />
+          <div style={{ position: 'relative', width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
+            <FilterVolunteers
+              skills={skills}
+              schedule={schedule}
+              selectSkills={this.selectSkills}
+              selectSchedule={this.selectSchedule}
+              strictSkills={strictSkills}
+              strictSchedule={strictSchedule}
+              selectStrict={this.selectStrict}
+              newGroupName={newGroupName}
+              editNewGroupName={this.editNewGroupName}
+            />
+            <Button position={1}>select all</Button>
+            <Button position={0} onClick={this.createNewGroup}>create group</Button>
           </div>
         </AdminPanel>
       </Wrapper>

@@ -59,7 +59,7 @@ class VolunteerList extends React.Component {
   }
 
   componentDidUpdate = () => {
-    if (this.props.users.length !== this.state.users.length) this.setState({ users: this.props.users })
+    if (this.props.campaignID !== this.state.id) this.setState({ id: this.props.campaignID, users: this.props.users })
   }
 
   toggleView = () => {

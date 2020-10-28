@@ -83,7 +83,7 @@ class UserCard extends React.Component {
   clickDeny = () => {
     if (!this.state.denyActive) {
       this.setState({ denyActive: true }, () => {
-        setTimeout(() => this.setState({ denyActive: false }), 2000)
+        this.clickInterval = setTimeout(() => this.setState({ denyActive: false }), 2000)
       })
     } else this.props.deny(this.props.user.id)
   }
@@ -91,6 +91,10 @@ class UserCard extends React.Component {
   clickSelect = () => {
     this.props.select(this.props.user.id)
     this.setState({ isSelected: !this.state.isSelected })
+  }
+
+  componentWillUnmount = () => {
+    clearInterval(this.clickInterval)
   }
 
   render() {
