@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   position: relative;
+  margin: auto;
   padding: 5px;
   padding-left: calc(2rem + 5px);
   width: calc(16rem + 20px);

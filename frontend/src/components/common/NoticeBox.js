@@ -8,7 +8,6 @@ import InputArea from '../elements/InputArea'
 
 const Wrapper = styled.div`
   width: 100%;
-  padding: 20px;
 `
 
 const NoticeContain = styled.div`
@@ -16,11 +15,11 @@ const NoticeContain = styled.div`
   flex-direction: column-reverse;
   position: relative;
   border: 1px solid ${props => props.theme.shadow};
-  border-bottom: none;
+  border-bottom: ${props => props.showInput ? 'none' : ''};
   background-color: ${props => props.theme.panels};
   overflow-y: scroll;
   overflow-x: hidden;
-  height: 300px;
+  height: ${props => props.showInput ? '300px' : 'calc(4rem + 330px)'};
 `
 
 const NoticeText = styled.div`
@@ -117,10 +116,13 @@ class NoticeBox extends React.Component {
 
     return (
       <Wrapper>
-        <NoticeContain ref={ref => {
-          if (ref) ref.scrollTop = -ref.scrollHeight
-          this.noticeboard = ref
-        }}>
+        <NoticeContain
+          ref={ref => {
+            if (ref) ref.scrollTop = -ref.scrollHeight
+            this.noticeboard = ref
+          }}
+          showInput={this.props.admin}
+        >
           { notices.map(notice => (
             <NoticeText key={notice.id}>
               {notice.text}<br />
