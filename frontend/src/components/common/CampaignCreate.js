@@ -31,7 +31,7 @@ const MapContain = styled.div`
   width: 100%;
   height: calc(100vw - 40px);
   max-height: 500px;
-  margin: 5px auto;
+  margin: 10px auto 20px;
 `
 
 class CampaignCreate extends React.Component{
@@ -98,7 +98,7 @@ class CampaignCreate extends React.Component{
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
-          <div style={{ position: 'fixed', bottom: '25px', right: '25px' }}>
+          <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 2 }}>
             <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
           </div>
         </Form>

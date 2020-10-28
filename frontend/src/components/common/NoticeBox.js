@@ -12,6 +12,8 @@ const Wrapper = styled.div`
 `
 
 const NoticeContain = styled.div`
+  display: flex;
+  flex-direction: column-reverse;
   position: relative;
   border: 1px solid ${props => props.theme.shadow};
   border-bottom: none;
@@ -66,6 +68,7 @@ class NoticeBox extends React.Component {
   componentDidUpdate = () => {
     if (this.props.campaignData.id !== this.state.campaignData.id) {
       this.loadData()
+      if (this.noticeboard) this.noticeboard.scrollTop = -this.noticeboard.scrollHeight
     }
   }
 
@@ -91,7 +94,7 @@ class NoticeBox extends React.Component {
       const notices = [...this.state.notices]
       notices.push(response.data)
       this.setState({ noticeText: '', notices })
-      this.noticeboard.scrollTop = this.noticeboard.scrollHeight
+      this.noticeboard.scrollTop = -this.noticeboard.scrollHeight
     } catch (err) {
       console.log(err.response.data)
     }
@@ -114,14 +117,17 @@ class NoticeBox extends React.Component {
 
     return (
       <Wrapper>
-        <NoticeContain ref={ref => this.noticeboard = ref}>
+        <NoticeContain ref={ref => {
+          if (ref) ref.scrollTop = -ref.scrollHeight
+          this.noticeboard = ref
+        }}>
           { notices.map(notice => (
             <NoticeText key={notice.id}>
               {notice.text}<br />
               <User>{notice.owner.username}</User>
               {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}
             </NoticeText>
-          )) }
+          ))}
         </NoticeContain>
         {this.props.admin &&
           <>
