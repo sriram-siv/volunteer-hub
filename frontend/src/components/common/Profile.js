@@ -6,9 +6,9 @@ import BannerImage from '../elements/BannerImage'
 import Button from '../elements/Button'
 import InputText from '../elements/InputText'
 
-import { getSingleProfile, getAllSkills } from '../../lib/api'
+import { getSingleProfile, updateProfile, getAllSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
-import  {MemberDetail } from '../common/PendingList'
+import  { MemberDetail } from '../common/PendingList'
 
 const Wrapper = styled.div`
   position: relative;
@@ -97,10 +97,17 @@ class Profile extends React.Component {
     this.setState({ pendingUserData })
   }
 
-  saveEdits = () => {
-    console.log('time to save edits to db')
-    this.setState({ userData: this.state.pendingUserData })
-    this.handleEditMode()
+  saveEdits = async () => {
+    try {
+      console.log('time to save edits to db')
+      const userID = localStorage.getItem('user_id')
+      console.log(this.state.pendingUserData)
+      const response = await updateProfile(userID, this.state.pendingUserData)
+      this.setState({ userData: this.state.pendingUserData })
+      this.handleEditMode()
+    } catch (err) {
+      console.log(err.response.data)
+    }
   }
 
   discardEdits = () => {

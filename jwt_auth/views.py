@@ -82,6 +82,7 @@ class ProfileDetailView(APIView):
     def put(self, request, pk):
         profile_to_update = self.get_profile(pk=pk)
         self.is_user(profile_to_update, request.user)
+        print(request.data)
         updated_profile = ProfileSerializer(profile_to_update, data=request.data)
         if updated_profile.is_valid():
             updated_profile.save()
