@@ -3,7 +3,7 @@ from .views import CampaignListView, CampaignDetailView, CampaignVolunteerView, 
 
 urlpatterns = [
     path('', CampaignListView.as_view()),
-    path('<int:pk>/volunteers/', CampaignVolunteerView.as_view()),
+    path('<int:pk>/volunteers/<int:vol_id>', CampaignVolunteerView.as_view()),
     path('<int:pk>/coordinators/', CampaignCoordinatorView.as_view()),
     path('<int:pk>/skills/', CampaignSkillView.as_view()),
     path('<int:pk>/', CampaignDetailView.as_view())

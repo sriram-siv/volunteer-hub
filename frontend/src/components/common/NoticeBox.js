@@ -128,6 +128,7 @@ class NoticeBox extends React.Component {
               {this.props.admin && <NoticeDelete id={notice.id} onClick={this.handleDelete} >delete</NoticeDelete>}
             </NoticeText>
           ))}
+          <div style={{ height: '0px' }}>&nbsp;</div>
         </NoticeContain>
         {this.props.admin &&
           <>

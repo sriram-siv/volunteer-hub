@@ -92,7 +92,7 @@ class CampaignCreate extends React.Component{
         <Form>
           <InputText width="100%" label='Give your campaign a name' name='name' value= {name} returnValue={this.handleChange} />
           <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
-          <InputArea width="100%" name='description' value={description} returnValue={this.handleChange} placeholder='Give your campaign a description'/>
+          <InputArea width="100%" name='description' value={description} returnValue={this.handleChange} placeholder='Give your campaign a description' submit={() => null}/>
           <InputText width="100%" type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
           <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef}/>
           <MapContain>
