@@ -5,10 +5,11 @@ import Select from 'react-select'
 import BannerImage from '../elements/BannerImage'
 import Button from '../elements/Button'
 import InputText from '../elements/InputText'
-
+import { SplitContain, SplitRow, SplitTitle } from '../elements/Split'
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
-import  { MemberDetail } from '../common/PendingList'
+import { ButtonGroup } from '../elements/ButtonGroup'
+// import  { MemberDetail } from '../common/PendingList'
 
 const Wrapper = styled.div`
   position: relative;
@@ -32,8 +33,8 @@ const Username = styled.h1`
   top: 150px;
   left: calc(50% + 50px);
   transform: translate(-50%, -50%);
+  color: #fff;
 `
-
 
 class Profile extends React.Component {
   
@@ -57,7 +58,6 @@ class Profile extends React.Component {
     skills: null,
     formData: {
       user_skills: null,
-      // schedule: null
       schedule: Array.from({ length: 14 }).fill(false)
     },
     editMode: false
@@ -183,29 +183,40 @@ class Profile extends React.Component {
           <ProfilePic src={userData.profile_image} />
           <Username>{userData.username}</Username>
         </BannerImage>
-        <Schedule handleClick={this.editSchedule} schedule={schedule} />
-        <Select value={user_skills} options={skills} isMulti onChange={this.editSkills}/>
-        <button onClick={app.logout}>Logout</button>
-        <button onClick={this.saveShiftsSkills} >save</button>
-        {!editMode &&
-          <div>
-            <MemberDetail>{userData.first_name}</MemberDetail>
-            <MemberDetail>{userData.last_name}</MemberDetail>
-            <MemberDetail>{userData.email}</MemberDetail>
-            <MemberDetail>{userData.phone}</MemberDetail>
-            <Button onClick={this.handleEditMode} label='Edit'></Button>
-          </div>}
-        {editMode &&
-          <div>
-            <InputText name='first_name' value={pendingUserData.first_name} label='First Name'  returnValue={this.handleEditChange}></InputText>
-            <InputText name='last_name' value={pendingUserData.last_name} label='Last Name' returnValue={this.handleEditChange}></InputText>
-            <InputText name='email' value={pendingUserData.email} label='Email' returnValue={this.handleEditChange}></InputText>
-            <InputText name='phone' value={pendingUserData.phone} label='Phone' returnValue={this.handleEditChange}></InputText>
-            <Button onClick={this.saveEdits} label='Save'></Button>
-            <Button onClick={this.discardEdits} label='Cancel'></Button>
-          </div>
-
-        }
+        <SplitContain>
+          <SplitRow>
+            {!editMode &&
+              <div>
+                <SplitTitle>My Profile</SplitTitle>
+                <div>{userData.first_name}</div>
+                <div>{userData.last_name}</div>
+                <div>{userData.email}</div>
+                <div>{userData.phone}</div>
+                <Button onClick={this.handleEditMode} label='Edit'></Button>
+              </div>}
+            {editMode &&
+              <div>
+                <SplitTitle>My Profile</SplitTitle>
+                <InputText name='first_name' value={pendingUserData.first_name} label='First Name'  returnValue={this.handleEditChange}></InputText>
+                <InputText name='last_name' value={pendingUserData.last_name} label='Last Name' returnValue={this.handleEditChange}></InputText>
+                <InputText name='email' value={pendingUserData.email} label='Email' returnValue={this.handleEditChange}></InputText>
+                <InputText name='phone' value={pendingUserData.phone} label='Phone' returnValue={this.handleEditChange}></InputText>
+                <ButtonGroup>
+                  <Button onClick={this.saveEdits} label='Save' />
+                  <Button onClick={this.discardEdits} label='Cancel' />
+                </ButtonGroup>
+              </div>
+            }
+            <div>
+              <SplitTitle>My Project Preferences</SplitTitle>
+              <Schedule handleClick={this.editSchedule} schedule={schedule} />
+              <Select value={user_skills} options={skills} isMulti onChange={this.editSkills}/>
+              {/* <Button onClick={app.logout} label='logout' /> */}
+              <Button onClick={this.saveShiftsSkills} label='save'/>
+            </div>
+          </SplitRow>
+        </SplitContain>
+        
       </Wrapper>
     )
   }

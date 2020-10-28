@@ -47,7 +47,7 @@ const Landing = () => {
             <p>
             Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting a campaign.
             </p>
-            <Link to='/campaigns/new-campaign'><Button width={width} label='Start a Campaign' /></Link>
+            <Link to='/campaigns/new'><Button width={width} label='Start a Campaign' /></Link>
           </div>
         </SplitRow>
         <SplitBrk/>
