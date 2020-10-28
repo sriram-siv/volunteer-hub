@@ -26,7 +26,7 @@ const CampaignInfo = ({ campaignData }) => {
 
   return (
     <Wrapper>
-      <Title>Hello</Title>
+      <Title>{campaignData.name}</Title>
       {campaignData.description}
     </Wrapper>
   )

@@ -37,7 +37,8 @@ class CampaignShow extends React.Component {
     members: null,
     rooms: null,
     admin: false,
-    schedule: Array.from({ length: 14 }).fill(false)
+    schedule: Array.from({ length: 14 }).fill(false),
+    skills: null
   }
   
   componentDidMount = () => {
@@ -93,15 +94,24 @@ class CampaignShow extends React.Component {
     this.setState({ schedule }, this.filterVolunteers)
   }
 
-  selectSkills = e => {
-    console.log(e)
+  selectSkills = selected => {
+    this.setState({ skills: selected }, this.filterVolunteers)
   }
 
   filterVolunteers = () => {
-    const { schedule } = this.state
-    console.log(schedule)
+    const { schedule, skills } = this.state
+
+    const isAvailableAll = user => (
+      schedule.every((slot, i) => !slot || user.user_shifts.some(shift => shift.id - 1 === i))
+    )
+    const isAvailableAny = user => (
+      user.user_shifts.some(shift => schedule[shift.id - 1] || schedule.every(slot => !slot))
+    )
+
     const filteredVolunteers = [ this.state.campaignData.owner, ...this.state.campaignData.coordinators, ...this.state.campaignData.conf_volunteers ]
-      .filter(member => member.user_shifts.some(shift => schedule[shift.id - 1]) || schedule.every(slot => !slot))
+    // Filter for schedule
+    
+    console.log(filteredVolunteers)
     this.setState({ filteredVolunteers })
 
   }
@@ -116,7 +126,7 @@ class CampaignShow extends React.Component {
       right: '5px'
     }
 
-    const { campaignData, members, rooms, admin, schedule, filteredVolunteers } = this.state
+    const { campaignData, members, rooms, admin, schedule, filteredVolunteers, skills } = this.state
 
     if (!campaignData || !members || !rooms) return null
 
@@ -139,7 +149,7 @@ class CampaignShow extends React.Component {
             <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers} containerStyle={{ height: '600px' }}/>
           </div>
           <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
-            <FilterVolunteers schedule={schedule} selectSchedule={this.selectSchedule} selectSkills={this.selectSkills}  />
+            <FilterVolunteers schedule={schedule} selectSchedule={this.selectSchedule} skills={skills} selectSkills={this.selectSkills}  />
           </div>
         </AdminPanel>
       </Wrapper>

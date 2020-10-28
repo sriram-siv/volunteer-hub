@@ -100,8 +100,6 @@ class UserCard extends React.Component {
     const schedule = Array.from({ length: 14 }).fill(false)
     user.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
 
-    console.log(user.user_skills)
-
     return (
       <Wrapper expanded={expanded} isSelected={isSelected} >
         <Header>
@@ -116,7 +114,7 @@ class UserCard extends React.Component {
           <ProfilePic src={user.profile_image} />
           <Details>
             <p>{user.first_name} {user.last_name}</p>
-            <p>{user.user_skills.map(skill => `${skill.name}, `)}</p>
+            <p>{user.user_skills.map(skill => skill.name).join(', ')}</p>
           </Details>
         </Body>
         <div style={{ margin: '5px auto', width: 'calc(100% - 10px)' }}>
