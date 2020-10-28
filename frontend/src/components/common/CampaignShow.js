@@ -3,14 +3,12 @@ import styled from 'styled-components'
 
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
-
-import DgTest from '../common/DgTest'
 import NoticeBox from '../common/NoticeBox'
-
+import MultiListVolunteer from '../elements/MultiListVolunteers'
+import CampaignInfo from '../elements/CampaignInfo'
+import FilterVolunteers from '../elements/FilterVolunteers'
 
 import { getSingleCampaign } from '../../lib/api'
-import VolunteerList from '../elements/VolunteerList'
-import MultiListVolunteer from '../elements/MultiListVolunteers'
 
 const Wrapper = styled.div`
   display: flex;
@@ -20,10 +18,19 @@ const Wrapper = styled.div`
   min-height: calc(100vh - 3rem);
 `
 
+const MainContent = styled.div`
+  display: flex;
+`
+
+const AdminPanel = styled.div`
+  display: ${props => props.show ? 'flex' : 'none'};
+`
+
 class CampaignShow extends React.Component {
 
   state = {
     campaignData: null,
+    filteredData: null,
     members: null,
     rooms: null,
     admin: false
@@ -42,7 +49,7 @@ class CampaignShow extends React.Component {
   getCampaign = async () => {
     try {
       const response = await getSingleCampaign(this.props.match.params.id)
-      this.setState({ campaignData: response.data })
+      this.setState({ campaignData: response.data, filteredData: response.data })
       console.log(response.data)
   
       const roomItems = response.data.message_rooms.filter(room => {
@@ -93,22 +100,22 @@ class CampaignShow extends React.Component {
       <Wrapper>
         <BannerImage />
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]} />
-        <div style={{ display: 'flex' }}>
-          <div style={{ width: '350px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
-            {campaignData.description}
-            <br /><br />more campaign details here
-            <br /><br />blah
-            <br /><br />blah
+        <MainContent>
+          <div style={{ width: '400px', height: '100%', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
+            <CampaignInfo campaignData={campaignData}/>
           </div>
-          <div style={{ width: 'calc(100% - 350px', padding: 0 }}>
+          <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
             <NoticeBox campaignData={campaignData} admin={admin} />
           </div>
-        </div>
-        {admin &&
-          <div style={{ width: '390px', padding: '20px' }}>
+        </MainContent>
+        <AdminPanel show={admin}>
+          <div style={{ width: '400px', padding: '20px' }}>
             <MultiListVolunteer campaignData={campaignData} containerStyle={{ height: '600px' }}/>
           </div>
-        }
+          <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
+            <FilterVolunteers />
+          </div>
+        </AdminPanel>
       </Wrapper>
     )
   }

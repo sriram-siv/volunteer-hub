@@ -9,7 +9,7 @@ import { confirmVolunteer, removeVolunteer } from '../../lib/api'
 const Wrapper = styled.div`
   overflow-y: hidden;
   position: relative;
-  margin: 5px;
+  margin: ${props => props.show ? '5px 0' : 0};
   transition: all 0.3s;
   height: ${props => {
     if (props.open) return '610px'
