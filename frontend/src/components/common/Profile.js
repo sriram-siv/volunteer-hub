@@ -99,7 +99,7 @@ class Profile extends React.Component {
 
   saveEdits = () => {
     console.log('time to save edits to db')
-    
+    this.setState({ userData: this.state.pendingUserData })
     this.handleEditMode()
   }
 
