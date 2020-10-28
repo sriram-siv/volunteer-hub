@@ -30,10 +30,11 @@ class CampaignShow extends React.Component {
 
   state = {
     campaignData: null,
-    filteredData: null,
+    filteredVolunteers: null,
     members: null,
     rooms: null,
-    admin: false
+    admin: false,
+    schedule: Array.from({ length: 14 }).fill(false)
   }
   
   componentDidMount = () => {
@@ -48,21 +49,22 @@ class CampaignShow extends React.Component {
 
   getCampaign = async () => {
     try {
+      // Get campaign data and set filtered volunteer list to be all members
       const response = await getSingleCampaign(this.props.match.params.id)
-      this.setState({ campaignData: response.data, filteredData: response.data })
-      console.log(response.data)
-  
+      const allMembers = [ response.data.owner, ...response.data.coordinators, ...response.data.conf_volunteers ]
+      this.setState({ campaignData: response.data, filteredVolunteers: allMembers })
+      // Format rooms to be usuable by list component
       const roomItems = response.data.message_rooms.filter(room => {
         const userID = Number(localStorage.getItem('user_id'))
         return room.members.includes(userID)
       }).map(room => ({ name: room.name, id: room.id, onClick: () => this.openChatRoom(room.id) }))
       const rooms = { title: 'groups', items: roomItems }
-  
-      const allMembers = [ response.data.owner, ...response.data.coordinators, ...response.data.conf_volunteers ]
+      // Format members for the same purpose
       const memberItems = allMembers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
       const members = { title: 'members', items: memberItems }
       this.setState({ rooms, members })
     } catch (err) {
+      // Go back a page if user is not authorized to view the page
       console.log(err.response)
       this.props.history.goBack()
     }
@@ -82,6 +84,21 @@ class CampaignShow extends React.Component {
     }
   }
 
+  editSchedule = slot => {
+    const schedule = [...this.state.schedule]
+    schedule[slot] = !schedule[slot]
+    this.setState({ schedule }, this.filterVolunteers)
+  }
+
+  filterVolunteers = () => {
+    const { schedule } = this.state
+    console.log(schedule)
+    const filteredVolunteers = [ this.state.campaignData.owner, ...this.state.campaignData.coordinators, ...this.state.campaignData.conf_volunteers ]
+      .filter(member => member.user_shifts.some(shift => schedule[shift.id - 1]) || schedule.every(slot => !slot))
+    this.setState({ filteredVolunteers })
+
+  }
+
 
   render() {
     
@@ -92,10 +109,10 @@ class CampaignShow extends React.Component {
       right: '5px'
     }
 
-    const { campaignData, members, rooms, admin } = this.state
+    const { campaignData, members, rooms, admin, schedule, filteredVolunteers } = this.state
 
     if (!campaignData || !members || !rooms) return null
-
+    
     return (
       <Wrapper>
         <BannerImage />
@@ -110,10 +127,10 @@ class CampaignShow extends React.Component {
         </MainContent>
         <AdminPanel show={admin}>
           <div style={{ width: '400px', padding: '20px' }}>
-            <MultiListVolunteer campaignData={campaignData} containerStyle={{ height: '600px' }}/>
+            <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers} containerStyle={{ height: '600px' }}/>
           </div>
           <div style={{ width: 'calc(100% - 400px)', padding: '20px', paddingLeft: 0 }}>
-            <FilterVolunteers />
+            <FilterVolunteers schedule={schedule} editSchedule={this.editSchedule} />
           </div>
         </AdminPanel>
       </Wrapper>

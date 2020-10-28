@@ -59,7 +59,7 @@ class VolunteerList extends React.Component {
   }
 
   componentDidUpdate = () => {
-    
+    if (this.props.users.length !== this.state.users.length) this.setState({ users: this.props.users })
   }
 
   toggleView = () => {
@@ -95,6 +95,7 @@ class VolunteerList extends React.Component {
     const { isHidden, userShowingDetail, users } = this.state
     const { label } = this.props
 
+    console.log(users)
     return (
       <Wrapper isHidden={isHidden}>
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>
