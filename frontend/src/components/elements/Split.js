@@ -24,6 +24,7 @@ export const SplitImg = styled.img `
   height: 65%;
   width: 65%;
   border-radius: 45px;
+  border: 2px solid #fef15e;
 
   @media (max-width: 760px) {
     display: none;

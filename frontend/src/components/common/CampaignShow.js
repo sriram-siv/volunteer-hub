@@ -96,9 +96,6 @@ class CampaignShow extends React.Component {
         <div style={{ display: 'flex' }}>
           <div style={{ width: '350px', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
             {campaignData.description}
-            <br /><br />more campaign details here
-            <br /><br />blah
-            <br /><br />blah
           </div>
           <div style={{ width: 'calc(100% - 350px', padding: 0 }}>
             <NoticeBox campaignData={campaignData} admin={admin} />
