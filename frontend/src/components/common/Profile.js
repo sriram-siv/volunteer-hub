@@ -57,7 +57,8 @@ class Profile extends React.Component {
     skills: null,
     formData: {
       user_skills: null,
-      schedule: Array.from({ length: 14 }).fill(false)
+      schedule: null
+      // schedule: Array.from({ length: 14 }).fill(false)
     },
     editMode: false
   }
@@ -78,9 +79,10 @@ class Profile extends React.Component {
       phone: response.data.phone,
       profile_image: response.data.profile_image
     }
+    
     console.log(userData)
     
-    const formData = { ...this.state.formData, user_skills: response.data.user_skills }
+    const formData = { ...this.state.formData, user_skills: response.data.user_skills, schedule: response.data.user_shifts }
     
     this.setState({ userData, pendingUserData: userData, formData }, () => console.log(this.state.formData)) 
   }

@@ -6,8 +6,8 @@ const Wrapper = styled.div`
   position: relative;
   padding: 5px;
   padding-left: calc(2rem + 5px);
-  width: calc(16rem + 12px);
-  height: calc(6rem + 12px);
+  width: calc(16rem + 20px);
+  height: calc(6rem + 20px);
   background-color: ${props => props.theme.panels};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -65,11 +65,11 @@ class Schedule extends React.Component {
     slots: Array.from({ length: 14 }).fill(false)
   }
 
-  // handleClick = (position) => {
-  //   const slots = [...this.state.slots]
-  //   slots[position] = !slots[position]
-  //   this.setState({ slots })
-  // }
+  handleClick = (position) => {
+    const slots = [...this.state.slots]
+    slots[position] = !slots[position]
+    this.setState({ slots })
+  }
 
   render() {
     const { schedule: slots, handleClick } = this.props
