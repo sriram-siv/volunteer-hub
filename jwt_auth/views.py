@@ -130,3 +130,16 @@ class ProfileShiftView(ProfileDetailView):
         profile_to_delete_shift.user_shifts.remove(request.data['shift_id'])
         profile_to_delete_shift.save()
         return Response({ 'message': 'Shift removed from profile' }, status=status.HTTP_204_NO_CONTENT)
+
+    def put(self, request, pk):
+        profile_to_update_shifts = self.get_profile(pk=pk)
+        self.is_user(profile_to_update_shifts, request.user)
+        new_shifts = request.data['schedule']
+        print(new_shifts)
+        for i in range(len(new_shifts)):
+            if new_shifts[i]:
+                profile_to_update_shifts.user_shifts.add(i + 1)
+            else:
+                profile_to_update_shifts.user_shifts.remove(i + 1)
+        return Response({ 'message': 'Shifts updated' }, status=status.HTTP_202_ACCEPTED)
+        
