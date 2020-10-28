@@ -5,7 +5,7 @@
   "fields": {
     "name": "Feed the Royals",
     "volunteer_count": 5,
-    "description": "5 volunteers needed to prepare and distribute food to the needy members of the royal family",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eros est, malesuada eu eleifend eu, tristique a nisl. Proin ante ligula, aliquet sit amet enim non, convallis mattis justo. Donec posuere nulla ut est convallis congue. In nisi elit, hendrerit in tempus et, lobortis ac elit. Sed diam tellus, convallis quis augue vel, euismod sollicitudin tortor. Donec id facilisis odio. Sed laoreet justo et sem volutpat maximus. Aenean est risus, suscipit sed interdum vitae, venenatis ac enim.\r\n\r\nCurabitur vitae elementum augue. Vestibulum vel mauris in velit commodo malesuada nec id urna. Vivamus dapibus laoreet justo, id commodo lacus accumsan ac. Nunc iaculis nec ipsum ut pharetra. Suspendisse nec imperdiet tortor.",
     "latitude": "51.505345",
     "longitude": "0.187769",
     "start_date": "2020-10-31T07:30:51Z",
@@ -16,14 +16,19 @@
       3
     ],
     "pend_volunteers": [
-      1,
-      4,
-      5
+      3,
+      10,
+      11
     ],
     "conf_volunteers": [
+      2,
+      4,
+      5,
       6,
       7,
-      8
+      8,
+      1,
+      14
     ]
   }
 },
@@ -33,7 +38,7 @@
   "fields": {
     "name": "Clean the Square",
     "volunteer_count": 10,
-    "description": "10 volunteers needed to pick up waste in Trafalgar Square",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eros est, malesuada eu eleifend eu, tristique a nisl. Proin ante ligula, aliquet sit amet enim non, convallis mattis justo. Donec posuere nulla ut est convallis congue. In nisi elit, hendrerit in tempus et, lobortis ac elit. Sed diam tellus, convallis quis augue vel, euismod sollicitudin tortor. Donec id facilisis odio. Sed laoreet justo et sem volutpat maximus. Aenean est risus, suscipit sed interdum vitae, venenatis ac enim.\r\n\r\nCurabitur vitae elementum augue. Vestibulum vel mauris in velit commodo malesuada nec id urna. Vivamus dapibus laoreet justo, id commodo lacus accumsan ac. Nunc in lorem lacus. Nam ante velit, fermentum ac lectus quis, pharetra condimentum sapien.",
     "latitude": "51.508169",
     "longitude": "0.127941",
     "start_date": "2020-11-01T07:42:36Z",
@@ -51,8 +56,8 @@
     "conf_volunteers": [
       11,
       12,
-      13,
-      14
+      14,
+      13
     ]
   }
 },
@@ -62,7 +67,7 @@
   "fields": {
     "name": "Repair Big Ben",
     "volunteer_count": 8,
-    "description": "We need 8 volunteers to help repair Big Ben",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eros est, malesuada eu eleifend eu, tristique a nisl. Proin ante ligula, aliquet sit amet enim non, convallis mattis justo. Donec posuere nulla ut est convallis congue. In nisi elit, hendrerit in tempus et.\r\n\r\nCurabitur vitae elementum augue. Vestibulum vel mauris in velit commodo malesuada nec id urna. Vivamus dapibus laoreet justo, id commodo lacus accumsan ac. Nunc in lorem lacus. Nam ante velit, fermentum ac lectus quis, pharetra condimentum sapien. Nunc iaculis nec ipsum ut pharetra. Suspendisse nec imperdiet tortor.",
     "latitude": "51.500720",
     "longitude": "0.124647",
     "start_date": "2020-10-29T07:48:17Z",
@@ -92,7 +97,7 @@
   "fields": {
     "name": "Concert at the Zoo",
     "volunteer_count": 20,
-    "description": "We need 20 volunteers to help direct crowds at the zoo's concert.",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed eros est, malesuada eu eleifend eu, tristique a nisl. Proin ante ligula, aliquet sit amet enim non, convallis mattis justo. Donec posuere nulla ut est convallis congue. In nisi elit, hendrerit in tempus et, lobortis ac elit. Sed diam tellus, convallis quis augue vel, euismod sollicitudin tortor. \r\n\r\nCurabitur vitae elementum augue. Vestibulum vel mauris in velit commodo malesuada nec id urna. Vivamus dapibus laoreet justo, id commodo lacus accumsan ac. Nunc in lorem lacus. Nam ante velit, fermentum ac lectus quis, pharetra condimentum sapien.",
     "latitude": "51.535613",
     "longitude": "0.153458",
     "start_date": "2020-12-01T07:55:28Z",
@@ -109,10 +114,10 @@
     ],
     "conf_volunteers": [
       9,
-      10,
       15,
       17,
-      18
+      18,
+      10
     ]
   }
 }
