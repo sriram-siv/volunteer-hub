@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk, SplitImgDiv } from '../elements/Split'
+import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk } from '../elements/Split'
 import Button from '../elements/Button'
 import { Link } from 'react-router-dom'
 

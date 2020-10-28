@@ -2,7 +2,6 @@ import React from 'react'
 // import { Link } from 'react-router-dom'
 
 import Landing from './Landing'
-import Profile from './Profile'
 
 class Home extends React.Component {
 
@@ -22,8 +21,6 @@ class Home extends React.Component {
   }
 
   render() {
-
-    const { loggedIn } = this.state
 
     return (
       <>
