@@ -50,7 +50,7 @@ class UserForms extends React.Component {
       phone: '',
       password: '',
       password_confirmation: '',
-      profile_image: undefined
+      profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
     },
     showNotification: false,
     registerErrors: {}
