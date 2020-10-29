@@ -8,6 +8,7 @@ import { Link } from 'react-router-dom'
 import campaigns from '../../images/campaigns.jpg'
 import campPreview from '../../images/campPreview.jpg'
 import chat from '../../images/chat.jpg'
+import chatgif from '../../gif/chatgif.gif'
 
 const Hero = styled.div`
   display: flex;
@@ -60,7 +61,7 @@ const Landing = () => {
             </p>
           </div>
           <div>
-            <SplitImg src={chat} alt=''/>
+            <SplitImg src={chatgif} alt=''/>
           </div>
         </SplitRow>
         <SplitBrk />
