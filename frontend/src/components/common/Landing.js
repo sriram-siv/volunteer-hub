@@ -7,7 +7,6 @@ import { Link } from 'react-router-dom'
 
 import campaigns from '../../images/campaigns.jpg'
 import campPreview from '../../images/campPreview.jpg'
-import chat from '../../images/chat.jpg'
 import chatgif from '../../gif/chatgif.gif'
 
 const Hero = styled.div`
@@ -33,7 +32,7 @@ const Landing = () => {
             <p>
               Browse the best volunteer opportunities near you and even match with those looking for someone with your skills. Your community needs your help, what are you waiting for?
             </p>
-            <Link to='/campaigns'><Button width={width} label='Search Campaigns'/></Link>
+            <Link to='/campaigns' style={{ textDecoration: 'none' }} ><Button width={width} label='Search Campaigns'/></Link>
           </div>
           <div>
             <SplitImg src={campaigns} alt='' />
@@ -49,7 +48,7 @@ const Landing = () => {
             <p>
             Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting and managing a campaign.
             </p>
-            <Link to='/campaigns/new'><Button width={width} label='Start a Campaign' /></Link>
+            <Link to='/campaigns/new' style={{ textDecoration: 'none' }}><Button width={width} label='Start a Campaign' /></Link>
           </div>
         </SplitRow>
         <SplitBrk/>
