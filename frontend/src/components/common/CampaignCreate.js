@@ -17,14 +17,20 @@ const Wrapper = styled.div`
 `
 
 const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
   margin: 0 auto;
   width: calc(100vw - 40px);
   max-width: 500px;
   height: 800px;
   > * { margin-top: 10px; }
+`
+
+const GeoWrapper = styled.div`
+  position: relative;
+  width: calc(100vw - 40px);
+  max-width: 500px;
 `
 
 const MapContain = styled.div`
@@ -110,7 +116,9 @@ class CampaignCreate extends React.Component{
           <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
           <InputArea width="100%" name='description' value={description} returnValue={this.handleChange} placeholder='Give your campaign a description' submit={() => null}/>
           <InputText width="100%" type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
-          <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef}/>
+          <GeoWrapper>
+            <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
+          </GeoWrapper>
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
