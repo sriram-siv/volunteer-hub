@@ -105,5 +105,112 @@
       4
     ]
   }
+},
+{
+  "model": "skills.skill",
+  "pk": 6,
+  "fields": {
+    "name": "Legal Experience",
+    "users": [
+      3,
+      5,
+      6
+    ],
+    "campaigns": [
+      1
+    ]
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 7,
+  "fields": {
+    "name": "Child Care",
+    "users": [
+      16,
+      3,
+      6,
+      7
+    ],
+    "campaigns": [
+      1,
+      4
+    ]
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 8,
+  "fields": {
+    "name": "Driving License",
+    "users": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      17,
+      18,
+      20
+    ],
+    "campaigns": [
+      1,
+      2
+    ]
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 9,
+  "fields": {
+    "name": "Counseling Experience",
+    "users": [
+      8,
+      2,
+      5
+    ],
+    "campaigns": [
+      1
+    ]
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 10,
+  "fields": {
+    "name": "First Aid",
+    "users": [
+      8,
+      1
+    ],
+    "campaigns": [
+      4
+    ]
+  }
+},
+{
+  "model": "skills.skill",
+  "pk": 11,
+  "fields": {
+    "name": "CRB Checked",
+    "users": [
+      10,
+      5,
+      7
+    ],
+    "campaigns": [
+      1
+    ]
+  }
 }
 ]
