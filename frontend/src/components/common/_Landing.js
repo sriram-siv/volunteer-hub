@@ -1,9 +1,9 @@
 import React from 'react'
+import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { SplitContain, SplitRow, SplitTitle, SplitImg, SplitBrk } from '../elements/Split'
 import Button from '../elements/Button'
-import { Link } from 'react-router-dom'
 
 import campaigns from '../../images/campaigns.jpg'
 import campPreview from '../../images/campPreview.jpg'

@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
-import NoticeBox from '../common/NoticeBox'
+import NoticeBox from '../elements/NoticeBox'
 import MultiListVolunteer from '../elements/MultiListVolunteers'
 import CampaignInfo from '../elements/CampaignInfo'
 import FilterVolunteers from '../elements/FilterVolunteers'
@@ -206,6 +206,7 @@ class CampaignShow extends React.Component {
             <NoticeBox campaignData={campaignData} admin={admin} />
           </div>
         </MainContent>
+        {/* Break AdminPanel into separate component.. props => campaignData .. the rest can live inside its state */}
         <AdminPanel show={admin}>
           <div style={{ width: '400px', padding: '20px' }}>
             <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} containerStyle={{ height: '600px' }}/>

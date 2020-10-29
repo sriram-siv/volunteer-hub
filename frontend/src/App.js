@@ -12,8 +12,6 @@ import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
 import CampaignCreate from './components/common/CampaignCreate'
-
-import Tests from './components/common/Tests'
 import Profile from './components/common/Profile'
 
 class App extends React.Component {
@@ -53,6 +51,7 @@ class App extends React.Component {
   componentDidMount = () => {
     const userID = localStorage.getItem('user_id')
     if (userID) this.getUser(userID)
+    // TODO get stored theme
   }
 
   changeTheme = () => {
@@ -62,7 +61,6 @@ class App extends React.Component {
 
   getUser = async (id) => {
     const response = await getSingleProfile(id)
-    console.log(response.data, id)
     this.setState({ userData: response.data }, this.getUserCampaigns)
     this.showNotification(`welcome back ${response.data.username}`)
   }
@@ -75,13 +73,13 @@ class App extends React.Component {
 
   getUserCampaigns = () => {
     if (!this.state.userData) return
-    const ownedCampaigns = this.state.userData.owned_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
-    const coordCampaigns = this.state.userData.coord_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
-    const confCampaigns = this.state.userData.conf_campaigns.map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
-    this.setState({ userCampaigns: [...ownedCampaigns, ...coordCampaigns, ...confCampaigns] }, () => console.log(this.state.userCampaigns))  
+    const { owned_campaigns: owned, coord_campaigns: coord, conf_campaigns: volunteer } = this.state.userData
+    const userCampaigns = [...owned, ...coord, ...volunteer]
+      .map(campaign => ({ value: `/campaigns/${campaign.id}`, label: campaign.name }))
+    this.setState({ userCampaigns })
   }
 
-  /* auto options: 0 autohide, 1 wait to dismiss */
+  /* auto options: 0 autohide, 1 wait to dismiss */// not working currently
   showNotification = (message, auto = 0) => {
     this.setState({ notification: { message, auto } })
   }
@@ -99,9 +97,8 @@ class App extends React.Component {
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
           <Notification notification={notification}/>
-          <NavBar ref={ref => this.app.navbar = ref} changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
+          <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
-            <Route path='/tests' component={Tests} />
             <Route exact path="/" component={Home} />
             <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />
