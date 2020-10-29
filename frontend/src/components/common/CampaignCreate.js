@@ -82,6 +82,22 @@ class CampaignCreate extends React.Component{
     }
   }
 
+  showWidget = () => {
+    const widget = window.cloudinary.createUploadWidget(
+      { 
+        cloudName: 'dmhj1vjdf',
+        uploadPreset: 'jisx4gi0',
+        showUploadMoreButton: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') { 
+          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
+          this.setState({ pendingUserData })
+        }
+      })
+    widget.open()
+  }
+
   render(){
 
     const { name, volunteer_count, description, start_date } = this.state.formData
@@ -99,7 +115,10 @@ class CampaignCreate extends React.Component{
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
           <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
+            <Button width="10rem" label='Save our campaign' onClick={this.handleSubmit}/>
+          </div>
+          <div style={{ position: 'fixed', bottom: '85px', right: '25px', zIndex: 2 }}>
+            <Button width="10rem" label='Change banner image' onClick={this.showWidget}/>
           </div>
         </Form>
       </Wrapper>
