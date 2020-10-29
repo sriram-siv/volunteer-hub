@@ -7,7 +7,6 @@ import NoticeBox from '../common/NoticeBox'
 import MultiListVolunteer from '../elements/MultiListVolunteers'
 import CampaignInfo from '../elements/CampaignInfo'
 import FilterVolunteers from '../elements/FilterVolunteers'
-import InputText from '../elements/InputText'
 
 import { getSingleCampaign, createRoom } from '../../lib/api'
 

@@ -52,7 +52,10 @@ class Map extends React.Component {
           doubleClickZoom={false}
         >
           <MapHelper onMount={this.onMapLoad} />
-          {pins && pins.map((pin, i) => <Pin key={i} {...pin} color={'#222'} alt={false} size={20} number={i + 1} clickPin={clickPin} dblClickPin={this.setViewport} />)}
+          {pins && pins.map((pin, i) => (
+            <Pin key={i} {...pin} color={'#222'} size={20} number={i + 1}
+              clickPin={clickPin} dblClickPin={this.setViewport} />
+          ))}
         </MapGL>
       </>
     )

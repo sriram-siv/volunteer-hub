@@ -37,6 +37,7 @@ const ListWrapper = styled.div`
   position: absolute;
   top: 5px;
   left: 5px;
+  z-index: 1;
 `
 
 class Room extends React.Component {
@@ -135,9 +136,8 @@ class Room extends React.Component {
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
-          <ChatControl send={this.sendMessage} toggleEmoji={this.toggleEmoji} />
+          <ChatControl send={this.sendMessage} showEmoji={showEmoji} toggleEmoji={this.toggleEmoji} pickEmoji={this.pickEmoji} />
         </ControlWrapper>
-        {showEmoji && <Picker onSelect={this.pickEmoji}/>}
       </Wrapper>
     )
   }

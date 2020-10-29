@@ -87,6 +87,7 @@ class Pin extends React.Component {
     const openDetails = () => {
       this.props.clickPin(id)
     }
+    
     return (
       <Marker
         latitude={latitude}

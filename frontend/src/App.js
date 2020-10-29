@@ -94,12 +94,12 @@ class App extends React.Component {
 
   render() {
     const { theme, userCampaigns, notification } = this.state
-    // TODO if unauthorized redirect to landing page
+
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
           <Notification notification={notification}/>
-          <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
+          <NavBar ref={ref => this.app.navbar = ref} changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
           <Switch>
             <Route path='/tests' component={Tests} />
             <Route exact path="/" component={Home} />
