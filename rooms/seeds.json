@@ -3,11 +3,27 @@
   "model": "rooms.room",
   "pk": 1,
   "fields": {
-    "name": "All",
+    "name": "Coordinators",
     "campaign": 1,
     "members": [
       2,
       3,
+      14
+    ]
+  }
+},
+{
+  "model": "rooms.room",
+  "pk": 2,
+  "fields": {
+    "name": "All",
+    "campaign": 1,
+    "members": [
+      1,
+      2,
+      3,
+      4,
+      5,
       6,
       7,
       8,
@@ -17,50 +33,21 @@
 },
 {
   "model": "rooms.room",
-  "pk": 2,
-  "fields": {
-    "name": "Coordinators",
-    "campaign": 1,
-    "members": [
-      2,
-      3,
-      14
-    ]
-  }
-},
-{
-  "model": "rooms.room",
   "pk": 3,
   "fields": {
-    "name": "All",
-    "campaign": 2,
+    "name": "Coordinators",
+    "campaign": 3,
     "members": [
-      5,
-      9,
+      8,
       10,
       11,
-      12,
-      13,
-      14
+      12
     ]
   }
 },
 {
   "model": "rooms.room",
   "pk": 4,
-  "fields": {
-    "name": "Coordinators",
-    "campaign": 2,
-    "members": [
-      5,
-      9,
-      10
-    ]
-  }
-},
-{
-  "model": "rooms.room",
-  "pk": 5,
   "fields": {
     "name": "All",
     "campaign": 3,
@@ -77,15 +64,31 @@
 },
 {
   "model": "rooms.room",
+  "pk": 5,
+  "fields": {
+    "name": "All",
+    "campaign": 2,
+    "members": [
+      5,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14
+    ]
+  }
+},
+{
+  "model": "rooms.room",
   "pk": 6,
   "fields": {
     "name": "Coordinators",
-    "campaign": 3,
+    "campaign": 2,
     "members": [
-      8,
+      9,
       10,
-      11,
-      12
+      5
     ]
   }
 },
