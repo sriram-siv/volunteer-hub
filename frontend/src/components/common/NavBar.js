@@ -77,10 +77,8 @@ class NavBar extends React.Component {
   }
 
   render() {
-    let options = [
-      { value: '/campaigns', label: 'Campaign Index' },
-      { value: '/campaigns/new', label: 'New Campaign' }
-    ]
+    let options = [{ value: '/campaigns', label: 'Campaign Index' }]
+    if (localStorage.getItem('user_id')) options.push({ value: '/campaigns/new', label: 'New Campaign' })
     const { changeTheme, theme, campaignList } = this.props
     const { showForm, showUserOptions } = this.state
 

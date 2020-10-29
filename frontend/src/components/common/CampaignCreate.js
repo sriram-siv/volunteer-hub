@@ -53,6 +53,10 @@ class CampaignCreate extends React.Component{
     flyTo: null
   }
 
+  componentDidMount = () => {
+    if (!localStorage.getItem('user_id')) this.props.history.push('/campaigns')
+  }
+
   setMapRef = ref => {
     this.map = ref
   }
