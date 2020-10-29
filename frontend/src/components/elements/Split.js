@@ -21,8 +21,8 @@ export const SplitTitle = styled.h1`
 `
 
 export const SplitImg = styled.img `
-  height: auto;
-  width: 100%;
+  height: 80%;
+  width: 80%;
   border-radius: 45px;
   border: 2px solid #fef15e;
 

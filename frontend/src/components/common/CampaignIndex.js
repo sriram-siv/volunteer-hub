@@ -23,7 +23,7 @@ const SearchFields = styled.div`
   > * { margin-bottom: 5px; }
 `
 
-const Notification = styled.div`
+export const Notification = styled.div`
   opacity: ${props => props.visible ? 1 : 0};
   pointer-events: ${props => props.visible ? 'all' : 'none'};
   display: flex;
