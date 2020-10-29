@@ -32,7 +32,7 @@ class MultiListVolunteer extends React.Component {
   }
 
   selectVolunteer = volunteerID => {
-    console.log(volunteerID)
+    this.props.selectVolunteer(volunteerID)
   }
 
   confirmVolunteer = async (volunteerID) => {
@@ -57,7 +57,7 @@ class MultiListVolunteer extends React.Component {
 
   render() {
     const { openList } = this.state
-    const { containerStyle, campaignData, filteredVolunteers } = this.props
+    const { containerStyle, campaignData, filteredVolunteers, selectVolunteer } = this.props
     console.log(filteredVolunteers)
 
 

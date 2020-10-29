@@ -1,7 +1,11 @@
 import React from 'react'
 import Select from 'react-select'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
+
 import Schedule from './Schedule'
+import InputText from '../elements/InputText'
+
+import { getAllSkills } from '../../lib/api'
 
 const Wrapper = styled.div`
   height: calc(100% + 5px);
@@ -23,26 +27,67 @@ const Title = styled.div`
   margin-bottom: 20px;
 `
 
+const CheckBox = styled.div`
+  text-align: right;
+  > * { margin-right: 15px }
+`
+
 class FilterVolunteers extends React.Component {
 
   state = {
-
+    skillsOptions: null
   }
 
-  
+  componentDidMount = () => {
+    this.getSkills()
+  }
+
+  getSkills = async () => {
+    const response = await getAllSkills()
+    const skillsOptions = response.data.map(skill => ({ value: skill.id, label: skill.name }))
+    this.setState({ skillsOptions })
+  }
 
   render() {
-    const { schedule, skills, selectSchedule, selectSkills } = this.props
+    const { schedule, skills, selectSchedule, selectSkills, selectStrict, strictSkills, strictSchedule, newGroupName, editNewGroupName } = this.props
+    const { skillsOptions } = this.state
+
+    const selectStyles = {
+      control: styles => ({
+        ...styles,
+        backgroundColor: this.props.theme.background,
+        borderRadius: '2px',
+        borderColor: this.props.theme.shadow,
+        height: '5rem'
+      }),
+      singleValue: (styles) => ({
+        ...styles,
+        color: this.props.theme.text,
+        fontWeight: this.props.theme.fontWeight,
+        letterSpacing: this.props.theme.letterSpacing,
+        fontSize: '0.85rem'
+      })
+    }
+
     return (
       <Wrapper>
         <Title>Select Volunteers</Title>
         <p>show volunteers with these skills</p>
-        <Select onChange={selectSkills} />
+        <Select styles={selectStyles} value={skills} options={skillsOptions} onChange={selectSkills} isMulti />
+        <CheckBox>
+          <label htmlFor="strictSkills">All</label>
+          <input type="checkbox" id="strictSkills" checked={strictSkills} onClick={selectStrict}/>
+        </CheckBox>
         <p>show volunteers available on</p>
         <Schedule schedule={schedule} handleClick={selectSchedule} />
+        <CheckBox>
+          <label htmlFor="strictSchedule">All</label>
+          <input type="checkbox" id="strictSchedule" checked={strictSchedule} onClick={selectStrict}/>
+        </CheckBox>
+        <InputText label="group name" name="newGroupName" value={newGroupName} returnValue={editNewGroupName} />
       </Wrapper>
     )
   }
 }
 
-export default FilterVolunteers
+export default withTheme(FilterVolunteers)

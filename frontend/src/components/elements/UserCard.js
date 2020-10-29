@@ -83,7 +83,7 @@ class UserCard extends React.Component {
   clickDeny = () => {
     if (!this.state.denyActive) {
       this.setState({ denyActive: true }, () => {
-        setTimeout(() => this.setState({ denyActive: false }), 2000)
+        this.clickInterval = setTimeout(() => this.setState({ denyActive: false }), 2000)
       })
     } else this.props.deny(this.props.user.id)
   }
@@ -93,14 +93,16 @@ class UserCard extends React.Component {
     this.setState({ isSelected: !this.state.isSelected })
   }
 
+  componentWillUnmount = () => {
+    clearInterval(this.clickInterval)
+  }
+
   render() {
     const { user, confirm, showDetail, expanded, pending } = this.props
     const { denyActive, isSelected } = this.state
 
     const schedule = Array.from({ length: 14 }).fill(false)
     user.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
-
-    console.log(user.user_skills)
 
     return (
       <Wrapper expanded={expanded} isSelected={isSelected} >
@@ -116,7 +118,7 @@ class UserCard extends React.Component {
           <ProfilePic src={user.profile_image} />
           <Details>
             <p>{user.first_name} {user.last_name}</p>
-            <p>{user.user_skills.map(skill => `${skill.name}, `)}</p>
+            <p>{user.user_skills.map(skill => skill.name).join(', ')}</p>
           </Details>
         </Body>
         <div style={{ margin: '5px auto', width: 'calc(100% - 10px)' }}>

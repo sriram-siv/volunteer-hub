@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import Select from 'react-select'
 
 import BannerImage from '../elements/BannerImage'
@@ -30,7 +30,7 @@ const ProfilePic = styled.img`
 
 const Section = styled.div`
   position: relative;
-  height: 400px;
+  height: 450px;
   padding: 20px;
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -55,7 +55,7 @@ const SectionTitle = styled.div`
 const Button = styled.button`
   position: absolute;
   bottom: 10px;
-  right: ${props => `${props.position * 110 + 10}px`};
+  right: ${props => `${props.position * 120 + 20}px`};
   width: 100px;
   padding: 10px;
   border-radius: 2px;
@@ -177,7 +177,7 @@ class Profile extends React.Component {
         backgroundColor: this.props.theme.background,
         borderRadius: '2px',
         borderColor: this.props.theme.shadow,
-        height: 'calc(2rem)'
+        height: '5rem'
       }),
       singleValue: (styles) => ({
         ...styles,
@@ -210,7 +210,8 @@ class Profile extends React.Component {
                   <SectionTitle > My Profile</SectionTitle>
                   <p>{userData.first_name} {userData.last_name}</p>
                   <p>email: {userData.email}</p>
-                  <p>phone: {userData.phone}</p>
+                  <p style={{ marginTop: '-15px' }}>phone: {userData.phone}</p>
+                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil molestias sed adipisci nulla! Neque hic omnis nam harum! Eligendi quasi fugiat enim odit commodi nam optio nesciunt laboriosam cum eius quam aspernatur minus fuga quia tempora animi inventore numquam quas ducimus unde, temporibus tenetur velit. Tenetur necessitatibus ducimus nam at.</p>
                   <Button position={0} onClick={this.handleEditMode}>Edit</Button>
                 </>
                 :
@@ -232,7 +233,7 @@ class Profile extends React.Component {
               <p>availability</p>
               <Schedule handleClick={this.editSchedule} schedule={schedule} />
               <p>skills</p>
-              <Select value={userSkills} options={skills} isMulti onChange={this.editSkills}/>
+              <Select styles={selectStyles} value={userSkills} options={skills} isMulti onChange={this.editSkills}/>
               <Button position={0} onClick={this.saveShiftsSkills}>Save</Button>
             </Section>
           </SplitRow>
@@ -243,4 +244,4 @@ class Profile extends React.Component {
   }
 }
 
-export default Profile
+export default withTheme(Profile)

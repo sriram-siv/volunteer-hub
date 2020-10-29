@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import MessageBox from './MessageBox'
 
 const Wrapper = styled.section`
-  height: calc(100vh - 7rem - 50px);
+  height: calc(100vh - 10rem - 55px);
   overflow-y: scroll;
   background-color: ${props => props.theme.panels};
   scroll-behavior: ${props => props.historyLoaded ? 'smooth' : 'auto'};
