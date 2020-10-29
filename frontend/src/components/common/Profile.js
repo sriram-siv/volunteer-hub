@@ -9,6 +9,8 @@ import { SplitContain, SplitRow } from '../elements/Split'
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
 
+import icons from '../../lib/icons'
+
 
 const Wrapper = styled.div`
   position: relative;
@@ -20,12 +22,34 @@ const Wrapper = styled.div`
 
 const ProfilePic = styled.img`
   position: absolute;
-  top: 70px;
-  left: 50px;
+  top: 50px;
+  left: 100px;
   width: 150px;
   height: 150px;
   border-radius: 50%;
   border: 2px solid ${props => props.theme.panels};
+`
+
+const EditPic = styled.img`
+  position: absolute;
+  bottom: -130px;
+  left: 30px;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  border: 1px solid ${props => props.theme.shadow};
+`
+
+const EditPicButton = styled.button`
+  padding: 0;
+  padding-bottom: 2px;
+  position: absolute;
+  bottom: -70px;
+  left: 25px;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid ${props => props.theme.shadow};
 `
 
 const Section = styled.div`
@@ -65,6 +89,7 @@ const Button = styled.button`
 `
 
 const EditForm = styled.div`
+  position: relative;
   > * {
     margin: 5px 0;
   }
@@ -80,7 +105,8 @@ class Profile extends React.Component {
       user_skills: null,
       schedule: Array.from({ length: 14 }).fill(false)
     },
-    editMode: false
+    editMode: false,
+    newPic: null
   }
 
   componentDidMount = async () => {
@@ -100,6 +126,22 @@ class Profile extends React.Component {
     const formData = { user_skills, schedule }
     
     this.setState({ userData, pendingUserData: userData, formData }, () => console.log(this.state.formData)) 
+  }
+
+  showWidget = () => {
+    const widget = window.cloudinary.createUploadWidget(
+      { 
+        cloudName: 'dmhj1vjdf',
+        uploadPreset: 'jisx4gi0',
+        showUploadMoreButton: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') { 
+          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
+          this.setState({ pendingUserData })
+        }
+      })
+    widget.open()
   }
 
   handleEditMode = () => {
@@ -189,6 +231,8 @@ class Profile extends React.Component {
     }
 
     if (!userData) return null
+    console.log(userData.profile_image)
+
 
     // Shape data into react-select options object
     const userSkills = formData.user_skills.map(skill => ({ value: skill.id, label: skill.name }))
@@ -222,6 +266,10 @@ class Profile extends React.Component {
                     <InputText name='last_name' value={pendingUserData.last_name} label='Last Name' returnValue={this.handleEditChange}></InputText>
                     <InputText name='email' value={pendingUserData.email} label='Email' returnValue={this.handleEditChange}></InputText>
                     <InputText name='phone' value={pendingUserData.phone} label='Phone' returnValue={this.handleEditChange}></InputText>
+                    <EditPic src={pendingUserData.profile_image} />
+                    <EditPicButton onClick={this.showWidget}>
+                      {icons.edit('#232323', 18)}
+                    </EditPicButton>
                   </EditForm>
                   <Button position={1} onClick={this.saveEdits}>Save</Button>
                   <Button position={0} onClick={this.discardEdits}>Cancel</Button>
