@@ -92,9 +92,9 @@ class VolunteerList extends React.Component {
 
 
   render() {
-    const { isHidden, userShowingDetail, users } = this.state
+    const { isHidden, userShowingDetail } = this.state
     const { label } = this.props
-
+    const users = label === 'volunteers' ? this.props.users : this.state.users
     return (
       <Wrapper isHidden={isHidden}>
         <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>

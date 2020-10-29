@@ -95,6 +95,7 @@ class UserForms extends React.Component {
       } catch (err) {
         console.log(err.response.data)
         this.setState({ registerErrors: err.response.data })
+        return
       }
     }  // need to add check for login mode so popup doesn't show up, add log to above steps or maybe just a return in the catch
     try {

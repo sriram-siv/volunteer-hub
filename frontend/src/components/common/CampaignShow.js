@@ -191,7 +191,6 @@ class CampaignShow extends React.Component {
     }
 
     const { campaignData, members, rooms, admin, schedule, filteredVolunteers, skills, strictSkills, strictSchedule, newGroupName } = this.state
-
     if (!campaignData || !members || !rooms) return null
 
     return (

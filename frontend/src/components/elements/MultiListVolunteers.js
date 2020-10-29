@@ -57,9 +57,7 @@ class MultiListVolunteer extends React.Component {
 
   render() {
     const { openList } = this.state
-    const { containerStyle, campaignData, filteredVolunteers, selectVolunteer } = this.props
-    console.log(filteredVolunteers)
-
+    const { containerStyle, campaignData, filteredVolunteers } = this.props
 
     return (
       <div style={containerStyle}>

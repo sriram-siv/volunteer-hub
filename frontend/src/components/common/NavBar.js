@@ -38,6 +38,12 @@ class NavBar extends React.Component {
       fontWeight: this.props.theme.fontWeight,
       letterSpacing: this.props.theme.letterSpacing,
       fontSize: '0.85rem'
+    }),
+    menu: (styles) => ({
+      ...styles,
+      backgroundColor: this.props.theme.background,
+      color: this.props.theme.text,
+      borderRadius: '2px'
     })
   }
   
@@ -54,7 +60,10 @@ class NavBar extends React.Component {
     else this.setState({ showUserOptions: !this.state.showUserOptions })
   }
 
-  openProfile = () => this.props.history.push('/profile')
+  openProfile = () => {
+    this.props.history.push('/profile')
+    this.setState({ showUserOptions: false })
+  }
 
   handleLogin = async (id) => {
     this.props.app.getUser(id)
@@ -68,10 +77,8 @@ class NavBar extends React.Component {
   }
 
   render() {
-    let options = [
-      { value: '/campaigns', label: 'Campaign Index' },
-      { value: '/campaigns/new', label: 'New Campaign' }
-    ]
+    let options = [{ value: '/campaigns', label: 'Campaign Index' }]
+    if (localStorage.getItem('user_id')) options.push({ value: '/campaigns/new', label: 'New Campaign' })
     const { changeTheme, theme, campaignList } = this.props
     const { showForm, showUserOptions } = this.state
 

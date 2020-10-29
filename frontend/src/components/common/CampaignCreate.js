@@ -17,14 +17,20 @@ const Wrapper = styled.div`
 `
 
 const Form = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+  /* display: flex; */
+  /* flex-direction: column; */
+  /* align-items: center; */
   margin: 0 auto;
   width: calc(100vw - 40px);
   max-width: 500px;
   height: 800px;
   > * { margin-top: 10px; }
+`
+
+const GeoWrapper = styled.div`
+  position: relative;
+  width: calc(100vw - 40px);
+  max-width: 500px;
 `
 
 const MapContain = styled.div`
@@ -45,6 +51,10 @@ class CampaignCreate extends React.Component{
       start_date: null
     },
     flyTo: null
+  }
+
+  componentDidMount = () => {
+    if (!localStorage.getItem('user_id')) this.props.history.push('/campaigns')
   }
 
   setMapRef = ref => {
@@ -82,6 +92,22 @@ class CampaignCreate extends React.Component{
     }
   }
 
+  showWidget = () => {
+    const widget = window.cloudinary.createUploadWidget(
+      { 
+        cloudName: 'dmhj1vjdf',
+        uploadPreset: 'jisx4gi0',
+        showUploadMoreButton: false
+      },
+      (error, result) => {
+        if (!error && result && result.event === 'success') { 
+          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
+          this.setState({ pendingUserData })
+        }
+      })
+    widget.open()
+  }
+
   render(){
 
     const { name, volunteer_count, description, start_date } = this.state.formData
@@ -94,12 +120,17 @@ class CampaignCreate extends React.Component{
           <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
           <InputArea width="100%" name='description' value={description} returnValue={this.handleChange} placeholder='Give your campaign a description' submit={() => null}/>
           <InputText width="100%" type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
-          <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef}/>
+          <GeoWrapper>
+            <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
+          </GeoWrapper>
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
           <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
+            <Button width="10rem" label='Save our campaign' onClick={this.handleSubmit}/>
+          </div>
+          <div style={{ position: 'fixed', bottom: '85px', right: '25px', zIndex: 2 }}>
+            <Button width="10rem" label='Change banner image' onClick={this.showWidget}/>
           </div>
         </Form>
       </Wrapper>
