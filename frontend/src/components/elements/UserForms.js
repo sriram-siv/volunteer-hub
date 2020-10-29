@@ -32,6 +32,12 @@ const ChangeMode = styled.p`
   cursor: pointer;
 `
 
+const ErrorText = styled.p`
+  color: #F00;
+  font-size: .7em;
+  padding-left: 15px;
+`
+
 class UserForms extends React.Component {
 
   state = {
@@ -46,7 +52,8 @@ class UserForms extends React.Component {
       password_confirmation: '',
       profile_image: undefined
     },
-    showNotification: false
+    showNotification: false,
+    registerErrors: {}
   }
 
   componentDidUpdate = (prevProps) => {
@@ -55,7 +62,7 @@ class UserForms extends React.Component {
   
   switchMode = () => {
     const mode = this.state.mode === 'login' ? 'register' : 'login'
-    this.setState({ mode })
+    this.setState({ mode, registerErrors: {} })
   }
 
   handleChange = event => {
@@ -63,7 +70,11 @@ class UserForms extends React.Component {
       ...this.state.formData,
       [event.target.name]: event.target.value
     }
-    this.setState({ formData })
+    const registerErrors = {
+      ...this.state.registerErrors,
+      [event.target.name]: ''
+    }
+    this.setState({ formData, registerErrors })
   }
 
   handleSubmit = async event => {
@@ -76,17 +87,22 @@ class UserForms extends React.Component {
     console.log(this.state.formData)
     
     if (this.state.mode === 'register') {
-      const response = await registerUser(this.state.formData)
+      try {
+        const response = await registerUser(this.state.formData)
+  
+        if (response.status !== 201) return
 
-      if (response.status !== 201) return
-    }
+      } catch (err) {
+        console.log(err.response.data)
+        this.setState({ registerErrors: err.response.data })
+      }
+    }  // need to add check for login mode so popup doesn't show up, add log to above steps or maybe just a return in the catch
     try {
       const response = await loginUser(loginData)
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user_id', response.data.id)
       if (response.status === 200) this.props.onLogin(response.data.id)
     } catch (err) {
-      console.log(err.response.data.detail)
       this.props.app.showNotification(err.response.data.detail)
       const formData = { ...this.state.formData, email: '', password: '' }
       this.setState({ formData })
@@ -99,12 +115,19 @@ class UserForms extends React.Component {
     return (
       <Wrapper visible={this.props.visible} onSubmit={this.handleSubmit}>
         {mode === 'register' && <InputText label="username" name="username" value={username} returnValue={this.handleChange} />}
+        {this.state.registerErrors.username && <ErrorText>{this.state.registerErrors.username[0]}</ErrorText>}
         {mode === 'register' && <InputText label="first name" name="first_name" value={first_name} returnValue={this.handleChange} />}
+        {this.state.registerErrors.first_name && <ErrorText>{this.state.registerErrors.first_name[0]}</ErrorText>}
         {mode === 'register' && <InputText label="last name" name="last_name" value={last_name} returnValue={this.handleChange} />}
+        {this.state.registerErrors.last_name && <ErrorText>{this.state.registerErrors.last_name[0]}</ErrorText>}
         <InputText label="email" name="email" value={email} returnValue={this.handleChange}/>
+        {this.state.registerErrors.email && <ErrorText>{this.state.registerErrors.email[0]}</ErrorText>}
         {mode === 'register' && <InputText label="phone" name="phone" value={phone} returnValue={this.handleChange} />}
+        {this.state.registerErrors.phone && <ErrorText>{this.state.registerErrors.phone[0]}</ErrorText>}
         <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange}/>
+        {this.state.registerErrors.password && <ErrorText>{this.state.registerErrors.password[0]}</ErrorText>}
         {mode === 'register' && <InputText label="confirm password" name="password_confirmation" value={password_confirmation} type="password" returnValue={this.handleChange} />}
+        {this.state.registerErrors.password_confirmation && <ErrorText>{this.state.registerErrors.password_confirmation[0]}</ErrorText>}
         <Button label={mode} width="calc(100% - 10px)" />
         <ChangeMode onClick={this.switchMode}>{mode === 'login' ? 'new user' : ' I have an account'}</ChangeMode>
       </Wrapper>
