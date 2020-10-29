@@ -1,5 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Picker } from 'emoji-mart'
+import 'emoji-mart/css/emoji-mart.css'
 
 import { getSingleRoom } from '../../lib/api'
 
@@ -44,7 +46,8 @@ class Room extends React.Component {
     members: [],
     messages: [],
     draft: '',
-    historyLoaded: false
+    historyLoaded: false,
+    showEmoji: false
   }
 
   componentDidMount = () => {
@@ -102,8 +105,16 @@ class Room extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  toggleEmoji = () => {
+    this.setState({ showEmoji: !this.state.showEmoji })
+  }
+
+  pickEmoji = emoji => {
+    this.setState({ draft: this.state.draft + emoji.native })
+  }
+
   render() {
-    const { name, messages, draft, historyLoaded } = this.state
+    const { name, messages, draft, historyLoaded, showEmoji } = this.state
 
     const memberItems = this.state.members.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
     const members = { title: 'members', items: memberItems }
@@ -124,8 +135,9 @@ class Room extends React.Component {
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
-          <ChatControl />
+          <ChatControl send={this.sendMessage} toggleEmoji={this.toggleEmoji} />
         </ControlWrapper>
+        {showEmoji && <Picker onSelect={this.pickEmoji}/>}
       </Wrapper>
     )
   }

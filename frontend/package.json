@@ -6,6 +6,7 @@
     "@urbica/react-map-gl": "^1.14.2",
     "axios": "^0.20.0",
     "bootstrap": "^4.5.3",
+    "emoji-mart": "^3.0.0",
     "eslint-plugin-react": "^7.21.5",
     "http-proxy-middleware": "^1.0.6",
     "mapbox-gl": "^1.12.0",
