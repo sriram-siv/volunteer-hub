@@ -82,7 +82,7 @@ class NavBar extends React.Component {
     return (
       <>
         <UserPanel visible={showUserOptions} openProfile={this.openProfile} logout={this.handleLogout} />
-        <UserForms visible={showForm} onLogin={this.handleLogin} />
+        <UserForms visible={showForm} onLogin={this.handleLogin} app={this.props.app}/>
         <NavBarContainer>
           <div className="nav-left">
             <span onClick={changeTheme}>

@@ -3,6 +3,8 @@ import styled from 'styled-components'
 
 import { loginUser, registerUser } from '../../lib/api'
 
+import { Notification } from '../common/CampaignIndex' 
+
 import InputText from './InputText'
 import Button from './Button'
 
@@ -43,7 +45,8 @@ class UserForms extends React.Component {
       password: '',
       password_confirmation: '',
       profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
-    }
+    },
+    showNotification: false
   }
 
   componentDidUpdate = (prevProps) => {
@@ -77,12 +80,17 @@ class UserForms extends React.Component {
 
       if (response.status !== 201) return
     }
-
-    const response = await loginUser(loginData)
-
-    localStorage.setItem('token', response.data.token)
-    localStorage.setItem('user_id', response.data.id)
-    if (response.status === 200) this.props.onLogin(response.data.id)
+    try {
+      const response = await loginUser(loginData)
+      localStorage.setItem('token', response.data.token)
+      localStorage.setItem('user_id', response.data.id)
+      if (response.status === 200) this.props.onLogin(response.data.id)
+    } catch (err) {
+      console.log(err.response.data.detail)
+      this.props.app.showNotification(err.response.data.detail)
+      const formData = { ...this.state.formData, email: '', password: '' }
+      this.setState({ formData })
+    }
   }
 
   render() {
