@@ -1,11 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 
-// background-color: #eeed;
-// color: #333;
 const ButtonElement = styled.button`
   display: block;
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.primary ? props.theme.primary : props.theme.background};
   color: ${props => props.theme.text};
   border-radius: 2px;
   width: ${props => props.width};
@@ -20,8 +18,8 @@ const ButtonElement = styled.button`
   }
 `
 
-const Button = ({ width, label, onClick }) => {
-  return <ButtonElement width={width} onClick={onClick}>{label}</ButtonElement>
+const Button = ({ width, label, onClick, primary }) => {
+  return <ButtonElement primary={primary} width={width} onClick={onClick}>{label}</ButtonElement>
 }
 
 export default Button

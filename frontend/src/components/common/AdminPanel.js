@@ -13,6 +13,7 @@ const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: space-evenly;
+  height: 600px;
 `
 
 const ButtonGroup = styled.div`
@@ -22,10 +23,6 @@ const ButtonGroup = styled.div`
   justify-content: space-between;
   width: 100%;
   padding: 0 10px;
-
-  > * {
-    width: calc(50% - 5px);
-  }
 `
 
 class AdminPanel extends React.Component {
@@ -136,8 +133,8 @@ class AdminPanel extends React.Component {
             editGroupName={this.editGroupName}
           />
           <ButtonGroup>
-            <Button label="select all" />
-            <Button label="create group" onClick={this.createNewGroup} />
+            <Button width="calc(50% - 10px)" label="select all" />
+            <Button width="calc(50% - 10px)" primary label="create group" onClick={this.createNewGroup} />
           </ButtonGroup>
         </div>
       </Wrapper>

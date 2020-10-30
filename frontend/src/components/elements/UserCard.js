@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   margin: 5px;
   margin-right: 2px;
   position: relative;
-  height: ${props => props.expanded ? '17rem' : 'calc(3.4rem + 10px)'};
+  height: ${props => props.expanded ? '18rem' : 'calc(3.4rem + 10px)'};
   transition: all 0.2s;
   background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.panels};
   border-radius: 2px;
