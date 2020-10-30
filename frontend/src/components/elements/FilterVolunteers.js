@@ -49,7 +49,7 @@ class FilterVolunteers extends React.Component {
   }
 
   render() {
-    const { schedule, skills, selectSchedule, selectSkills, selectStrict, strictSkills, strictSchedule, newGroupName, editNewGroupName } = this.props
+    const { schedule, skills, selectSchedule, selectSkills, selectStrict, strictSkills, strictSchedule, groupName, editGroupName } = this.props
     const { skillsOptions } = this.state
 
     const selectStyles = {
@@ -84,7 +84,7 @@ class FilterVolunteers extends React.Component {
           <label htmlFor="strictSchedule">All</label>
           <input type="checkbox" id="strictSchedule" checked={strictSchedule} onClick={selectStrict}/>
         </CheckBox>
-        <InputText label="group name" name="newGroupName" value={newGroupName} returnValue={editNewGroupName} />
+        <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
       </Wrapper>
     )
   }

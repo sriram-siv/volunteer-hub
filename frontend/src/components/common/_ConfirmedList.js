@@ -12,7 +12,6 @@ class ConfirmedList extends React.Component{
     this.setState({ campaignData: this.props.campaignData })
   }
 
-
   render () {
     const { campaignData } = this.state
     if (!campaignData) return null
