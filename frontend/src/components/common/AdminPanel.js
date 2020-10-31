@@ -176,13 +176,8 @@ class AdminPanel extends React.Component {
 
     return (
       <Wrapper>
-<<<<<<< HEAD
-        <div style={{ width: '360px', height: '100%' }}>
-          <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} />
-=======
         <div style={{ width: '360px' }}>
           <MultiListVolunteer lists={volunteerLists} actions={this.volunteerActions} />
->>>>>>> refactoring
         </div>
         <div style={{ width: 'calc(100% - 420px)' }}>
           <FilterVolunteers
