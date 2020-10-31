@@ -28,13 +28,17 @@ const EmojiPicker = styled.div`
   display: ${props => props.show ? 'block' : 'none'};
 `
 
-const ChatControl = ({ send, showEmoji, toggleEmoji, pickEmoji }) => {
+const ChatControl = ({ send, pickEmoji }) => {
+  const [showEmoji, setShowEmoji] = React.useState(false)
+  const toggleEmoji = () => setShowEmoji(!showEmoji)
   return (
     <Wrapper>
       <Button position="right" corner onClick={send}>
         <IconSpan>{icons.send('#232323', 16)}</IconSpan>
       </Button>
-      <Button position="right" onClick={toggleEmoji}>😀</Button>
+      <Button position="right" onClick={toggleEmoji}>
+        <span role="img" aria-label="emoji menu">😀</span>
+      </Button>
       <EmojiPicker show={showEmoji} onBlur={toggleEmoji}>
         <Picker onSelect={pickEmoji} />
       </EmojiPicker>

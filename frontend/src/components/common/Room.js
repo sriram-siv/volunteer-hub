@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Picker } from 'emoji-mart'
 import 'emoji-mart/css/emoji-mart.css'
 
 import { getSingleRoom } from '../../lib/api'
@@ -47,12 +46,10 @@ class Room extends React.Component {
     members: [],
     messages: [],
     draft: '',
-    historyLoaded: false,
-    showEmoji: false
+    historyLoaded: false
   }
 
   componentDidMount = () => {
-    // this.connectToSocket()
     this.getChatHistory()
   }
 
@@ -63,21 +60,16 @@ class Room extends React.Component {
       `ws://${domain}/ws/chat/${this.props.match.params.room}/`
     )
 
-    // this.chatSocket.addEventListener('open', this.getChatHistory())
-
     this.chatSocket.onmessage = (e) => {
       const data = JSON.parse(e.data)
-      console.log(data.message)
       this.setState({ messages: [...this.state.messages, data.message] })
       this.chatWindow.scrollTop = this.chatWindow.scrollHeight
     }
 
     this.chatSocket.onclose = () => console.error('Chat socket closed unexpectedly')
-    console.log(this.chatSocket)
   }
 
   getChatHistory = async () => {
-    // get request to room (id)
     try {
       const response = await getSingleRoom(this.props.match.params.room)
       const { name, members, messages } = response.data
@@ -106,20 +98,13 @@ class Room extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
-  toggleEmoji = () => {
-    this.setState({ showEmoji: !this.state.showEmoji })
-  }
-
   pickEmoji = emoji => {
     this.setState({ draft: this.state.draft + emoji.native })
   }
 
   render() {
-    const { name, messages, draft, historyLoaded, showEmoji } = this.state
-
+    const { name, messages, draft, historyLoaded } = this.state
     const memberItems = this.state.members.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
-    const members = { title: 'members', items: memberItems }
-    console.log(members)
     return (
       <Wrapper>
         <Header>
@@ -136,7 +121,7 @@ class Room extends React.Component {
             returnValue={this.handleChange}
             submit={this.sendMessage}
           />
-          <ChatControl send={this.sendMessage} showEmoji={showEmoji} toggleEmoji={this.toggleEmoji} pickEmoji={this.pickEmoji} />
+          <ChatControl send={this.sendMessage} pickEmoji={this.pickEmoji} />
         </ControlWrapper>
       </Wrapper>
     )
