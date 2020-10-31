@@ -8,8 +8,6 @@ import InputText from '../elements/InputText'
 import { getAllSkills } from '../../lib/api'
 
 const Wrapper = styled.div`
-  /* height: calc(100% + 5px); */
-  /* margin-top: 5px; */
   height: 100%;
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -72,7 +70,7 @@ class FilterVolunteers extends React.Component {
 
     return (
       <Wrapper>
-        <Title>Select Volunteers</Title>
+        <Title>Organise Volunteers</Title>
         <p>show volunteers with these skills</p>
         <Select styles={selectStyles} value={skills} options={skillsOptions} onChange={selectSkills} isMulti />
         <CheckBox>

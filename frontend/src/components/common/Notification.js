@@ -9,7 +9,7 @@ const Wrapper = styled.div`
   width: 300px;
   max-width: 95vw;
   transform: translateX(-50%);
-  z-index: 5;
+  z-index: 9;
 
   text-align: center;
   font-size: 0.85rem;
@@ -39,7 +39,7 @@ class Notification extends React.Component {
 
   showNotification = () => {
     const { notification } = this.props
-    this.setState({ notification: <Wrapper>{notification.message}</Wrapper> })
+    this.setState({ notification: notification.message })
   }
 
   hideNotification = () => {
@@ -49,7 +49,7 @@ class Notification extends React.Component {
   render() {
     const { notification } = this.state
     if (!notification) return null
-    return <>{notification}</>
+    return <Wrapper>{notification}</Wrapper>
   }
 }
 

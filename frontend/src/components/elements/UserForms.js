@@ -3,25 +3,19 @@ import styled from 'styled-components'
 
 import { loginUser, registerUser } from '../../lib/api'
 
-import { Notification } from '../common/CampaignIndex' 
-
 import InputText from './InputText'
 import Button from './Button'
 
 const Wrapper = styled.form`
   position: absolute;
-  z-index: 9;
+  z-index: 8;
   top: ${props => props.visible ? 'calc(3rem + 5px)' : '-12rem'};
   left: 5px;
   background-color: ${props => props.theme.panels};
-  border-width: 1px;
-  /* border-style: solid; */
-  border-color: ${props => props.theme.shadow};
   width: 360px;
   transition: top 0.4s;
   > * {
     margin: 5px;
-
   }
 `
 
@@ -30,12 +24,6 @@ const ChangeMode = styled.p`
   text-align: center;
   color: ${props => props.theme.text};
   cursor: pointer;
-`
-
-const ErrorText = styled.p`
-  color: #F00;
-  font-size: .7em;
-  padding-left: 15px;
 `
 
 class UserForms extends React.Component {
@@ -79,25 +67,23 @@ class UserForms extends React.Component {
 
   handleSubmit = async event => {
     event.preventDefault()
+
+    // Prepare separate form for login so that autologin can complete upon register
     const loginData = {
       email: this.state.formData.email,
       password: this.state.formData.password
     }
-
-    console.log(this.state.formData)
     
     if (this.state.mode === 'register') {
       try {
         const response = await registerUser(this.state.formData)
-  
         if (response.status !== 201) return
-
       } catch (err) {
         console.log(err.response.data)
         this.setState({ registerErrors: err.response.data })
         return
       }
-    }  // need to add check for login mode so popup doesn't show up, add log to above steps or maybe just a return in the catch
+    }
     try {
       const response = await loginUser(loginData)
       localStorage.setItem('token', response.data.token)
@@ -111,24 +97,22 @@ class UserForms extends React.Component {
   }
 
   render() {
-    const { mode } = this.state
-    const { username, email, password, password_confirmation, first_name, last_name, phone } = this.state.formData
+    const { mode, registerErrors } = this.state
+    const { username, email, password, password_confirmation: passwordConfirmation, first_name: firstName, last_name: lastName, phone } = this.state.formData
     return (
       <Wrapper visible={this.props.visible} onSubmit={this.handleSubmit}>
-        {mode === 'register' && <InputText label="username" name="username" value={username} returnValue={this.handleChange} />}
-        {this.state.registerErrors.username && <ErrorText>{this.state.registerErrors.username[0]}</ErrorText>}
-        {mode === 'register' && <InputText label="first name" name="first_name" value={first_name} returnValue={this.handleChange} />}
-        {this.state.registerErrors.first_name && <ErrorText>{this.state.registerErrors.first_name[0]}</ErrorText>}
-        {mode === 'register' && <InputText label="last name" name="last_name" value={last_name} returnValue={this.handleChange} />}
-        {this.state.registerErrors.last_name && <ErrorText>{this.state.registerErrors.last_name[0]}</ErrorText>}
-        <InputText label="email" name="email" value={email} returnValue={this.handleChange}/>
-        {this.state.registerErrors.email && <ErrorText>{this.state.registerErrors.email[0]}</ErrorText>}
-        {mode === 'register' && <InputText label="phone" name="phone" value={phone} returnValue={this.handleChange} />}
-        {this.state.registerErrors.phone && <ErrorText>{this.state.registerErrors.phone[0]}</ErrorText>}
-        <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange}/>
-        {this.state.registerErrors.password && <ErrorText>{this.state.registerErrors.password[0]}</ErrorText>}
-        {mode === 'register' && <InputText label="confirm password" name="password_confirmation" value={password_confirmation} type="password" returnValue={this.handleChange} />}
-        {this.state.registerErrors.password_confirmation && <ErrorText>{this.state.registerErrors.password_confirmation[0]}</ErrorText>}
+        {mode === 'register' &&
+          <InputText label="username" name="username" value={username} returnValue={this.handleChange} error={registerErrors.username} />}
+        {mode === 'register' &&
+          <InputText label="first name" name="first_name" value={firstName} returnValue={this.handleChange} error={registerErrors.first_name && registerErrors.first_name[0]} />}
+        {mode === 'register' &&
+          <InputText label="last name" name="last_name" value={lastName} returnValue={this.handleChange} error={registerErrors.last_name && registerErrors.last_name[0]} />}
+        <InputText label="email" name="email" value={email} returnValue={this.handleChange} error={registerErrors.email && registerErrors.email[0]} />
+        {mode === 'register' &&
+          <InputText label="phone" name="phone" value={phone} type="number" returnValue={this.handleChange} error={registerErrors.phone && registerErrors.phone[0]} />}
+        <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange} error={registerErrors.password && registerErrors.password[0]} />
+        {mode === 'register' &&
+          <InputText label="confirm password" name="password_confirmation" value={passwordConfirmation} type="password" returnValue={this.handleChange} error={registerErrors.password_confirmation && registerErrors.password_confirmation[0]} />}
         <Button label={mode} width="calc(100% - 10px)" />
         <ChangeMode onClick={this.switchMode}>{mode === 'login' ? 'new user' : ' I have an account'}</ChangeMode>
       </Wrapper>
