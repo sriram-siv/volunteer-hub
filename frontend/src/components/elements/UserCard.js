@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   margin: 5px;
   margin-right: 2px;
   position: relative;
-  height: ${props => props.expanded ? '18rem' : 'calc(3.4rem + 10px)'};
+  height: ${props => props.expanded ? '19 rem' : '3rem'};
   transition: all 0.2s;
   background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.panels};
   border-radius: 2px;
@@ -21,27 +21,25 @@ const Wrapper = styled.div`
 
 const Header = styled.div`
   display: flex;
-  height: calc(3.4rem + 10px);
+  height: 3rem;
 `
 
 const Title = styled.div`
-  width: calc(100% - 100px);
-  line-height: calc(3.4rem + 10px);
+  width: calc(100% - 120px);
+  line-height: 3rem;
   padding-left: 15px;
 `
 
 const Control = styled.div`
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  width: 100px;
-
-  margin: 2px;
+  flex-direction: row;
+  width: 120px;
 `
 
 const Button = styled.button`
   width: 100%;
-  height: calc(50% - 1px);
+  min-width: 60px;
+  height: 3rem;
   border: none;
   background-color: ${props => props.isSelected ? 'transparent' : props.theme.panels};
   transition: all 0.2s;
@@ -54,22 +52,22 @@ const Button = styled.button`
 `
 
 const Body = styled.div`
-  padding: 5px 20px;
+  padding: 5px 10px;
   display: flex;
-
+  height: 8rem;
 `
 
 const ProfilePic = styled.img`
   width: 60px;
   height: 60px;
-  clip-path: circle();
+  border-radius: 50%;
 `
 
 const Details = styled.div`
-  padding: 5px;
+  margin: 0 15px;
   p {
-    line-height: 1rem;
-    margin: 5px 10px;
+    margin-bottom: 5px;
+    line-height: 1.5rem;
   }
 `
 

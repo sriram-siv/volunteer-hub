@@ -2,18 +2,22 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import { createRoom } from '../../lib/api'
+import { confirmVolunteer, removeVolunteer, createRoom } from '../../lib/api'
 
 import Button from '../elements/Button'
 import MultiListVolunteer from '../elements/MultiListVolunteers'
 import FilterVolunteers from '../elements/FilterVolunteers'
-
 
 const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: space-evenly;
   height: 600px;
+
+  > * {
+    position: relative;
+    height: 100%;
+  }
 `
 
 const ButtonGroup = styled.div`
@@ -28,7 +32,10 @@ const ButtonGroup = styled.div`
 class AdminPanel extends React.Component {
 
   state = {
+    campaignID: null,
+    volunteers: null,
     filteredVolunteers: null,
+    pendingVolunteers: null,
     skills: [],
     schedule: Array.from({ length: 14 }).fill(false),
     strictSkills: true,
@@ -38,8 +45,21 @@ class AdminPanel extends React.Component {
   }
 
   componentDidMount = () => {
-    const { owner, coordinators, conf_volunteers: volunteers } = this.props.campaignData
-    this.setState({ campaignData: this.props.campaignData, filteredVolunteers: [owner, ...coordinators, ...volunteers] })    
+    this.getCampaignData() 
+  }
+
+  componentDidUpdate = () => {
+    if (this.state.campaignID !== this.props.campaignData.id) this.getCampaignData()
+  }
+
+  getCampaignData = () => {
+    const { id, owner, coordinators, conf_volunteers: volunteers, pend_volunteers: pendingVolunteers } = this.props.campaignData
+    this.setState({
+      campaignID: id,
+      volunteers: [owner, ...coordinators, ...volunteers],
+      filteredVolunteers: [owner, ...coordinators, ...volunteers],
+      pendingVolunteers
+    })   
   }
 
   selectSchedule = slot => {
@@ -53,7 +73,7 @@ class AdminPanel extends React.Component {
   }
 
   filterVolunteers = () => {
-    const { campaignData, schedule, skills, strictSchedule, strictSkills } = this.state
+    const { volunteers, schedule, skills, strictSchedule, strictSkills } = this.state
 
     const isAvailableAll = user => (
       schedule.every((slot, i) => !slot || user.user_shifts.some(shift => shift.id - 1 === i))
@@ -71,7 +91,7 @@ class AdminPanel extends React.Component {
       return user.user_skills.some(userSkill => skills.some(skill => skill.value === userSkill.id))
     }
 
-    const filteredVolunteers = [ campaignData.owner, ...campaignData.coordinators, ...campaignData.conf_volunteers ]
+    const filteredVolunteers = volunteers
       .filter(volunteer => strictSchedule ? isAvailableAll(volunteer) : isAvailableAny(volunteer))
       .filter(volunteer => strictSkills ? hasSkillsAll(volunteer) : hasSkillsAny(volunteer))
     
@@ -94,15 +114,14 @@ class AdminPanel extends React.Component {
   }
 
   createNewGroup = async () => {
-    const { groupName, selectedVolunteers, campaignData } = this.state
-    console.log(campaignData)
+    const { groupName, selectedVolunteers, campaignID } = this.state
     if (!groupName || selectedVolunteers.length === 0) return
     const userID = Number(localStorage.getItem('user_id'))
     if (!selectedVolunteers.includes(userID)) selectedVolunteers.unshift(userID)
     const formData = {
       name: groupName,
       members: selectedVolunteers,
-      campaign: campaignData.id
+      campaign: campaignID
     }
     
     const response = await createRoom(formData)
@@ -111,16 +130,61 @@ class AdminPanel extends React.Component {
     }
   }
 
+  confirmVolunteer = async volunteerID => {
+    try {
+      await confirmVolunteer(this.state.campaignID, volunteerID)
+      const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
+      const volunteers = [...this.state.volunteers, confirmedVolunteer]
+      const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
+      this.setState({ volunteers, pendingVolunteers }, this.filterVolunteers)
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  denyVolunteer = async volunteerID => {
+    try {
+      await removeVolunteer(this.state.campaignID, volunteerID)
+      const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
+      this.setState({ pendingVolunteers })
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+  volunteerActions = {
+    selectVolunteer: this.selectVolunteer,
+    confirmVolunteer: this.confirmVolunteer,
+    denyVolunteer: this.denyVolunteer
+  }
 
   render() {
-    const { campaignData } = this.props
-    const { filteredVolunteers, skills, schedule, strictSkills, strictSchedule, groupName } = this.state
+    const {
+      filteredVolunteers,
+      pendingVolunteers,
+      skills,
+      schedule,
+      strictSkills,
+      strictSchedule,
+      groupName
+    } = this.state
+
+    const volunteerLists = [
+      { label: 'pending', users: pendingVolunteers },
+      { label: 'volunteers', users: filteredVolunteers }
+    ]
+
     return (
       <Wrapper>
+<<<<<<< HEAD
         <div style={{ width: '360px', height: '100%' }}>
           <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} />
+=======
+        <div style={{ width: '360px' }}>
+          <MultiListVolunteer lists={volunteerLists} actions={this.volunteerActions} />
+>>>>>>> refactoring
         </div>
-        <div style={{ position: 'relative', width: 'calc(100% - 420px)' }}>
+        <div style={{ width: 'calc(100% - 420px)' }}>
           <FilterVolunteers
             skills={skills}
             schedule={schedule}
@@ -133,8 +197,9 @@ class AdminPanel extends React.Component {
             editGroupName={this.editGroupName}
           />
           <ButtonGroup>
-            <Button width="calc(50% - 10px)" label="select all" />
-            <Button width="calc(50% - 10px)" primary label="create group" onClick={this.createNewGroup} />
+            <Button width="calc(50% - 5px)" label="select all" />
+            <div style={{ width: '5px' }} />
+            <Button width="calc(50% - 5px)" primary label="create group" onClick={this.createNewGroup} />
           </ButtonGroup>
         </div>
       </Wrapper>

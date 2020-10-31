@@ -58,6 +58,7 @@ const Error = styled.div`
   font-weight: ${props => props.theme.fontWeight};
   letter-spacing: ${props => props.theme.letterSpacing};
   pointer-events: none;
+  text-transform: lowercase;
 `
 
 class InputField extends React.Component {
