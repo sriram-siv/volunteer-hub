@@ -26,7 +26,6 @@ class MultiListVolunteer extends React.Component {
   }
 
   onListToggle = listName => {
-    console.log(listName)
     const openList = this.state.openList === listName ? '' : listName
     this.setState({ openList })
   }
@@ -61,10 +60,10 @@ class MultiListVolunteer extends React.Component {
 
     return (
       <div style={containerStyle}>
-        <Wrapper position={0} show={!openList || openList === 'pending'} open={openList === 'pending' } >
+        <Wrapper show={!openList || openList === 'pending'} open={openList === 'pending' } >
           <VolunteerList actions={this.volunteerActions} label="pending" campaignID={campaignData.id} users={campaignData.pend_volunteers} onToggle={() => this.onListToggle('pending')} />
         </Wrapper>
-        <Wrapper position={0} show={!openList || openList === 'volunteers'} open={openList === 'volunteers' } >
+        <Wrapper show={!openList || openList === 'volunteers'} open={openList === 'volunteers' } >
           <VolunteerList actions={this.volunteerActions} label="volunteers" campaignData={campaignData} users={filteredVolunteers} onToggle={() => this.onListToggle('volunteers')} />
         </Wrapper>
       </div>
