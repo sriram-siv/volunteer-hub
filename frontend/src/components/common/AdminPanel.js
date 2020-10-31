@@ -117,8 +117,8 @@ class AdminPanel extends React.Component {
     const { filteredVolunteers, skills, schedule, strictSkills, strictSchedule, groupName } = this.state
     return (
       <Wrapper>
-        <div style={{ width: '360px' }}>
-          <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} containerStyle={{ height: '600px' }}/>
+        <div style={{ width: '360px', height: '100%' }}>
+          <MultiListVolunteer campaignData={campaignData} filteredVolunteers={filteredVolunteers}  selectVolunteer={this.selectVolunteer} />
         </div>
         <div style={{ position: 'relative', width: 'calc(100% - 420px)' }}>
           <FilterVolunteers

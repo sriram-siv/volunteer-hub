@@ -56,10 +56,10 @@ class MultiListVolunteer extends React.Component {
 
   render() {
     const { openList } = this.state
-    const { containerStyle, campaignData, filteredVolunteers } = this.props
+    const { campaignData, filteredVolunteers } = this.props
 
     return (
-      <div style={containerStyle}>
+      <div style={{ height: '100%' }}>
         <Wrapper show={!openList || openList === 'pending'} open={openList === 'pending' } >
           <VolunteerList actions={this.volunteerActions} label="pending" campaignID={campaignData.id} users={campaignData.pend_volunteers} onToggle={() => this.onListToggle('pending')} />
         </Wrapper>
