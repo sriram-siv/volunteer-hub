@@ -4,62 +4,42 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 
 import Pin from './Pin'
 import MapHelper from './MapHelper'
+import MapLoading from './MapLoading'
 
-class Map extends React.Component {
+const Map = ({ setRef, pins, clickPin, flyTo }) => {
+  const [viewport, setViewport] = React.useState({ zoom: 1, latitude: 50, longitude: 0 })
+  const [mapReady, setMapReady] = React.useState(false)
+  // MapGL will only render child components once the tiles have loaded so
+  // we can use this to check when to stop displaying the loading screen
+  const onMapLoad = () => setMapReady(true)
 
-  state = {
-    viewport: {
-      zoom: 1,
-      latitude: 50,
-      longitude: 0
-    },
-    bounds: null,
-    mapReady: false
-  }
+  React.useEffect(() => {
+    if (!flyTo) return
+    const { latitude, longitude, zoom } = flyTo
+    setViewport({ latitude, longitude, zoom: zoom + 10 })
+  }, [flyTo])
 
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.flyTo !== this.props.flyTo) {
-      const { latitude, longitude } = this.props.flyTo
-      const zoom = this.props.flyTo.zoom + 10
-      this.setViewport({ latitude, longitude, zoom })
-    }
-  }
-
-  setViewport = newViewport => {
-    const viewport = { ...this.state.viewport, ...newViewport }
-    this.setState({ viewport })
-  }
-
-  onMapLoad = () => {
-    if (!this.state.mapReady) this.setState({ mapReady: true })
-  }
-
-  render() {
-    const { pins, setRef, clickPin } = this.props
-    const { mapReady } = this.state
-    return (
-      <>
-        {!mapReady && <div style={{ textAlign: 'center', lineHeight: '100vh' }}>Map Loading</div>}
-        <MapGL
-          ref={setRef}
-          mapStyle='mapbox://styles/mapbox/streets-v11'
-          style={{ width: '100%', height: mapReady ? '100%' : 0 }}
-          cursorStyle="default"
-          accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
-          {...this.state.viewport}
-          viewportChangeMethod="flyTo"
-          onViewportChange={this.setViewport}
-          doubleClickZoom={false}
-        >
-          <MapHelper onMount={this.onMapLoad} />
-          {pins && pins.map((pin, i) => (
-            <Pin key={i} {...pin} color={'#222'} size={20} number={i + 1}
-              clickPin={clickPin} dblClickPin={this.setViewport} />
-          ))}
-        </MapGL>
-      </>
-    )
-  }
+  return (
+    <>
+      {!mapReady && <MapLoading/>}
+      <MapGL
+        ref={setRef}
+        mapStyle='mapbox://styles/mapbox/streets-v11'
+        style={{ width: '100%', height: mapReady ? '100%' : 0 }}
+        cursorStyle="default"
+        accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+        {...viewport}
+        viewportChangeMethod="flyTo"
+        onViewportChange={setViewport}
+        doubleClickZoom={false}
+      >
+        <MapHelper onMount={onMapLoad} />
+        {pins && pins.map((pin, i) => (
+          <Pin key={i} {...pin} clickPin={clickPin} dblClickPin={setViewport} />
+        ))}
+      </MapGL>
+    </>
+  )
 }
 
 export default Map

@@ -98,8 +98,6 @@ class CampaignIndex extends React.Component {
   }
 
   getResults = () => {
-    console.log(this.geocoder.state.inputValue)
-
     if (!this.state.campaigns) return
 
     const { campaigns, bounds } = this.state
@@ -111,8 +109,8 @@ class CampaignIndex extends React.Component {
         const inLng = result.longitude > bounds._sw.lng && result.longitude < bounds._ne.lng
         return inLat && inLng
       })
-      // // Filter by tags
-      // .filter(result => result.theme === theme || theme === 'All')
+      // TODO Filter by tags
+      .map((result, i) => ({ ...result, color: '#222', size: 20, number: ++i }))
     this.setState({ filteredResults })
   }
 
@@ -137,7 +135,6 @@ class CampaignIndex extends React.Component {
   dismissNotification = () => this.setState({ showNotification: false })
 
   showDetail = id => {
-    console.log(id)
     this.setState({ resultShowingDetail: id })
   }
 
