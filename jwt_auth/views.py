@@ -101,16 +101,12 @@ class ProfileSkillsView(ProfileDetailView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, pk):
-        profile_update_skills=self.get_profile(pk=pk)
-        self.is_user(profile_update_skills, request.user)
-        current_skills = [skill.id for skill in profile_update_skills.user_skills.all()]
+        profile_update = self.get_profile(pk=pk)
+        self.is_user(profile_update, request.user)
+        profile_update.user_skills.clear()
         updated_skills = request.data['user_skills']
         for skill in updated_skills:
-            if skill not in current_skills:
-                profile_update_skills.user_skills.add(skill)
-        for skill in current_skills:
-            if skill not in updated_skills:
-                profile_update_skills.user_skills.remove(skill)
+            profile_update.user_skills.add(skill)
         return Response({ 'message': 'Skills updated' })
 
 
