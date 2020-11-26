@@ -96,21 +96,27 @@ class CampaignVolunteerView(CampaignDetailView):
     permission_classes = (IsAuthenticated,)
 
     # USER ADDS SELF TO PENDING VOLUNTEER 
-    def post(self, request, pk, vol_id):
+    def post(self, request, pk):
         campaign_to_volunteer = self.get_campaign(pk=pk)
         campaign_to_volunteer.pend_volunteers.add(request.user.id)
         campaign_to_volunteer.save()
         return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER MOVES VOLUNTEER FROM PENDING TO CONFIRMED
-    def put(self, request, pk, vol_id):
+    def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_update, request.user)
-        volunteer_id = vol_id
+        volunteer_id = request.data['volunteer_id']
+        confirm = request.data['confirm']
         campaign_to_update.pend_volunteers.remove(volunteer_id)
-        campaign_to_update.conf_volunteers.add(volunteer_id)
-        campaign_to_update.save()
-        self.add_to_room('All', pk, volunteer_id)
+        if confirm:
+            campaign_to_update.conf_volunteers.add(volunteer_id)
+            self.add_to_room('All', pk, volunteer_id)
+        else:
+            campaign_to_update.conf_volunteers.remove(volunteer_id)
+            campaign_to_update.coordinators.remove(volunteer_id)
+            self.remove_from_room('All', pk, volunteer_id) # refacter to remove from all campaign rooms
+
         return Response({ 'message': 'Volunteer confirmed & added to message room.' }, status=status.HTTP_202_ACCEPTED)
 
     # OWNER OR USER CAN REMOVE THEMSELVES FROM PROJECT
@@ -130,6 +136,8 @@ class CampaignCoordinatorView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/coordinators '''
 
     # OWNER ADDS/REMOVES COORDINATOR
+
+    #Should this just be one put request, with set
     def post(self, request, pk):
         campaign_to_add_coord = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_add_coord, request.user)
@@ -155,19 +163,16 @@ class CampaignSkillView(CampaignDetailView):
 
     permission_classes = (IsAuthenticated,)
 
-    def post(self, request, pk):
-        campaign_to_add_skill = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_add_skill, request.user)
-        campaign_to_add_skill.campaign_skills.add(request.data['skill_id'])
-        campaign_to_add_skill.save()
-        return Response({ 'message': 'Skill added to campaign' }, status=status.HTTP_202_ACCEPTED)
+    def put(self, request, pk):
+        campaign_to_update = self.get_campaign(pk=pk)
+        self.is_owner(campaign_to_update, request.user)
+        #Just use set
+        campaign_to_update.campaign_skills.clear()
+        for skill in request.data['campaign_skills']:
+            campaign_to_update.campaign_skills.add(skill)
+        return Response({ 'message': 'Skills updated' }, status=status.HTTP_202_ACCEPTED)
 
-    def delete(self, request, pk):
-        campaign_to_delete_skill = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_delete_skill, request.user)
-        campaign_to_delete_skill.campaign_skills.remove(request.data['skill_id'])
-        campaign_to_delete_skill.save()
-        return Response({ 'message': 'Skill removed from campaign' }, status=status.HTTP_204_NO_CONTENT)
+    
 
 
 

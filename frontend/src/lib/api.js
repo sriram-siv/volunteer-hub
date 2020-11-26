@@ -42,6 +42,10 @@ export const addPendVolunteer = campaignId => axios.post(`${baseUrlCampaigns}/${
 // CAMPAIGN COORDINATOR MOVES PENDING VOLUNTEER TO CONFIRMED, REQUEST BODY NEEDS TO INCLUDE 'volunteer_id': id
 export const confirmVolunteer = (campaignId, volunteer_id) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/${volunteer_id}`, null, withHeaders())
 
+// export const confirmVolunteer = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/`, formData, withHeaders())
+//vol_id: pk
+//confirm: True
+
 // CAMPAIGN COORDINATOR OR USER-VOLUNTEER CAN REMOVE VOLUNTEER FROM CAMPAIGN (PENDING & CONFIRMED)
 // BODY NEEDS TO INCLUDE 'volunteer_id': id REGARDLESS OF LOGGED IN USER
 export const removeVolunteer = (campaignId, volunteer_id) => axios.delete(`${baseUrlCampaigns}/${campaignId}/volunteers/${volunteer_id}`, withHeaders())
