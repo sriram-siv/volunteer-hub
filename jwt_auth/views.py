@@ -105,6 +105,7 @@ class ProfileSkillsView(ProfileDetailView):
         self.is_user(profile_update, request.user)
         profile_update.user_skills.clear()
         updated_skills = request.data['user_skills']
+        # Just use set
         for skill in updated_skills:
             profile_update.user_skills.add(skill)
         return Response({ 'message': 'Skills updated' })
@@ -117,6 +118,8 @@ class ProfileShiftView(ProfileDetailView):
         profile_to_update_shifts = self.get_profile(pk=pk)
         self.is_user(profile_to_update_shifts, request.user)
         new_shifts = request.data['schedule']
+        # Use list concat to create list of shift ids
+        # Use 'set' here ie: profie_to_update_shifts.shifts.set([new_shifts])
         for i in range(len(new_shifts)):
             if new_shifts[i]:
                 profile_to_update_shifts.user_shifts.add(i + 1)

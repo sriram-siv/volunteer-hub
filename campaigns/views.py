@@ -136,6 +136,8 @@ class CampaignCoordinatorView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/coordinators '''
 
     # OWNER ADDS/REMOVES COORDINATOR
+
+    #Should this just be one put request, with set
     def post(self, request, pk):
         campaign_to_add_coord = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_add_coord, request.user)
@@ -164,6 +166,7 @@ class CampaignSkillView(CampaignDetailView):
     def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_update, request.user)
+        #Just use set
         campaign_to_update.campaign_skills.clear()
         for skill in request.data['campaign_skills']:
             campaign_to_update.campaign_skills.add(skill)
