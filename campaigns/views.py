@@ -95,68 +95,54 @@ class CampaignVolunteerView(CampaignDetailView):
 
     permission_classes = (IsAuthenticated,)
 
-    # USER ADDS SELF TO PENDING VOLUNTEER 
-    def post(self, request, pk):
-        campaign_to_volunteer = self.get_campaign(pk=pk)
-        campaign_to_volunteer.pend_volunteers.add(request.user.id)
-        campaign_to_volunteer.save()
-        return Response({ 'message': f'Volunteer added to campaign {pk}' }, status=status.HTTP_202_ACCEPTED)
-
     # OWNER MOVES VOLUNTEER FROM PENDING TO CONFIRMED
     def put(self, request, pk):
+        # TODO update frontend implementation
         campaign_to_update = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_update, request.user)
         volunteer_id = request.data['volunteer_id']
-        confirm = request.data['confirm']
-        campaign_to_update.pend_volunteers.remove(volunteer_id)
-        if confirm:
+        action = request.data['action']
+
+        if request.user.id != volunteer_id or action == 'confirm':
+            # TODO Maybe let coords do this
+            self.is_owner(campaign_to_update, request.user)
+
+        if action == 'add':
+            campaign_to_update.pend_volunteers.add(volunteer_id)
+
+        if action == 'confirm':
             campaign_to_update.conf_volunteers.add(volunteer_id)
             self.add_to_room('All', pk, volunteer_id)
-        else:
-            campaign_to_update.conf_volunteers.remove(volunteer_id)
-            campaign_to_update.coordinators.remove(volunteer_id)
-            self.remove_from_room('All', pk, volunteer_id) # refacter to remove from all campaign rooms
 
-        return Response({ 'message': 'Volunteer confirmed & added to message room.' }, status=status.HTTP_202_ACCEPTED)
-
-    # OWNER OR USER CAN REMOVE THEMSELVES FROM PROJECT
-    def delete(self, request, pk, vol_id):
-        # if owner is true OR if volunteer_id == request.user.id remove. Otherwise returned permissiondenied
-        campaign_to_update = self.get_campaign(pk=pk)
-        volunteer_id = vol_id
-        if (request.user.id == campaign_to_update.owner.id or request.user.id == volunteer_id):
+        if action == 'delete':
             campaign_to_update.pend_volunteers.remove(volunteer_id)
             campaign_to_update.conf_volunteers.remove(volunteer_id)
+            campaign_to_update.coordinators.remove(volunteer_id)
+            # TODO refacter to remove from all campaign rooms
             self.remove_from_room('All', pk, volunteer_id)
-            campaign_to_update.save()
-            return Response({ 'message': 'Volunteer removed from campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
-        return Response({ 'message': 'Must be user or owner to perform this action.' })
+
+        return Response({ 'message': 'User lists updated' }, status=status.HTTP_202_ACCEPTED)
 
 class CampaignCoordinatorView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/coordinators '''
 
     # OWNER ADDS/REMOVES COORDINATOR
 
-    #Should this just be one put request, with set
-    def post(self, request, pk):
-        campaign_to_add_coord = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_add_coord, request.user)
+    def put(self, request, pk):
+        campaign = self.get_campaign(pk=pk)
+        self.is_owner(campaign, request.user)
         coordinator_id = request.data['coordinator_id']
-        campaign_to_add_coord.coordinators.add(coordinator_id)
-        campaign_to_add_coord.save()
-        self.add_to_room('Coordinators', pk, coordinator_id)
-        self.add_to_room('All', pk, coordinator_id)
-        return Response({ 'message': 'Coordinator added to campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
-
-    def delete(self, request, pk):
-        campaign_to_add_coord = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_add_coord, request.user)
-        coordinator_id = request.data['coordinator_id']
-        campaign_to_add_coord.coordinators.remove(coordinator_id)
-        campaign_to_add_coord.save()
-        self.remove_from_room('Coordinators', pk, coordinator_id)
-        self.remove_from_room('All', pk, coordinator_id)
-        return Response({ 'message': 'Coordinator removed from campaign & message rooms.' }, status=status.HTTP_202_ACCEPTED)
+        confirm = request.date['confirm']
+        message = ''
+        if (confirm):
+            self.add_to_room('Coordinators', pk, coordinator_id)
+            campaign.coordinators.add(coordinator_id)
+            message = 'User added as coordinator'
+        else:
+            self.remove_from_room('Coordinators', pk, coordinator_id)
+            campaign.coordinators.remove(coordinator_id)
+            message = 'User removed as coordinator'
+        
+        return Response({ 'message': message }, status=status.HTTP_202_ACCEPTED)
 
 class CampaignSkillView(CampaignDetailView):
     ''' Handles requests to /campaigns/:campaign_id/skills '''
@@ -166,10 +152,7 @@ class CampaignSkillView(CampaignDetailView):
     def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
         self.is_owner(campaign_to_update, request.user)
-        #Just use set
-        campaign_to_update.campaign_skills.clear()
-        for skill in request.data['campaign_skills']:
-            campaign_to_update.campaign_skills.add(skill)
+        campaign_to_update.campaign_skills.set(request.data['campaign_skills'])
         return Response({ 'message': 'Skills updated' }, status=status.HTTP_202_ACCEPTED)
 
     

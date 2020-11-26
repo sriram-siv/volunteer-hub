@@ -103,11 +103,7 @@ class ProfileSkillsView(ProfileDetailView):
     def put(self, request, pk):
         profile_update = self.get_profile(pk=pk)
         self.is_user(profile_update, request.user)
-        profile_update.user_skills.clear()
-        updated_skills = request.data['user_skills']
-        # Just use set
-        for skill in updated_skills:
-            profile_update.user_skills.add(skill)
+        profile_update.user_skills.set(request.data['user_skills'])
         return Response({ 'message': 'Skills updated' })
 
 
@@ -117,13 +113,10 @@ class ProfileShiftView(ProfileDetailView):
     def put(self, request, pk):
         profile_to_update_shifts = self.get_profile(pk=pk)
         self.is_user(profile_to_update_shifts, request.user)
-        new_shifts = request.data['schedule']
-        # Use list concat to create list of shift ids
-        # Use 'set' here ie: profie_to_update_shifts.shifts.set([new_shifts])
-        for i in range(len(new_shifts)):
-            if new_shifts[i]:
-                profile_to_update_shifts.user_shifts.add(i + 1)
-            else:
-                profile_to_update_shifts.user_shifts.remove(i + 1)
+
+        # Reduce array to just true values
+        new_shifts = [i + 1 for i, val in enumerate(request.data['schedule']) if val]
+        profile_to_update_shifts.user_shifts.set(new_shifts)
+
         return Response({ 'message': 'Shifts updated' }, status=status.HTTP_202_ACCEPTED)
         
