@@ -9,6 +9,7 @@ from .serializers.common import CampaignSerializer
 from .serializers.populated import PopulatedCampaignSerializer
 from rooms.models import Room
 from rooms.serializers.common import RoomSerializer
+from rooms.views import add_to_room, remove_from_room
 
 class CampaignListView(APIView):
     ''' Handles Requests to /campaigns '''
@@ -47,37 +48,33 @@ class CampaignDetailView(APIView):
         except Campaign.DoesNotExist:
             raise NotFound()
 
-    def is_owner(self, campaign, user):
-        if campaign.owner.id != user.id:
+    def get_user_status(self, campaign, user):
+        if campaign.owner == user:
+            return 3
+        if user in campaign.coordinators.all():
+            return 2
+        if user in campaign.conf_volunteers.all():
+            return 1
+        return 0
+
+    def check_user_perm(self, campaign, user, status):
+        perm_levels = {
+            'owner': 3,
+            'coordinator': 2,
+            'confirmed': 1
+        }
+        if self.get_user_status(campaign, user) < perm_levels[status]:
             raise PermissionDenied()
-
-    def is_member(self, campaign, user):
-        is_pending = user in campaign.pend_volunteers.all()
-        is_confirmed = user in campaign.conf_volunteers.all()
-        is_coord = user in campaign.coordinators.all()
-        is_owner = user == campaign.owner
-        if not (is_pending or is_confirmed or is_coord or is_owner):
-            raise PermissionDenied()
-
-    def add_to_room(self, room_name, campaign_id, member_id):
-        room_to_add_member = Room.objects.get(name=room_name, campaign=campaign_id)
-        room_to_add_member.members.add(member_id)
-        room_to_add_member.save()
-
-    def remove_from_room(self, room_name, campaign_id, member_id):
-        room_to_add_member = Room.objects.get(name=room_name, campaign=campaign_id)
-        room_to_add_member.members.remove(member_id)
-        room_to_add_member.save()
 
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
-        self.is_member(campaign, request.user)
+        self.check_user_perm(campaign, request.user, 'confirmed')
         serialized_campaign = PopulatedCampaignSerializer(campaign)
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_update, request.user)
+        self.check_user_perm(campaign_to_update, request.user, 'owner')
         updated_campaign = CampaignSerializer(campaign_to_update, data=request.data)
         if updated_campaign.is_valid():
             updated_campaign.save()
@@ -86,7 +83,7 @@ class CampaignDetailView(APIView):
 
     def delete(self, request, pk):
         campaign_to_delete = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_delete, request.user)
+        self.check_user_perm(campaign_to_delete, request.user, 'owner')
         campaign_to_delete.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -103,22 +100,23 @@ class CampaignVolunteerView(CampaignDetailView):
         action = request.data['action']
 
         if request.user.id != volunteer_id or action == 'confirm':
-            # TODO Maybe let coords do this
-            self.is_owner(campaign_to_update, request.user)
+            self.check_user_perm(campaign_to_update, request.user, 'coordinator')         
 
         if action == 'add':
             campaign_to_update.pend_volunteers.add(volunteer_id)
 
         if action == 'confirm':
             campaign_to_update.conf_volunteers.add(volunteer_id)
-            self.add_to_room('All', pk, volunteer_id)
+            campaign_to_update.pend_volunteers.remove(volunteer_id)
+            add_to_room(room_name='All', campaign_id=pk, member_id=volunteer_id)
 
         if action == 'delete':
             campaign_to_update.pend_volunteers.remove(volunteer_id)
             campaign_to_update.conf_volunteers.remove(volunteer_id)
             campaign_to_update.coordinators.remove(volunteer_id)
-            # TODO refacter to remove from all campaign rooms
-            self.remove_from_room('All', pk, volunteer_id)
+            rooms = Room.objects.filter(campaign=campaign_to_update, members=volunteer_id)
+            for room in rooms:
+                remove_from_room(room_name=room.name, campaign_id=pk, member_id=volunteer_id)
 
         return Response({ 'message': 'User lists updated' }, status=status.HTTP_202_ACCEPTED)
 
@@ -129,16 +127,16 @@ class CampaignCoordinatorView(CampaignDetailView):
 
     def put(self, request, pk):
         campaign = self.get_campaign(pk=pk)
-        self.is_owner(campaign, request.user)
+        self.check_user_perm(campaign, request.user, 'owner')
         coordinator_id = request.data['coordinator_id']
         confirm = request.date['confirm']
         message = ''
         if (confirm):
-            self.add_to_room('Coordinators', pk, coordinator_id)
+            add_to_room('Coordinators', pk, coordinator_id)
             campaign.coordinators.add(coordinator_id)
             message = 'User added as coordinator'
         else:
-            self.remove_from_room('Coordinators', pk, coordinator_id)
+            remove_from_room('Coordinators', pk, coordinator_id)
             campaign.coordinators.remove(coordinator_id)
             message = 'User removed as coordinator'
         
@@ -151,7 +149,7 @@ class CampaignSkillView(CampaignDetailView):
 
     def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
-        self.is_owner(campaign_to_update, request.user)
+        self.check_user_perm(campaign_to_update, request.user, 'owner')
         campaign_to_update.campaign_skills.set(request.data['campaign_skills'])
         return Response({ 'message': 'Skills updated' }, status=status.HTTP_202_ACCEPTED)
 

@@ -37,17 +37,16 @@ export const deleteCampaign = campaignId => axios.delete(`${baseUrlCampaigns}/${
 
 
 // USER ADDS SELF AS PENDING VOLUNTEER
-export const addPendVolunteer = campaignId => axios.post(`${baseUrlCampaigns}/${campaignId}/volunteers/0`, null, withHeaders())
+// BODY NEEDS TO INCLUDE 'volunteer_id': id and 'action': 'confirm', 'add', or 'delete' to put request
+// export const updateVolunteers = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/`, formData, withHeaders())
 
+export const addPendVolunteer = campaignId => axios.post(`${baseUrlCampaigns}/${campaignId}/volunteers/0`, null, withHeaders())
 // CAMPAIGN COORDINATOR MOVES PENDING VOLUNTEER TO CONFIRMED, REQUEST BODY NEEDS TO INCLUDE 'volunteer_id': id
 export const confirmVolunteer = (campaignId, volunteer_id) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/${volunteer_id}`, null, withHeaders())
-
 // export const confirmVolunteer = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/`, formData, withHeaders())
 //vol_id: pk
 //confirm: True
-
 // CAMPAIGN COORDINATOR OR USER-VOLUNTEER CAN REMOVE VOLUNTEER FROM CAMPAIGN (PENDING & CONFIRMED)
-// BODY NEEDS TO INCLUDE 'volunteer_id': id REGARDLESS OF LOGGED IN USER
 export const removeVolunteer = (campaignId, volunteer_id) => axios.delete(`${baseUrlCampaigns}/${campaignId}/volunteers/${volunteer_id}`, withHeaders())
 
 // SKILL POST & DELETE REQUESTS REQUIRE 'skill_id' IN REQUEST BODY
@@ -55,6 +54,8 @@ export const getAllSkills = () => axios.get(`${baseUrl}/skills/`)
 
 export const updateProfileSkills = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
 
+// Update campaign skill requires body of 'campaign_skills': array of skills
+// export const updateCampaignSkills = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
 export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
