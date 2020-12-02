@@ -128,7 +128,7 @@ class CampaignIndex extends React.Component {
       this.props.app.showNotification('please login to sign up')
       return
     }
-    await updateVolunteers({ volunteer_id: id, action: 'add' })
+    await updateVolunteers(id, { volunteer_id: Number(userID), action: 'add' })
     this.setState({ showNotification: true })
   }
 

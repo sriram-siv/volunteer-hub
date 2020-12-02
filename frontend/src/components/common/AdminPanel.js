@@ -132,7 +132,7 @@ class AdminPanel extends React.Component {
 
   confirmVolunteer = async volunteerID => {
     try {
-      await updateVolunteers({ volunteer_id: volunteerId, action: 'confirm' })
+      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'confirm' })
       const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
       const volunteers = [...this.state.volunteers, confirmedVolunteer]
       const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
@@ -144,7 +144,7 @@ class AdminPanel extends React.Component {
 
   denyVolunteer = async volunteerID => {
     try {
-      await updateVolunteers({ volunteer_id: volunteerId, action: 'delete' })
+      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'delete' })
       const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
       this.setState({ pendingVolunteers })
     } catch (err) {
