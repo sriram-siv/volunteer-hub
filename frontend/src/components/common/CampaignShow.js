@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { getSingleCampaign } from '../../lib/api'
+import { getSingleCampaign, updateVolunteers } from '../../lib/api'
 
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'

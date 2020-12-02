@@ -6,7 +6,7 @@ import Geocoder from '../map/Geocoder'
 import InputText from '../elements/InputText'
 import ResultsList from '../elements/ResultsList'
 
-import { getAllCampaigns, addPendVolunteer } from '../../lib/api'
+import { getAllCampaigns, updateVolunteers } from '../../lib/api'
 
 const Wrapper = styled.main`
   position: relative;
@@ -128,7 +128,7 @@ class CampaignIndex extends React.Component {
       this.props.app.showNotification('please login to sign up')
       return
     }
-    await addPendVolunteer(id)
+    await updateVolunteers({ volunteer_id: id, action: 'add' })
     this.setState({ showNotification: true })
   }
 
