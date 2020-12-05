@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import { confirmVolunteer, removeVolunteer, createRoom } from '../../lib/api'
+import { updateVolunteers, createRoom } from '../../lib/api'
 
 import Button from '../elements/Button'
 import MultiListVolunteer from '../elements/MultiListVolunteers'
@@ -132,7 +132,7 @@ class AdminPanel extends React.Component {
 
   confirmVolunteer = async volunteerID => {
     try {
-      await confirmVolunteer(this.state.campaignID, volunteerID)
+      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'confirm' })
       const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
       const volunteers = [...this.state.volunteers, confirmedVolunteer]
       const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
@@ -144,7 +144,7 @@ class AdminPanel extends React.Component {
 
   denyVolunteer = async volunteerID => {
     try {
-      await removeVolunteer(this.state.campaignID, volunteerID)
+      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'delete' })
       const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
       this.setState({ pendingVolunteers })
     } catch (err) {

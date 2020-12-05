@@ -7,6 +7,17 @@ from .models import Room
 from .serializers.common import RoomSerializer
 from .serializers.populated import PopulatedRoomSerializer
 
+# TODO consider where to define these: Room model?
+def add_to_room(room_name, campaign_id, member_id):
+        room_to_add_member = Room.objects.get(name=room_name, campaign=campaign_id)
+        room_to_add_member.members.add(member_id)
+        room_to_add_member.save()
+
+def remove_from_room(room_name, campaign_id, member_id):
+        room_to_add_member = Room.objects.get(name=room_name, campaign=campaign_id)
+        room_to_add_member.members.remove(member_id)
+        room_to_add_member.save()
+
 class RoomListView(APIView):
     ''' Handles Requests to /rooms '''
 
@@ -34,7 +45,6 @@ class RoomDetailView(APIView):
     def is_member(self, room, user):
         if user not in room.members.all():
             raise PermissionDenied()
-
 
     def get(self, request, pk):
         room = self.get_room(pk=pk)
