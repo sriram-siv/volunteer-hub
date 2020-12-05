@@ -1,3 +1,6 @@
+import string
+import random
+
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,6 +21,15 @@ def remove_from_room(room_name, campaign_id, member_id):
         room_to_add_member.members.remove(member_id)
         room_to_add_member.save()
 
+
+def random_id():
+    current_ids = [room.id for room in Room.objects.all()]
+    room_id = ''
+    while (room_id in current_ids or room_id == ''):
+        chars = list(string.ascii_letters) + [str(num) for num in range(10)]
+        room_id = ''.join(random.choice(chars) for i in range(8))
+    return room_id
+
 class RoomListView(APIView):
     ''' Handles Requests to /rooms '''
 
@@ -27,6 +39,7 @@ class RoomListView(APIView):
         return Response(serialized_room_list.data, status=status.HTTP_200_OK)
 
     def post(self, request):
+        request.data['id'] = random_id()
         room_to_create = RoomSerializer(data=request.data)
         if room_to_create.is_valid():
             room_to_create.save()
@@ -34,7 +47,7 @@ class RoomListView(APIView):
         return Response(room_to_create.errors, status=status.HTTP_422_UNPROCESSABLE_ENTITY)
 
 class RoomDetailView(APIView):
-    ''' Handles Requests to /rooms/:room_id '''
+    ''' Handles Requests to /rooms/:room_name '''
 
     def get_room(self, pk):
         try:

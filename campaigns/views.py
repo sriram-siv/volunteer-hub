@@ -9,7 +9,7 @@ from .serializers.common import CampaignSerializer
 from .serializers.populated import PopulatedCampaignSerializer
 from rooms.models import Room
 from rooms.serializers.common import RoomSerializer
-from rooms.views import add_to_room, remove_from_room
+from rooms.views import add_to_room, remove_from_room, random_id
 
 class CampaignListView(APIView):
     ''' Handles Requests to /campaigns '''
@@ -27,8 +27,8 @@ class CampaignListView(APIView):
         if campaign_to_create.is_valid():
             campaign_to_create.save()
             rooms_to_create = [
-                {'name': 'All', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']},
-                {'name': 'Coordinators', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']}
+                {'id': random_id(), 'name': 'All', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']},
+                {'id': random_id(), 'name': 'Coordinators', 'members': [request.user.id], 'campaign': campaign_to_create.data['id']}
             ]
             serialized_rooms = RoomSerializer(data=rooms_to_create, many=True)
             if serialized_rooms.is_valid():

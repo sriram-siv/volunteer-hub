@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'channels',
     'notices',
     'shifts',
+    'tags',
 ]
 
 MIDDLEWARE = [
