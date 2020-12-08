@@ -17,13 +17,15 @@ export const registerUser = formData => axios.post(`${baseUrl}/auth/register/`, 
 
 export const loginUser = formData => axios.post(`${baseUrl}/auth/login/`, formData)
 
-export const getAllProfiles = () => axios.get(`${baseUrlProfiles}/`)
-
 export const getSingleProfile = profileId => axios.get(`${baseUrlProfiles}/${profileId}/`)
 
 export const updateProfile = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/`, formData, withHeaders())
 
 export const deleteProfile = profileId => axios.delete(`${baseUrlProfiles}/${profileId}/`, withHeaders())
+
+export const updateProfileSkills = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
+
+export const updateProfileShifts = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
 
 
 export const createCampaign = formData => axios.post(`${baseUrlCampaigns}/`, formData, withHeaders())
@@ -36,33 +38,18 @@ export const updateCampaign = (campaignId, formData) => axios.put(`${baseUrlCamp
 
 export const deleteCampaign = campaignId => axios.delete(`${baseUrlCampaigns}/${campaignId}/`, withHeaders())
 
-
 // BODY NEEDS TO INCLUDE 'volunteer_id': id and 'action': 'confirm', 'add', or 'delete' to put request
 export const updateVolunteers = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/volunteers/`, formData, withHeaders())
 
-// SKILL POST & DELETE REQUESTS REQUIRE 'skill_id' IN REQUEST BODY
 export const getAllSkills = () => axios.get(`${baseUrl}/skills/`)
 
-export const updateProfileSkills = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/skills/`, formData, withHeaders())
-
 // Update campaign skill requires body of 'campaign_skills': array of skills
-// export const updateCampaignSkills = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
-export const addCampaignSkill = (campaignId, formData) => axios.post(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
-
-export const removeCampaignSkill = (campaignId, formData) => axios.delete(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
-
-// SKILL POST & DELETE REQUESTS REQUIRE 'shift_id' IN REQUEST BODY
-export const getAllShifts = () => axios.get(`${baseUrl}/shifts/`)
-
-export const updateProfileShifts = (profileId, formData) => axios.put(`${baseUrlProfiles}/${profileId}/shifts/`, formData, withHeaders())
-
+export const updateCampaignSkills = (campaignId, formData) => axios.put(`${baseUrlCampaigns}/${campaignId}/skills/`, formData, withHeaders())
 
 export const addCampaignNotice = formData => axios.post(`${baseUrl}/notices/`, formData, withHeaders())
 
 export const deleteCampaignNotice = noticeId => axios.delete(`${baseUrl}/notices/${noticeId}/`, withHeaders())
 
-
-export const getAllRooms = () => axios.get(`${baseUrl}/rooms/`)
 
 export const createRoom = formData => axios.post(`${baseUrl}/rooms/`, formData)
 
