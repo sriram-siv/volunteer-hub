@@ -35,7 +35,7 @@ class RoomListView(APIView):
 
     def get(self, _request):
         room_list = Room.objects.all()
-        serialized_room_list = PopulatedRoomSerializer(room_list, many=True)
+        serialized_room_list = RoomSerializer(room_list, many=True)
         return Response(serialized_room_list.data, status=status.HTTP_200_OK)
 
     def post(self, request):

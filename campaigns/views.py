@@ -18,7 +18,7 @@ class CampaignListView(APIView):
 
     def get(self, _request):
         campaign_list = Campaign.objects.all()
-        serialized_campaign_list = PopulatedCampaignSerializer(campaign_list, many=True)
+        serialized_campaign_list = CampaignSerializer(campaign_list, many=True)
         return Response(serialized_campaign_list.data, status=status.HTTP_200_OK)
 
     def post(self, request):
@@ -69,7 +69,10 @@ class CampaignDetailView(APIView):
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
         self.check_user_perm(campaign, request.user, 'confirmed')
-        serialized_campaign = PopulatedCampaignSerializer(campaign)
+        if self.get_user_status(campaign, request.user) > 1:
+            serialized_campaign = PopulatedCampaignSerializer(campaign)
+        else:
+            serialized_campaign = CampaignSerializer(campaign)
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
