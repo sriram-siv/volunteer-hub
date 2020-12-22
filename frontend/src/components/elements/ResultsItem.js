@@ -46,11 +46,12 @@ const Open = styled.button`
   background-color: ${props => props.theme.background};
 `
 
-const ResultsItem = ({ visible, expanded, showDetails, id, position, name, description, signUp }) => {
+const ResultsItem = ({ visible, expanded, showDetails, id, position, name, description, campaign_skills, signUp }) => {
   return (
     <Wrapper visible={visible} expanded={expanded} position={position}>
       <Title onClick={() => showDetails(id)}>
-        {name}<br />skills list..
+        {name}<br />
+        {campaign_skills.map(skill => <p key={skill.name}>{skill.name}</p>)}
       </Title>
       <Body>
         {description}
