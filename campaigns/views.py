@@ -7,6 +7,7 @@ from rest_framework.permissions import IsAuthenticatedOrReadOnly, IsAuthenticate
 from .models import Campaign
 from .serializers.common import CampaignSerializer
 from .serializers.populated import PopulatedCampaignSerializer
+from .serializers.index import IndexSerializer
 from rooms.models import Room
 from rooms.serializers.common import RoomSerializer
 from rooms.views import add_to_room, remove_from_room, random_id
@@ -18,7 +19,7 @@ class CampaignListView(APIView):
 
     def get(self, _request):
         campaign_list = Campaign.objects.all()
-        serialized_campaign_list = CampaignSerializer(campaign_list, many=True)
+        serialized_campaign_list = IndexSerializer(campaign_list, many=True)
         return Response(serialized_campaign_list.data, status=status.HTTP_200_OK)
 
     def post(self, request):

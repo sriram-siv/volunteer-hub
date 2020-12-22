@@ -8,10 +8,10 @@ import MapLoading from './MapLoading'
 
 const Map = ({ setRef, pins, clickPin, flyTo }) => {
   const [viewport, setViewport] = React.useState({ zoom: 1, latitude: 50, longitude: 0 })
-  const [mapReady, setMapReady] = React.useState(false)
+  // const [mapReady, setMapReady] = React.useState(false)
   // MapGL will only render child components once the tiles have loaded so
   // we can use this to check when to stop displaying the loading screen
-  const onMapLoad = () => setMapReady(true)
+  // const onMapLoad = () => setMapReady(true)
 
   React.useEffect(() => {
     if (!flyTo) return
@@ -21,11 +21,11 @@ const Map = ({ setRef, pins, clickPin, flyTo }) => {
 
   return (
     <>
-      {!mapReady && <MapLoading/>}
+      {/* {!mapReady && <MapLoading/>} */}
       <MapGL
         ref={setRef}
         mapStyle='mapbox://styles/mapbox/streets-v11'
-        style={{ width: '100%', height: mapReady ? '100%' : 0 }}
+        style={{ width: '100%', height: '100%' }}
         cursorStyle="default"
         accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         {...viewport}
@@ -33,7 +33,7 @@ const Map = ({ setRef, pins, clickPin, flyTo }) => {
         onViewportChange={setViewport}
         doubleClickZoom={false}
       >
-        <MapHelper onMount={onMapLoad} />
+        {/* <MapHelper onMount={onMapLoad} /> */}
         {pins && pins.map((pin, i) => (
           <Pin key={i} {...pin} clickPin={clickPin} dblClickPin={setViewport} />
         ))}

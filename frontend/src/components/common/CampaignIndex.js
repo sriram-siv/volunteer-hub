@@ -81,7 +81,7 @@ class CampaignIndex extends React.Component {
   }
 
   handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value })
+    this.setState({ [event.target.name]: event.target.value }, this.getResults)
   }
 
   setMapRef = ref => {
@@ -100,7 +100,7 @@ class CampaignIndex extends React.Component {
   getResults = () => {
     if (!this.state.campaigns) return
 
-    const { campaigns, bounds } = this.state
+    const { campaigns, bounds, tags } = this.state
 
     const filteredResults = campaigns
       // Filter by visible area of map
@@ -109,8 +109,18 @@ class CampaignIndex extends React.Component {
         const inLng = result.longitude > bounds._sw.lng && result.longitude < bounds._ne.lng
         return inLat && inLng
       })
-      // TODO Filter by tags
+      .filter(result => {
+        const tagList = result.tags.map(tag => tag.name).join(',')
+        try {
+          const re = new RegExp(tags, 'gi')
+          return re.test(tagList)
+        } catch (err) {
+          // TODO Handle this error - form? results?
+          return true
+        }
+      })
       .map((result, i) => ({ ...result, color: '#222', size: 20, number: ++i }))
+    // filteredResults.forEach(result => console.log(result.tags.map(tag => tag.name).join(',')))
     this.setState({ filteredResults })
   }
 
