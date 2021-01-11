@@ -20,8 +20,10 @@ const Geocoder = ({ width, onSelect, setRef }) => {
       ref={ref => setRef(ref)}
       viewport={{ true: 0 }} //this is just filler to stop errors
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
+
       inputComponent={inputProps => (
         <GeocoderInput width={width} label="Location" geocoderProps={{ ...inputProps }} />)}
+      
       itemComponent={itemProps => <Item {...itemProps}/>}
       updateInputOnSelect
       onSelected={onSelect}

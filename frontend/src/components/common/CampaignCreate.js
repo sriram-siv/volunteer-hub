@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 import React from 'react'
 import styled from 'styled-components'
 
@@ -8,7 +9,7 @@ import Button from '../elements/Button'
 import Geocoder from '../map/Geocoder'
 import Map from '../map/Map'
 
-import { createCampaign } from '../../lib/api' 
+import { createCampaign, getSingleCampaign, updateCampaign } from '../../lib/api' 
 
 const Wrapper = styled.div`
   height: calc(100vh - 3rem);
@@ -50,11 +51,37 @@ class CampaignCreate extends React.Component{
       longitude: '',
       start_date: null
     },
-    flyTo: null
+    flyTo: null,
+    isEdit: false
   }
 
   componentDidMount = () => {
+    // Prevents page loading if not logged in
     if (!localStorage.getItem('user_id')) this.props.history.push('/campaigns')
+
+    // Pull data for edit
+    if (this.props.match.params.id) this.loadData()
+  }
+
+  loadData = async () => {
+    try {
+      const response = await getSingleCampaign(this.props.match.params.id)
+
+      const formData = {
+        name: response.data.name,
+        volunteer_count: response.data.volunteer_count,
+        description: response.data.description,
+        banner_image: response.data.banner_image,
+        latitude: response.data.latitude,
+        longitude: response.data.longitude,
+        start_date: response.data.start_date.replace('Z', ''),
+        owner: response.data.owner.id
+      }
+
+      this.setState({ formData, isEdit: true })
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   setMapRef = ref => {
@@ -84,7 +111,11 @@ class CampaignCreate extends React.Component{
 
   handleSubmit = async () => {
     try {
-      const response = await createCampaign(this.state.formData)
+
+
+      const response = this.state.isEdit
+        ? await updateCampaign(this.props.match.params.id, this.state.formData)
+        : await createCampaign(this.state.formData)
       const newCampaignId = response.data.id
       this.props.history.push(`/campaigns/${newCampaignId}`)
     } catch (err) {
@@ -101,8 +132,8 @@ class CampaignCreate extends React.Component{
       },
       (error, result) => {
         if (!error && result && result.event === 'success') { 
-          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
-          this.setState({ pendingUserData })
+          const banner_image = result.info.url
+          this.setState({ formData: { ...this.state.formData, banner_image } })
         }
       })
     widget.open()
@@ -110,11 +141,11 @@ class CampaignCreate extends React.Component{
 
   render(){
 
-    const { name, volunteer_count, description, start_date } = this.state.formData
+    const { name, volunteer_count, description, start_date, banner_image } = this.state.formData
 
     return (
       <Wrapper>
-        <BannerImage style={{ height: '150px' }}/>
+        <BannerImage style={{ height: '150px' }} src={banner_image}/>
         <Form>
           <InputText width="100%" label='Give your campaign a name' name='name' value= {name} returnValue={this.handleChange} />
           <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />

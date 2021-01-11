@@ -103,6 +103,7 @@ class App extends React.Component {
             <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />
             <Route path='/campaigns/new' component={CampaignCreate} />
+            <Route path='/campaigns/:id/edit' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' render={() => <CampaignIndex app={this.app}/>} />
           </Switch>

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import { getSingleCampaign } from '../../lib/api'
+import icons from '../../lib/icons'
 
 import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
@@ -80,6 +81,10 @@ class CampaignShow extends React.Component {
     return isOwner || isCoord
   }
 
+  editCampaign = () => {
+    this.props.history.push(`/campaigns/${this.state.campaignData.id}/edit`)
+  }
+
   
   render() {
     
@@ -95,8 +100,9 @@ class CampaignShow extends React.Component {
     return (
       <Wrapper>
         <div>
-          <BannerImage />
+          <BannerImage src={campaignData.banner_image} />
         </div>
+        {admin && <button onClick={this.editCampaign}>{icons.edit()}</button>}
         <MultiList containerStyle={multiListStyle} lists={[members, rooms]}/>
         <MainContent>
           <div style={{ width: '400px', height: '100%', padding: '20px', fontSize: '0.85rem', textAlign: 'justify' }}>
