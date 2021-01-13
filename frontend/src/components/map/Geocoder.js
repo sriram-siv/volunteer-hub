@@ -27,7 +27,7 @@ const Geocoder = ({ width, onSelect, setRef, prefilled }) => {
       updateInputOnSelect
       onSelected={onSelect}
       timeout={150}
-
+      // There will only be a prefilled value in campaign edit
       initialInputValue={prefilled}
     />
   )

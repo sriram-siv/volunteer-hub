@@ -10,6 +10,7 @@ import Geocoder from '../map/Geocoder'
 import Map from '../map/Map'
 
 import { createCampaign, getSingleCampaign, updateCampaign } from '../../lib/api' 
+import { reverseGeoCode } from '../../lib/mapbox'
 
 const Wrapper = styled.div`
   height: calc(100vh - 3rem);
@@ -68,21 +69,38 @@ class CampaignCreate extends React.Component{
     try {
       const response = await getSingleCampaign(this.props.match.params.id)
 
-      const formData = {
-        name: response.data.name,
-        volunteer_count: response.data.volunteer_count,
-        description: response.data.description,
-        banner_image: response.data.banner_image,
-        latitude: response.data.latitude,
-        longitude: response.data.longitude,
-        start_date: response.data.start_date.replace('Z', ''),
-        owner: response.data.owner.id
-      }
+      // const formData = {
+      //   name: response.data.name,
+      //   volunteer_count: response.data.volunteer_count,
+      //   description: response.data.description,
+      //   banner_image: response.data.banner_image,
+      //   latitude: response.data.latitude,
+      //   longitude: response.data.longitude,
+      //   start_date: response.data.start_date.replace('Z', ''),
+      //   owner: response.data.owner.id
+      // }
 
-      // TODO
-      // const campaignLocation = reverseGeocode(lat, lng)
+      // Construct formData from relevant fields
+      const formData = [
+        'name',
+        'volunteer_count',
+        'description',
+        'banner_image',
+        'latitude',
+        'longitude',
+        'start_date',
+        'owner'
+      ].reduce((res, prop) => ({ ...res, [prop]: response.data[prop] }), {})
+      // Correct date format for date picker
+      formData.start_date = formData.start_date.replace('Z', '')
 
-      this.setState({ formData, isEdit: true, campaignLocation: 'Campaign Location' })
+
+      // Get location name from mapbox api
+      const { latitude, longitude } = response.data
+      const geoData = await reverseGeoCode({ latitude, longitude })
+      const campaignLocation = geoData.data.features[0].place_name
+
+      this.setState({ formData, isEdit: true, campaignLocation })
 
     } catch (err) {
       console.log(err)
@@ -93,6 +111,21 @@ class CampaignCreate extends React.Component{
     this.map = ref
   }
 
+  // Receives a reference for the geocoder input element on mount or update
+  // Timeouts are needed to allow the component to mount / update before updating
+  setGeocoderInputRef = ref => {
+    this.geocoder = ref
+
+    setTimeout(() => {
+      // Remove default value to allow input label to change on focus 
+      if (!this.geocoder.value && this.state.campaignLocation) {
+        this.setState({ campaignLocation: null })
+        // Refocus input
+        setTimeout(() => this.geocoder.focus(), 1)
+      }
+    }, 10)
+  }
+
   selectGeocoderItem = location => {
     const formData = {
       ...this.state.formData,
@@ -100,18 +133,6 @@ class CampaignCreate extends React.Component{
       longitude: location.longitude
     }
     this.setState({ flyTo: location, formData })
-  }
-
-  setGeocoderInputRef = ref => {
-    this.geocoder = ref
-    // Change location string so that input label can function properly
-    setTimeout(() => {
-      if (!this.geocoder.value && this.state.campaignLocation) {
-        this.setState({ campaignLocation: null })
-        // Refocus input
-        setTimeout(() => this.geocoder.focus(), 1)
-      }
-    }, 10)
   }
 
   handleChange = event => {
