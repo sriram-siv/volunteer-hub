@@ -19,9 +19,6 @@ const Wrapper = styled.div`
 `
 
 const Form = styled.div`
-  /* display: flex; */
-  /* flex-direction: column; */
-  /* align-items: center; */
   margin: 0 auto;
   width: calc(100vw - 40px);
   max-width: 500px;
@@ -60,10 +57,15 @@ class CampaignCreate extends React.Component{
   componentDidMount = () => {
     // Prevents page loading if not logged in
     if (!localStorage.getItem('user_id')) this.props.history.push('/campaigns')
-
+    
     // Pull data for edit
     if (this.props.match.params.id) this.loadData()
+    // Or set date picker to current date
+    else this.setState({ formData: { ...this.state.formData, start_date: this.formatDate(new Date()) } })
   }
+
+  // Returns valid string for date picker input
+  formatDate = date => date.toISOString().split(':').slice(0, 2).join(':')
 
   loadData = async () => {
     try {
@@ -87,12 +89,12 @@ class CampaignCreate extends React.Component{
         'description',
         'banner_image',
         'latitude',
-        'longitude',
-        'start_date',
-        'owner'
+        'longitude'
       ].reduce((res, prop) => ({ ...res, [prop]: response.data[prop] }), {})
       // Correct date format for date picker
-      formData.start_date = formData.start_date.replace('Z', '')
+      formData.start_date = response.data.start_date.replace('Z', '')
+      // Get owner id
+      formData.owner = response.data.owner.id
 
 
       // Get location name from mapbox api
@@ -118,12 +120,13 @@ class CampaignCreate extends React.Component{
 
     setTimeout(() => {
       // Remove default value to allow input label to change on focus 
-      if (!this.geocoder.value && this.state.campaignLocation) {
+      if (!this.geocoder?.value && this.state.campaignLocation) {
         this.setState({ campaignLocation: null })
         // Refocus input
-        setTimeout(() => this.geocoder.focus(), 1)
+        setTimeout(() => this.geocoder?.focus(), 1)
       }
-    }, 10)
+    }, 1)
+
   }
 
   selectGeocoderItem = location => {
@@ -149,8 +152,8 @@ class CampaignCreate extends React.Component{
       const response = this.state.isEdit
         ? await updateCampaign(this.props.match.params.id, this.state.formData)
         : await createCampaign(this.state.formData)
-      const newCampaignId = response.data.id
-      this.props.history.push(`/campaigns/${newCampaignId}`)
+      const campaignId = response.data.id
+      this.props.history.push(`/campaigns/${campaignId}`)
     } catch (err) {
       console.log(err.response.data)
     }
@@ -192,7 +195,7 @@ class CampaignCreate extends React.Component{
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
           <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Save our campaign' onClick={this.handleSubmit}/>
+            <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
           </div>
           <div style={{ position: 'fixed', bottom: '85px', right: '25px', zIndex: 2 }}>
             <Button width="10rem" label='Change banner image' onClick={this.showWidget}/>
