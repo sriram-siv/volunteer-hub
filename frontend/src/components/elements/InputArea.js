@@ -11,7 +11,8 @@ const Input = styled.textarea`
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
   border-radius: 2px;
-  height: 4rem;
+  /* height: 4rem; */
+  height: ${props => props.height ? props.height : '4rem'};
   width: 100%;
   font-size: 0.85rem;
   font-weight: ${props => props.theme.fontWeight};
@@ -32,7 +33,7 @@ const Input = styled.textarea`
 const Label = styled.div`
 position: absolute;
 top: ${props => props.focus ? '.2px' : '0.8rem'};
-display: ${props => props.focus ? 'none' : 'block'};
+display: ${props => props.focus && props.hideLabel ? 'none' : 'block'};
 left: 11px;
 color: ${props => props.theme.text};
 font-size: ${props => props.focus ? '0.7rem' : '1rem'};
@@ -84,7 +85,7 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { name, value, width, returnValue, placeholder } = this.props
+    const { name, value, width, returnValue, label, height, hideLabel } = this.props
     return (
       <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
         <Input
@@ -93,8 +94,9 @@ class InputField extends React.Component {
           onChange={returnValue}
           onKeyDown={this.keyDown}
           onKeyUp={this.keyUp}
+          height={height}
         />
-        <Label focus={focus || value}>{placeholder}</Label>
+        <Label focus={focus || value} hideLabel={hideLabel}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>
     )
