@@ -14,7 +14,8 @@ const BannerImage = ({ src, children }) => {
   if (children) {
     if (!children.length) children = [children]
   }
-  const defaultSrc = 'https://mondrian.mashable.com/lead-img-anti-racist-curriculum.jpg'
+  const defaultSrc = require('../../images/default_banner.png')
+  
   return (
     <Banner src={src ? src : defaultSrc}>
       {children && children.map(component => component)}

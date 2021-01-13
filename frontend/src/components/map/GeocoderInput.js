@@ -33,6 +33,7 @@ const Label = styled.div`
   font-size: ${props => props.focus ? '0.7rem' : '1rem'};
   font-weight: ${props => props.theme.fontWeight};
   letter-spacing: ${props => props.theme.letterSpacing};
+  pointer-events: none;
 `
 
 const Highlight = styled.div`
@@ -59,11 +60,12 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { label, width, geocoderProps } = this.props
-    const value = this.input ? this.input.value : ''
+    const { label, width, geocoderProps, setRef, prefilled } = this.props
+    const value = prefilled || this.input?.value || ''
+
     return (
       <Wrapper width={width} onFocus={this.toggleFocus} onBlur={this.toggleFocus}>
-        <Input ref={input => this.input = input} {...geocoderProps} spellCheck="false"  />
+        <Input ref={ref => setRef(ref)} {...geocoderProps} spellCheck="false" />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>

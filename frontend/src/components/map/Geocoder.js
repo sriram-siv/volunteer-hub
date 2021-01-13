@@ -14,20 +14,21 @@ const Item = styled.div`
    }
 `
 
-const Geocoder = ({ width, onSelect, setRef }) => {
+const Geocoder = ({ width, onSelect, setRef, prefilled }) => {
   return (
     <GeocoderGL
-      ref={ref => setRef(ref)}
       viewport={{ true: 0 }} //this is just filler to stop errors
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
 
       inputComponent={inputProps => (
-        <GeocoderInput width={width} label="Location" geocoderProps={{ ...inputProps }} />)}
+        <GeocoderInput setRef={setRef} width={width} label="Location" prefilled={prefilled} geocoderProps={{ ...inputProps }} />)}
       
       itemComponent={itemProps => <Item {...itemProps}/>}
       updateInputOnSelect
       onSelected={onSelect}
       timeout={150}
+
+      initialInputValue={prefilled}
     />
   )
 }

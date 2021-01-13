@@ -51,6 +51,7 @@ class CampaignCreate extends React.Component{
       longitude: '',
       start_date: null
     },
+    campaignLocation: '',
     flyTo: null,
     isEdit: false
   }
@@ -78,7 +79,11 @@ class CampaignCreate extends React.Component{
         owner: response.data.owner.id
       }
 
-      this.setState({ formData, isEdit: true })
+      // TODO
+      // const campaignLocation = reverseGeocode(lat, lng)
+
+      this.setState({ formData, isEdit: true, campaignLocation: 'Campaign Location' })
+
     } catch (err) {
       console.log(err)
     }
@@ -99,6 +104,14 @@ class CampaignCreate extends React.Component{
 
   setGeocoderInputRef = ref => {
     this.geocoder = ref
+    // Change location string so that input label can function properly
+    setTimeout(() => {
+      if (!this.geocoder.value && this.state.campaignLocation) {
+        this.setState({ campaignLocation: null })
+        // Refocus input
+        setTimeout(() => this.geocoder.focus(), 1)
+      }
+    }, 10)
   }
 
   handleChange = event => {
@@ -109,10 +122,9 @@ class CampaignCreate extends React.Component{
     this.setState({ formData })
   }
 
+
   handleSubmit = async () => {
     try {
-
-
       const response = this.state.isEdit
         ? await updateCampaign(this.props.match.params.id, this.state.formData)
         : await createCampaign(this.state.formData)
@@ -142,17 +154,18 @@ class CampaignCreate extends React.Component{
   render(){
 
     const { name, volunteer_count, description, start_date, banner_image } = this.state.formData
+    const { campaignLocation } = this.state
 
     return (
       <Wrapper>
         <BannerImage style={{ height: '150px' }} src={banner_image}/>
         <Form>
-          <InputText width="100%" label='Give your campaign a name' name='name' value= {name} returnValue={this.handleChange} />
-          <InputArea height="20rem" width="100%" name='description' value={description} returnValue={this.handleChange} label='Give your campaign a description' submit={() => null}/>
+          <InputText width="100%" label='Give your campaign a name' name='name' value={name} returnValue={this.handleChange} />
+          <InputArea width="100%" height="20rem" name='description' value={description} returnValue={this.handleChange} label='Give your campaign a description' submit={() => null}/>
           <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
           <InputText width="100%" type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
           <GeoWrapper>
-            <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
+            <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} prefilled={campaignLocation} />
           </GeoWrapper>
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
