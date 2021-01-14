@@ -8,13 +8,13 @@ const Item = styled.div`
   background-color: ${props => props.theme.background};
   color: ${props => props.theme.text};
   padding: 10px;
-   &:hover {
-     background-color: ${props => props.theme.primary};
-     color: #333;
-   }
+  &:hover {
+    background-color: ${props => props.theme.primary};
+    color: #333;
+  }
 `
 
-const Geocoder = ({ width, onSelect, setRef, value, onChange, flyToLocation }) => {
+const Geocoder = ({ width, value, onSelect, onChange, flyToLocation, setRef }) => {
   return (
     <GeocoderGL
       viewport={{}} // set to empty as we are handling connection to map component manually

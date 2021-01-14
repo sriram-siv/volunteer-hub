@@ -26,14 +26,7 @@ const Form = styled.div`
   > * { margin-top: 10px; }
 `
 
-const GeoWrapper = styled.div`
-  position: relative;
-  width: calc(100vw - 40px);
-  max-width: 500px;
-`
-
 const MapContain = styled.div`
-  width: 100%;
   height: calc(100vw - 40px);
   max-height: 500px;
   margin: 10px auto 20px;
@@ -90,19 +83,19 @@ class CampaignCreate extends React.Component {
         'banner_image',
         'latitude',
         'longitude'
-      ].reduce((res, prop) => ({ ...res, [prop]: response.data[prop] }), {})
+      ].reduce((obj, prop) => ({ ...obj, [prop]: response.data[prop] }), {})
+
       // Correct date format for date picker
       formData.start_date = this.formatDate(response.data.start_date)
       // Get owner id
       formData.owner = response.data.owner.id
-
 
       // Get location name from mapbox api
       const { latitude, longitude } = response.data
       const geoData = await reverseGeoCode({ latitude, longitude })
       const campaignLocation = geoData.data.features[0].place_name
 
-      this.setState({ formData, campaignLocation, isEdit: true })
+      this.setState({ formData, campaignLocation, flyTo: { latitude, longitude, zoom: 4 }, isEdit: true })
 
     } catch (err) {
       console.log(err)
@@ -149,6 +142,7 @@ class CampaignCreate extends React.Component {
   //   }, 1)
   // }
 
+  // onSelect Geocoder results item
   flyToLocation = location => {
 
     const formData = {
@@ -189,7 +183,7 @@ class CampaignCreate extends React.Component {
     }
   }
 
-  showWidget = () => {
+  showImagePicker = () => {
     const widget = window.cloudinary.createUploadWidget(
       { 
         cloudName: 'dmhj1vjdf',
@@ -217,15 +211,15 @@ class CampaignCreate extends React.Component {
           <InputArea label='Give your campaign a description' name='description' value={description} height="20rem" returnValue={this.handleChange} submit={() => null}/>
           <InputText label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} type='number' returnValue={this.handleChange} />
           <InputText label='When does your campaign start?' name='start_date' value={start_date} type='datetime-local' returnValue={this.handleChange} />
-          <GeoWrapper>
-            <Geocoder
-              flyToLocation={this.flyToLocation}
-              onSelect={this.onGeocoderSelect}
-              onChange={this.handleGeocoderChange}
-              setRef={this.setGeocoderInputRef}
-              value={campaignLocation}
-            />
-          </GeoWrapper>
+
+          <Geocoder
+            flyToLocation={this.flyToLocation}
+            onSelect={this.onGeocoderSelect}
+            onChange={this.handleGeocoderChange}
+            setRef={this.setGeocoderInputRef}
+            value={campaignLocation}
+          />
+
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
@@ -233,7 +227,7 @@ class CampaignCreate extends React.Component {
             <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
           </div>
           <div style={{ position: 'fixed', bottom: '85px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Change banner image' onClick={this.showWidget}/>
+            <Button width="10rem" label='Change banner image' onClick={this.showImagePicker}/>
           </div>
         </Form>
       </Wrapper>

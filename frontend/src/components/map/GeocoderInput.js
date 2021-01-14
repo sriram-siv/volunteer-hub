@@ -48,7 +48,8 @@ const Highlight = styled.div`
   transition: all 0;
 `
 
-class InputField extends React.Component {
+// This could be a simple component to convert to functional with hooks
+class GeocoderInput extends React.Component {
 
   state = {
     focus: false
@@ -64,7 +65,7 @@ class InputField extends React.Component {
 
     return (
       <Wrapper width={width} onFocus={this.toggleFocus} onBlur={this.toggleFocus}>
-        <Input ref={ref => setRef(ref)} {...inputProps} spellCheck="false" onInput={onChange} value={value} />
+        <Input ref={ref => setRef(ref)} {...inputProps} spellCheck="false" onChangeCapture={onChange} value={value} />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>
@@ -72,4 +73,4 @@ class InputField extends React.Component {
   }
 }
 
-export default InputField
+export default GeocoderInput
