@@ -3,8 +3,8 @@ import MapGL from '@urbica/react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import Pin from './Pin'
-import MapHelper from './MapHelper'
-import MapLoading from './MapLoading'
+// import MapHelper from './MapHelper'
+// import MapLoading from './MapLoading'
 
 const Map = ({ setRef, pins, clickPin, flyTo }) => {
   const [viewport, setViewport] = React.useState({ zoom: 1, latitude: 50, longitude: 0 })

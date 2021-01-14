@@ -14,21 +14,24 @@ const Item = styled.div`
    }
 `
 
-const Geocoder = ({ width, onSelect, setRef, prefilled }) => {
+const Geocoder = ({ width, onSelect, setRef, value, onChange, flyToLocation }) => {
   return (
     <GeocoderGL
-      viewport={{ true: 0 }} //this is just filler to stop errors
+      viewport={{}} // set to empty as we are handling connection to map component manually
       mapboxApiAccessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
 
       inputComponent={inputProps => (
-        <GeocoderInput setRef={setRef} width={width} label="Location" prefilled={prefilled} geocoderProps={{ ...inputProps }} />)}
+        <GeocoderInput setRef={setRef} width={width} label="Location" value={value} onChange={onChange} inputProps={{ ...inputProps }} />)}
       
-      itemComponent={itemProps => <Item {...itemProps}/>}
-      updateInputOnSelect
-      onSelected={onSelect}
+      // Click capture is needed here to allow onSelected to retain functionality
+      itemComponent={itemProps => (
+        <Item {...itemProps} onClickCapture={() => onSelect(itemProps.item)} />)}
+
+      onSelected={flyToLocation}
+      initialInputValue={value}
       timeout={150}
-      // There will only be a prefilled value in campaign edit
-      initialInputValue={prefilled}
+        
+      // updateInputOnSelect
     />
   )
 }

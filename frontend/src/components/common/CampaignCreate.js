@@ -39,15 +39,15 @@ const MapContain = styled.div`
   margin: 10px auto 20px;
 `
 
-class CampaignCreate extends React.Component{
+class CampaignCreate extends React.Component {
   state = {
     formData: {
       name: '',
-      volunteer_count: null,
+      volunteer_count: '',
       description: '',
       latitude: '',
       longitude: '',
-      start_date: null
+      start_date: ''
     },
     campaignLocation: '',
     flyTo: null,
@@ -113,29 +113,60 @@ class CampaignCreate extends React.Component{
     this.map = ref
   }
 
-  // Receives a reference for the geocoder input element on mount or update
-  // Timeouts are needed to allow the component to mount / update before updating
   setGeocoderInputRef = ref => {
     this.geocoder = ref
-
-    setTimeout(() => {
-      // Remove default value to allow input label to change on focus 
-      if (!this.geocoder?.value && this.state.campaignLocation) {
-        this.setState({ campaignLocation: null })
-        // Refocus input
-        setTimeout(() => this.geocoder?.focus(), 1)
-      }
-    }, 1)
-
   }
 
-  selectGeocoderItem = location => {
+  
+  // Use geocoder input as controlled component
+  // Necessary to use this method as the geocoder component does not allow enough access
+  // to its elements to control it in the normal way
+  // setGeocoderInputRef = ref => {
+  //   this.geocoder = ref
+
+  // setTimeout(() => {
+    
+  //   if (this.geocoder.value !== this.state.campaignLocation) {
+  //     this.setState({ campaignLocation: this.geocoder.value })
+      
+  //     setTimeout(() => this.geocoder.focus(), 1)
+  //   }
+  // }, 1)
+  // }
+
+  // Previous version
+  // Receives a reference for the geocoder input element on mount or update
+  // Timeouts are needed to allow the component to mount / update before updating
+  // setGeocoderInputRef = ref => {
+  //   this.geocoder = ref
+  //   setTimeout(() => {
+  //     // Remove default value to allow input label to change on focus 
+  //     if (!this.geocoder?.value && this.state.campaignLocation) {
+  //       this.setState({ campaignLocation: null })
+  //       // Refocus input
+  //       setTimeout(() => this.geocoder?.focus(), 1)
+  //     }
+  //   }, 1)
+  // }
+
+  flyToLocation = location => {
+
     const formData = {
       ...this.state.formData,
       latitude: location.latitude,
       longitude: location.longitude
     }
+
     this.setState({ flyTo: location, formData })
+  }
+
+  onGeocoderSelect = item => {
+    setTimeout(() => this.setState({ campaignLocation: item.place_name }), 1)
+  }
+
+  handleGeocoderChange = event => {
+    this.setState({ campaignLocation: event.target.value })
+    setTimeout(() => this.geocoder?.focus(), 1)
   }
 
   handleChange = event => {
@@ -145,7 +176,6 @@ class CampaignCreate extends React.Component{
     }
     this.setState({ formData })
   }
-
 
   handleSubmit = async () => {
     try {
@@ -184,11 +214,17 @@ class CampaignCreate extends React.Component{
         <BannerImage style={{ height: '150px' }} src={banner_image}/>
         <Form>
           <InputText label='Give your campaign a name' name='name' value={name} returnValue={this.handleChange} />
-          <InputArea height="20rem" name='description' value={description} returnValue={this.handleChange} label='Give your campaign a description' submit={() => null}/>
-          <InputText type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
-          <InputText type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
+          <InputArea label='Give your campaign a description' name='description' value={description} height="20rem" returnValue={this.handleChange} submit={() => null}/>
+          <InputText label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} type='number' returnValue={this.handleChange} />
+          <InputText label='When does your campaign start?' name='start_date' value={start_date} type='datetime-local' returnValue={this.handleChange} />
           <GeoWrapper>
-            <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} prefilled={campaignLocation} />
+            <Geocoder
+              flyToLocation={this.flyToLocation}
+              onSelect={this.onGeocoderSelect}
+              onChange={this.handleGeocoderChange}
+              setRef={this.setGeocoderInputRef}
+              value={campaignLocation}
+            />
           </GeoWrapper>
           <MapContain>
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>

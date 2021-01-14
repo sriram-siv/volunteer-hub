@@ -60,12 +60,11 @@ class InputField extends React.Component {
 
   render() {
     const { focus } = this.state
-    const { label, width, geocoderProps, setRef, prefilled } = this.props
-    const value = prefilled || this.input?.value || ''
+    const { label, width, inputProps, setRef, value, onChange } = this.props
 
     return (
       <Wrapper width={width} onFocus={this.toggleFocus} onBlur={this.toggleFocus}>
-        <Input ref={ref => setRef(ref)} {...geocoderProps} spellCheck="false" />
+        <Input ref={ref => setRef(ref)} {...inputProps} spellCheck="false" onInput={onChange} value={value} />
         <Label focus={focus || value}>{label}</Label>
         <Highlight focus={focus} />
       </Wrapper>
