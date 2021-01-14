@@ -61,11 +61,11 @@ class CampaignCreate extends React.Component{
     // Pull data for edit
     if (this.props.match.params.id) this.loadData()
     // Or set date picker to current date
-    else this.setState({ formData: { ...this.state.formData, start_date: this.formatDate(new Date()) } })
+    else this.setState({ formData: { ...this.state.formData, start_date: this.formatDate(new Date().toISOString()) } })
   }
 
   // Returns valid string for date picker input
-  formatDate = date => date.toISOString().split(':').slice(0, 2).join(':')
+  formatDate = date => date.split(':').slice(0, 2).join(':')
 
   loadData = async () => {
     try {
@@ -92,7 +92,7 @@ class CampaignCreate extends React.Component{
         'longitude'
       ].reduce((res, prop) => ({ ...res, [prop]: response.data[prop] }), {})
       // Correct date format for date picker
-      formData.start_date = response.data.start_date.replace('Z', '')
+      formData.start_date = this.formatDate(response.data.start_date)
       // Get owner id
       formData.owner = response.data.owner.id
 
@@ -102,7 +102,7 @@ class CampaignCreate extends React.Component{
       const geoData = await reverseGeoCode({ latitude, longitude })
       const campaignLocation = geoData.data.features[0].place_name
 
-      this.setState({ formData, isEdit: true, campaignLocation })
+      this.setState({ formData, campaignLocation, isEdit: true })
 
     } catch (err) {
       console.log(err)
@@ -167,9 +167,8 @@ class CampaignCreate extends React.Component{
         showUploadMoreButton: false
       },
       (error, result) => {
-        if (!error && result && result.event === 'success') { 
-          const banner_image = result.info.url
-          this.setState({ formData: { ...this.state.formData, banner_image } })
+        if (result?.event === 'success') { 
+          this.setState({ formData: { ...this.state.formData, banner_image: result.info.url } })
         }
       })
     widget.open()
@@ -184,10 +183,10 @@ class CampaignCreate extends React.Component{
       <Wrapper>
         <BannerImage style={{ height: '150px' }} src={banner_image}/>
         <Form>
-          <InputText width="100%" label='Give your campaign a name' name='name' value={name} returnValue={this.handleChange} />
-          <InputArea width="100%" height="20rem" name='description' value={description} returnValue={this.handleChange} label='Give your campaign a description' submit={() => null}/>
-          <InputText width="100%" type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
-          <InputText width="100%" type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
+          <InputText label='Give your campaign a name' name='name' value={name} returnValue={this.handleChange} />
+          <InputArea height="20rem" name='description' value={description} returnValue={this.handleChange} label='Give your campaign a description' submit={() => null}/>
+          <InputText type='number' label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} returnValue={this.handleChange} />
+          <InputText type='datetime-local' label='When does your campaign start?' name='start_date' value={start_date} returnValue={this.handleChange} />
           <GeoWrapper>
             <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} prefilled={campaignLocation} />
           </GeoWrapper>
