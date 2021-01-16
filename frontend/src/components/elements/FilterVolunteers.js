@@ -59,7 +59,7 @@ class FilterVolunteers extends React.Component {
         borderColor: this.props.theme.shadow,
         height: '5rem'
       }),
-      singleValue: (styles) => ({
+      singleValue: styles => ({
         ...styles,
         color: this.props.theme.text,
         fontWeight: this.props.theme.fontWeight,
@@ -75,13 +75,13 @@ class FilterVolunteers extends React.Component {
         <Select styles={selectStyles} value={skills} options={skillsOptions} onChange={selectSkills} isMulti />
         <CheckBox>
           <label htmlFor="strictSkills">All</label>
-          <input type="checkbox" id="strictSkills" checked={strictSkills} onClick={selectStrict}/>
+          <input type="checkbox" id="strictSkills" checked={strictSkills} onChange={selectStrict}/>
         </CheckBox>
         <p>show volunteers available on</p>
         <Schedule schedule={schedule} handleClick={selectSchedule} />
         <CheckBox>
           <label htmlFor="strictSchedule">All</label>
-          <input type="checkbox" id="strictSchedule" checked={strictSchedule} onClick={selectStrict}/>
+          <input type="checkbox" id="strictSchedule" checked={strictSchedule} onChange={selectStrict}/>
         </CheckBox>
         <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
       </Wrapper>

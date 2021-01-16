@@ -98,7 +98,7 @@ class CampaignCreate extends React.Component {
       this.setState({ formData, campaignLocation, flyTo: { latitude, longitude, zoom: 4 }, isEdit: true })
 
     } catch (err) {
-      console.log(err)
+      console.error(err)
     }
   }
 
@@ -158,12 +158,12 @@ class CampaignCreate extends React.Component {
     setTimeout(() => this.setState({ campaignLocation: item.place_name }), 1)
   }
 
-  handleGeocoderChange = event => {
+  updateGeocoderInput = event => {
     this.setState({ campaignLocation: event.target.value })
     setTimeout(() => this.geocoder?.focus(), 1)
   }
 
-  handleChange = event => {
+  updateControlledInput = event => {
     const formData = {
       ...this.state.formData,
       [event.target.name]: event.target.value
@@ -176,8 +176,7 @@ class CampaignCreate extends React.Component {
       const response = this.state.isEdit
         ? await updateCampaign(this.props.match.params.id, this.state.formData)
         : await createCampaign(this.state.formData)
-      const campaignId = response.data.id
-      this.props.history.push(`/campaigns/${campaignId}`)
+      this.props.history.push(`/campaigns/${response.data.id}`)
     } catch (err) {
       console.log(err.response.data)
     }
@@ -194,7 +193,8 @@ class CampaignCreate extends React.Component {
         if (result?.event === 'success') { 
           this.setState({ formData: { ...this.state.formData, banner_image: result.info.url } })
         }
-      })
+      }
+    )
     widget.open()
   }
 
@@ -207,15 +207,15 @@ class CampaignCreate extends React.Component {
       <Wrapper>
         <BannerImage style={{ height: '150px' }} src={banner_image}/>
         <Form>
-          <InputText label='Give your campaign a name' name='name' value={name} returnValue={this.handleChange} />
-          <InputArea label='Give your campaign a description' name='description' value={description} height="20rem" returnValue={this.handleChange} submit={() => null}/>
-          <InputText label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} type='number' returnValue={this.handleChange} />
-          <InputText label='When does your campaign start?' name='start_date' value={start_date} type='datetime-local' returnValue={this.handleChange} />
+          <InputText label='Give your campaign a name' name='name' value={name} returnValue={this.updateControlledInput} />
+          <InputArea label='Give your campaign a description' name='description' value={description} height="20rem" returnValue={this.updateControlledInput} />
+          <InputText label='How many volunteers will you need?' name='volunteer_count' value={volunteer_count} type='number' returnValue={this.updateControlledInput} />
+          <InputText label='When does your campaign start?' name='start_date' value={start_date} type='datetime-local' returnValue={this.updateControlledInput} />
 
           <Geocoder
             flyToLocation={this.flyToLocation}
             onSelect={this.onGeocoderSelect}
-            onChange={this.handleGeocoderChange}
+            onChange={this.updateGeocoderInput}
             setRef={this.setGeocoderInputRef}
             value={campaignLocation}
           />

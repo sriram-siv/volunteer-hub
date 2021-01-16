@@ -18,7 +18,8 @@ const BannerImage = ({ src, children }) => {
   
   return (
     <Banner src={src ? src : defaultSrc}>
-      {children && children.map(component => component)}
+      {/* {children && children.map(component => component)} */}
+      {children}
     </Banner>
   )
 }

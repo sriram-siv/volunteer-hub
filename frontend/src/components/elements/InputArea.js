@@ -74,6 +74,7 @@ class InputField extends React.Component {
     this.setState({ focus: false })
   }
   keyDown = event => {
+    if (!this.props.submit) return
     if (event.keyCode === 16) this.setState({ shiftPressed: this.state.shiftPressed + 1 })
     if (event.keyCode === 13 && !this.state.shiftPressed) {
       this.props.submit(event)
