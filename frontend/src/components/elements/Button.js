@@ -13,7 +13,7 @@ const ButtonElement = styled.button`
   transition: all 0.15s;
 
   &:hover {
-    background-color: #fef15eef;
+    background-color: ${props => props.theme.primary};
     color: #333;
   }
 `

@@ -5,8 +5,8 @@ const Wrapper = styled.div`
   position: absolute;
   z-index: 20;
   top: 0;
-  left: ${props => props.visible ? '100px' : '60px'};
-  width: 15rem;
+  right: ${props => props.visible ? '120px' : '60px'};
+  width: 8rem;
   height: 3rem;
   opacity: ${props => props.visible ? 1 : 0};
   transition: all 0.2s;
@@ -29,8 +29,8 @@ const Link = styled.a`
 const UserPanel = ({ visible, openProfile, logout }) => {
   return (
     <Wrapper visible={visible}>
-      <Link onClick={openProfile}>profile</Link>
       <Link onClick={logout}>logout</Link>
+      <Link onClick={openProfile}>profile</Link>
     </Wrapper>
   )
 }

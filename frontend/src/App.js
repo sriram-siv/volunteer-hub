@@ -4,7 +4,7 @@ import { ThemeProvider } from 'styled-components'
 
 import { getSingleProfile } from './lib/api'
 
-import NavBar from './components/common/NavBar'
+import NavBar from './components/common/NavBarAlt'
 import Notification from './components/common/Notification'
 
 import Home from './components/common/Home'
@@ -13,6 +13,8 @@ import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
 import CampaignCreate from './components/common/CampaignCreate'
 import Profile from './components/common/Profile'
+
+import ShowTest from './components/common/ShowTest'
 
 class App extends React.Component {
 
@@ -92,12 +94,12 @@ class App extends React.Component {
 
   render() {
     const { theme, userCampaigns, notification } = this.state
-
+    const path = window.location.pathname
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
           <Notification notification={notification}/>
-          <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns}/>
+          {path !== '/' && <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns} />}
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/profile" render={() => <Profile app={this.app} />} />
@@ -105,7 +107,8 @@ class App extends React.Component {
             <Route path='/campaigns/new' component={CampaignCreate} />
             <Route path='/campaigns/:id/edit' component={CampaignCreate} />
             <Route path='/campaigns/:id' component={CampaignShow} />
-            <Route path='/campaigns' render={() => <CampaignIndex app={this.app}/>} />
+            <Route path='/campaigns' render={() => <CampaignIndex app={this.app} />} />
+            <Route path="/test" component={ShowTest} />
           </Switch>
         </BrowserRouter>
       </ThemeProvider>

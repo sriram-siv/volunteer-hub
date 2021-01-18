@@ -159,8 +159,10 @@ class CampaignCreate extends React.Component {
   }
 
   updateGeocoderInput = event => {
-    this.setState({ campaignLocation: event.target.value })
-    setTimeout(() => this.geocoder?.focus(), 1)
+    this.setState(
+      { campaignLocation: event.target.value },
+      () => this.geocoder.focus()
+    )
   }
 
   updateControlledInput = event => {

@@ -10,12 +10,17 @@ const Wrapper = styled.form`
   position: absolute;
   z-index: 8;
   top: ${props => props.visible ? 'calc(3rem + 5px)' : '-12rem'};
-  left: 5px;
-  background-color: ${props => props.theme.panels};
-  width: 360px;
+  /* left: 5px; */
+  right: 5px;
+  /* background-color: ${props => props.theme.panels}; */
+  background-color: #fffa;
+  backdrop-filter: blur(4px);
+  width: 20rem;
   transition: top 0.4s;
+  padding: 5px;
+  border-radius: 3px;
   > * {
-    margin: 5px;
+    margin-bottom: 5px;
   }
 `
 
@@ -113,7 +118,7 @@ class UserForms extends React.Component {
         <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange} error={registerErrors.password && registerErrors.password[0]} />
         {mode === 'register' &&
           <InputText label="confirm password" name="password_confirmation" value={passwordConfirmation} type="password" returnValue={this.handleChange} error={registerErrors.password_confirmation && registerErrors.password_confirmation[0]} />}
-        <Button label={mode} width="calc(100% - 10px)" />
+        <Button label={mode} primary={true} width={'100%'} />
         <ChangeMode onClick={this.switchMode}>{mode === 'login' ? 'new user' : ' I have an account'}</ChangeMode>
       </Wrapper>
     )
