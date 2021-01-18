@@ -4,53 +4,36 @@ import styled from 'styled-components'
 const Wrapper = styled.div`
   position: absolute;
   top: 0;
-  left: 50vw;
-  height: 2rem;
-  width: 300px;
-  max-width: 95vw;
-  transform: translateX(-50%);
+  height: fit-content;
+  width: 100%;
+  padding: 5px;
   z-index: 9;
+  border-bottom: 1px solid ${props => props.theme.shadow};
 
   text-align: center;
   font-size: 0.85rem;
   line-height: 2rem;
 
-  border: 1px solid ${props => props.theme.primary};
-  border-radius: 2px;
-  background-color: ${props => props.theme.panels};
   color: ${props => props.theme.text};
+  background-color: ${props => props.theme.background};
+  opacity: 0.9;
+  backdrop-filter: blur(4px);
+
   animation-name: toastAuto;
   animation-duration: 4s;
   animation-fill-mode: forwards;
 `
 
-class Notification extends React.Component {
-
-  state = {
-    notification: null
-  }
+const Notification = ({ notification }) => {
   
-  componentDidUpdate = (prevProps) => {
-    if (prevProps.notification !== this.props.notification) {
-      this.showNotification()
-      setTimeout(this.hideNotification, 4000)
-    }
-  }
+  const [message, setMessage] = React.useState('')
 
-  showNotification = () => {
-    const { notification } = this.props
-    this.setState({ notification: notification.message })
-  }
+  React.useEffect(() => {
+    setMessage(notification.message)
+    setTimeout(() => setMessage(''), 4000)
+  }, [notification])
 
-  hideNotification = () => {
-    this.setState({ notification: null })
-  }
-  
-  render() {
-    const { notification } = this.state
-    if (!notification) return null
-    return <Wrapper>{notification}</Wrapper>
-  }
+  return message ? <Wrapper>{message}</Wrapper> : null
 }
 
 export default Notification

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { withTheme } from 'styled-components'
 
-import Select, { components } from 'react-select'
+import Select from 'react-select'
 
 import { getSingleCampaign } from '../../lib/api'
 

@@ -23,60 +23,30 @@ const SearchFields = styled.div`
   > * { margin-bottom: 5px; }
 `
 
-export const Notification = styled.div`
-  opacity: ${props => props.visible ? 1 : 0};
-  pointer-events: ${props => props.visible ? 'all' : 'none'};
-  display: flex;
-  justify-content: center;
-  position: absolute;
-  top: 0;
-  height: calc(100vh - 3rem);
-  width: 100vw;
-  z-index: 10;
-  background-color: #aaaa;
-  transition: all 0.2s;
-`
-
-const Message = styled.div`
-  position: absolute;
-  top: 100px;
-  width: 300px;
-  height: 150px;
-  background-color: ${props => props.theme.panels};
-  border-radius: 2px;
-  border: 1px solid ${props => props.theme.shadow};
-  font-size: 0.85rem;
-  text-align: center;
-  padding: 15px;
-`
-
-const Dismiss = styled.button`
-  height: 2rem;
-  width: 100px;
-  border: 1px solid ${props => props.theme.primary};
-  border-radius: 2px;
-  color: ${props => props.theme.text};
-  background-color: ${props => props.theme.background};
-`
-
 class CampaignIndex extends React.Component {
 
   state = {
-    campaigns: null,
-    filteredResults: null,
-    tags: '',
+    campaigns: [],
+    results: null,
+    location: '',
+    tag: '',
     bounds: {
       _ne: { lat: 90, lng: 180 },
       _sw: { lat: -90, lng: -180 }
     },
     flyTo: null,
-    showNotification: false,
-    resultShowingDetail: -1
+    resultShowingDetail: -1,
+    tagError: ''
   }
 
   componentDidMount = async () => {
-    const response = await getAllCampaigns()
-    const campaigns = response.data
+    this.getCampaigns()
+  }
+
+  // componentDidUpdate = () => this.getResults() // ? would work well with useEffect
+
+  getCampaigns = async () => {
+    const { data: campaigns } = await getAllCampaigns()
     this.setState({ campaigns }, this.getResults)
   }
 
@@ -85,12 +55,7 @@ class CampaignIndex extends React.Component {
   }
 
   setMapRef = ref => {
-    this.map = ref
-    try {
-      this.map.getMap().on('moveend', this.getBounds)
-    } catch (err) {
-      console.log(err)
-    }
+    ref && ref.getMap().on('moveend', () => this.getBounds(ref))
   }
   
   setGeocoderInputRef = ref => {
@@ -98,73 +63,65 @@ class CampaignIndex extends React.Component {
   }
 
   getResults = () => {
-    if (!this.state.campaigns) return
 
-    const { campaigns, bounds, tags } = this.state
+    const { campaigns, tag, bounds: { _sw: min, _ne: max } } = this.state
 
-    const filteredResults = campaigns
-      // Filter by visible area of map
-      .filter(result => {
-        const inLat = result.latitude > bounds._sw.lat && result.latitude < bounds._ne.lat
-        const inLng = result.longitude > bounds._sw.lng && result.longitude < bounds._ne.lng
-        return inLat && inLng
-      })
-      .filter(result => {
-        const tagList = result.tags.map(tag => tag.name).join(',')
-        try {
-          const re = new RegExp(tags, 'gi')
-          return re.test(tagList)
-        } catch (err) {
-          // TODO Handle this error - form? results?
-          return true
-        }
-      })
+    const inRange = (value, min, max) => value > min && value < max
+    const matchesQuery = ({ name }) => name.toLowerCase().includes(tag.toLowerCase())
+    const invalidTagQuery = /[^\w]/.test(tag)
+    const tagError = invalidTagQuery ? 'can only include alphanumeric characters' : ''
+
+    const results = campaigns
+      .filter(({ latitude, longitude }) => (
+        inRange(latitude, min.lat, max.lat) && inRange(longitude, min.lng, max.lng)
+      ))
+      .filter(({ tags }) => (
+        !tag || invalidTagQuery || tags.some(matchesQuery)
+      ))
       .map((result, i) => ({ ...result, color: '#222', size: 20, number: ++i }))
-    // filteredResults.forEach(result => console.log(result.tags.map(tag => tag.name).join(',')))
-    this.setState({ filteredResults })
+    
+    this.setState({ results, tagError })
   }
 
-  getBounds = () => {
-    this.setState({ bounds: this.map.getMap().getBounds() }, this.getResults)
+  getBounds = map => {
+    this.setState({ bounds: map.getMap().getBounds() }, this.getResults)
   }
+
+  flyToLocation = location => this.setState({ flyTo: location })
 
   selectGeocoderItem = location => {
-    this.setState({ flyTo: location })
+    setTimeout(() => this.setState({ location: location.place_name }), 1)
+  }
+
+  updateGeocoderInput = e => {
+    this.setState(
+      { location: e.target.value },
+      () => setTimeout(() => this.geocoder.focus(), 1)
+    )
   }
 
   signUpToCampaign = async id => {
-    const userID = localStorage.getItem('user_id')
+    const userID = this.props.app.currentUser()
     if (!userID) {
       this.props.app.showNotification('please login to sign up')
-      return
+    } else {
+      await updateVolunteers(id, { volunteer_id: userID, action: 'add' })
+      this.props.app.showNotification('A request to join has been sent to the campaign coordinators')
     }
-    await updateVolunteers(id, { volunteer_id: Number(userID), action: 'add' })
-    this.setState({ showNotification: true })
   }
 
-  dismissNotification = () => this.setState({ showNotification: false })
-
-  showDetail = id => {
-    this.setState({ resultShowingDetail: id })
-  }
+  showDetail = id => this.setState({ resultShowingDetail: id })
 
   render() {
-    const { filteredResults, tags, flyTo, showNotification, resultShowingDetail } = this.state
+    const { results, tag, flyTo, resultShowingDetail, location, tagError } = this.state
     return (
       <Wrapper>
-        <Notification visible={showNotification}>
-          <Message>
-            Thanks<br />
-            You&apos;ll be notified when the coordinators have approved you to join<br/><br/>
-            <Dismiss onClick={this.dismissNotification}>ok</Dismiss>
-          </Message>
-        </Notification>
         <SearchFields>
-          <Geocoder onSelect={this.selectGeocoderItem} setRef={this.setGeocoderInputRef} />
-          <InputText name="tags" label="Tags" value={tags} returnValue={this.handleChange} />
-          <ResultsList campaigns={filteredResults} signUp={this.signUpToCampaign} showDetail={this.showDetail} resultShowingDetail={resultShowingDetail} />
+          <Geocoder value={location} onChange={this.updateGeocoderInput} onSelect={this.selectGeocoderItem} flyToLocation={this.flyToLocation} setRef={this.setGeocoderInputRef} />
+          <InputText name="tag" label="Tags" error={tagError} value={tag} returnValue={this.handleChange} />
+          <ResultsList campaigns={results} signUp={this.signUpToCampaign} showDetail={this.showDetail} resultShowingDetail={resultShowingDetail} />
         </SearchFields>
-        <Map pins={filteredResults} flyTo={flyTo} setRef={this.setMapRef} clickPin={this.showDetail} />
+        <Map pins={results} flyTo={flyTo} setRef={this.setMapRef} clickPin={this.showDetail} />
       </Wrapper>
     )
   }

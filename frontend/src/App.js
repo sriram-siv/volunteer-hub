@@ -81,15 +81,18 @@ class App extends React.Component {
     this.setState({ userCampaigns })
   }
 
-  /* auto options: 0 autohide, 1 wait to dismiss */// not working currently
+  /* auto options: 0 autohide, 1 wait to dismiss */// not working currently TODO
   showNotification = (message, auto = 0) => {
     this.setState({ notification: { message, auto } })
   }
 
+  currentUser = () => Number(localStorage.getItem('user_id'))
+
   app = {
-    getUser: this.getUser,
+    getUser: this.getUser, // TODO should be called login
     logout: this.logout,
-    showNotification: this.showNotification
+    showNotification: this.showNotification,
+    currentUser: this.currentUser
   }
 
   render() {

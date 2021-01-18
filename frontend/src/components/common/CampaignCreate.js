@@ -30,6 +30,7 @@ const MapContain = styled.div`
   height: calc(100vw - 40px);
   max-height: 500px;
   margin: 10px auto 20px;
+  overflow: hidden;
 `
 
 class CampaignCreate extends React.Component {

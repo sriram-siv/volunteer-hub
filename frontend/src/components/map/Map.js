@@ -25,7 +25,7 @@ const Map = ({ setRef, pins, clickPin, flyTo }) => {
       <MapGL
         ref={setRef}
         mapStyle='mapbox://styles/mapbox/streets-v11'
-        style={{ width: '100%', height: '100%' }}
+        style={{ position: 'relative', top: '-1px', left: '-1px', width: 'calc(100% + 2px)', height: 'calc(100% + 2px)' }}
         cursorStyle="default"
         accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         {...viewport}
