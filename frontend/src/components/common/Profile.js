@@ -1,5 +1,6 @@
 /* eslint-disable camelcase */
 import React from 'react'
+import { withRouter } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
 import Select from 'react-select'
 
@@ -209,6 +210,11 @@ class Profile extends React.Component {
     }
   }
 
+  logout = () => {
+    this.props.app.logout()
+    this.props.history.push('/campaigns')
+  }
+
   render() {
     // const { app } = this.props
     const { userData, pendingUserData, skills, editMode, formData } = this.state
@@ -242,6 +248,9 @@ class Profile extends React.Component {
       <Wrapper>
         <BannerImage src={'http://backgroundlabs.com/wp-content/uploads/2014/10/yellow-triangles-background.jpg'}>
           <ProfilePic src={userData.profile_image} />
+          <div style={{ position: 'absolute', top: '40px', right: '120px', height: '2rem' }}>
+            <Button onClick={this.logout}>Logout</Button>
+          </div>
         </BannerImage>
         <PageTitle>{userData.username}</PageTitle>
 
@@ -293,4 +302,4 @@ class Profile extends React.Component {
   }
 }
 
-export default withTheme(Profile)
+export default withTheme(withRouter(Profile))

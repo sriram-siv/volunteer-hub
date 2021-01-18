@@ -8,22 +8,22 @@ import Button from './Button'
 
 const Wrapper = styled.form`
   position: absolute;
-  z-index: 8;
   top: ${props => props.visible ? 'calc(3rem + 5px)' : '-12rem'};
-  /* left: 5px; */
   right: 5px;
-  /* background-color: ${props => props.theme.panels}; */
+  width: 20rem;
+  padding: 5px;
+  z-index: 9;
+  border-radius: 3px;
+  
   background-color: #fffa;
   backdrop-filter: blur(4px);
-  width: 20rem;
   transition: top 0.4s;
-  padding: 5px;
-  border-radius: 3px;
+
   > * {
     margin-bottom: 5px;
   }
 `
-
+// TODO change to button for accessibility
 const ChangeMode = styled.p`
   font-size: 0.7rem;
   text-align: center;
@@ -43,9 +43,9 @@ class UserForms extends React.Component {
       phone: '',
       password: '',
       password_confirmation: '',
+      // TODO this should be in the backend
       profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
     },
-    showNotification: false,
     registerErrors: {}
   }
 
@@ -93,7 +93,10 @@ class UserForms extends React.Component {
       const response = await loginUser(loginData)
       localStorage.setItem('token', response.data.token)
       localStorage.setItem('user_id', response.data.id)
-      if (response.status === 200) this.props.onLogin(response.data.id)
+      if (response.status === 200) {
+        this.props.app.getUser(response.data.id)
+        this.props.onLogin()
+      }
     } catch (err) {
       this.props.app.showNotification(err.response.data.detail)
       const formData = { ...this.state.formData, email: '', password: '' }

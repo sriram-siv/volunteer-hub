@@ -31,50 +31,39 @@ const Items = styled.div`
   right: 25px;
   > * {
     margin-left: 10px;
+    cursor: pointer;
   }
 `
 
 const NavBar = ({ app, history, changeTheme, theme }) => {
 
   const [showForm, setShowForm] = React.useState(false)
-  const [showUserOptions, setShowUserOptions] = React.useState(false)
 
-  const goToPage = page => {
-    history.push(page)
-    setShowUserOptions(false)
-  }
+  const navUser = <>
+    <span onClick={() => history.push('/profile')}>
+      {icons.user()}
+    </span>
+    <span onClick={() => history.push('/campaigns')}>
+      {icons.home()}
+    </span>
+    <span onClick={changeTheme}>
+      {theme.name === 'light' ? icons.sun() : icons.moon()}
+    </span>
+  </>
 
-  const openUserPanel = () => {
-    if (!localStorage.getItem('user_id')) setShowForm(!showForm)
-    else setShowUserOptions(!showUserOptions)
-  }
-
-  const handleLogin = async (id) => {
-    app.getUser(id)
-    setShowForm(false)
-  }
-
-  const handleLogout = () => {
-    app.logout()
-    goToPage('/campaigns')
-  }
+  const navGuest = <>
+    <span onClick={() => setShowForm(!showForm)}>
+      login
+    </span>
+  </>
 
   return (
     <>
-      <UserPanel visible={showUserOptions} openProfile={() => goToPage('/profile')} logout={handleLogout} />
-      <UserForms visible={showForm} onLogin={handleLogin} app={app}/>
+      <UserForms visible={showForm} onLogin={() => setShowForm(!showForm)} app={app}/>
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>
-          <span onClick={openUserPanel}>
-            {icons.user()}
-          </span>
-          <span onClick={() => goToPage('/campaigns')}>
-            {icons.home()}
-          </span>
-          <span onClick={changeTheme}>
-            {theme.name === 'light' ? icons.sun() : icons.moon()}
-          </span>
+          {app.currentUser() ? navUser : navGuest }
         </Items>
       </NavBarContainer>
     </>
