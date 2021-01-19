@@ -33,7 +33,7 @@ const MapContain = styled.div`
   overflow: hidden;
 `
 
-class CampaignCreate extends React.Component {
+class CampaignForm extends React.Component {
   state = {
     formData: {
       name: '',
@@ -238,4 +238,4 @@ class CampaignCreate extends React.Component {
   }
 }
 
-export default CampaignCreate
+export default CampaignForm

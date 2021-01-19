@@ -6,14 +6,13 @@ const Wrapper = styled.div`
   width: ${props => props.width || '100%' };
   margin: auto;
 `
-
+// TODO implement focus visible
 const Input = styled.input`
   background-color: ${props => props.theme.background};
-  color: ${props => props.focus ? props.theme.text : 'transparent'};
+  color: ${props => props.theme.text};
   border-radius: 2px;
   height: 3.1rem;
   width: 100%;
-  font-size: 1rem;
   font-weight: ${props => props.theme.fontWeight};
   border: 1px solid ${props => props.theme.shadow};
   padding: calc(12px + 0.7rem) 10px 5px;
@@ -61,34 +60,24 @@ const Error = styled.div`
   text-transform: lowercase;
 `
 
-class InputField extends React.Component {
+const InputField = ({ label, width, value, name, type, error, returnValue }) => {
 
-  state = {
-    focus: false
-  }
+  const [focus, setFocus] = React.useState(false)
 
-  handleChange = event => {
-    this.props.returnValue(event)
-  }
-  handleFocus = () => {
-    this.setState({ focus: true })
-  }
-  handleBlur = () => {
-    this.setState({ focus: false })
-  }
-
-  render() {
-    const { focus } = this.state
-    const { label, width, value, name, type, error } = this.props
-    return (
-      <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input ref={input => this.input = input} focus={focus || value} type={type} name={name} value={value} onChange={this.handleChange} spellCheck="false" />
-        <Label focus={focus || value}>{label}</Label>
-        <Error>{error}</Error>
-        <Highlight focus={focus} />
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper width={width} onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}>
+      <Input
+        focus={focus || value}
+        type={type} name={name}
+        value={value}
+        onChange={returnValue}
+        spellCheck="false"
+      />
+      <Label focus={focus || value}>{label}</Label>
+      <Error>{error}</Error>
+      <Highlight focus={focus} />
+    </Wrapper>
+  )
 }
 
 export default InputField

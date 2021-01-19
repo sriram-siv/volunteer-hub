@@ -6,12 +6,11 @@ import Select from 'react-select'
 
 import BannerImage from '../elements/BannerImage'
 // import Button from '../elements/Button'
-import InputText from '../elements/InputText'
-import { SplitContain, SplitRow } from '../elements/Split'
+// import InputText from '../elements/InputText'
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
 import Schedule from '../elements/Schedule'
 
-import icons from '../../lib/icons'
+// import icons from '../../lib/icons'
 
 
 const Wrapper = styled.div`
@@ -22,79 +21,56 @@ const Wrapper = styled.div`
   padding-bottom: 30px;
 `
 
+const Logout = styled.button`
+  position: fixed;
+  top: calc(3rem + 10px);
+  right: 15px;
+  border: none;
+  background-color: transparent;
+`
+
+const Panel = styled.div`
+  position: relative;
+  top: calc(250px - 3rem);
+  left: 10px;
+  width: calc(100vw - 23px);
+  height: calc(100vh - 3rem - 20px);
+  background-color: #eeed;
+  /* background: linear-gradient(0deg, #fffa, #fffc); */
+  border-radius: 3px;
+  margin-bottom: 10px;
+  backdrop-filter: blur(4px);
+`
+
+const Title = styled.h2`
+  font-size: 1.1rem;
+  background-color: ${props => props.theme.primary};
+  color: #333;
+  padding: 12px 20px;
+  border-top-left-radius: 3px;
+  border-top-right-radius: 3px;
+  height: 3rem;
+`
+
+const SelectWrapper = styled.div`
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  width: 10rem;
+`
+
 const ProfilePic = styled.img`
-  position: absolute;
-  top: 50px;
-  left: 100px;
-  width: 150px;
-  height: 150px;
-  border-radius: 50%;
-  border: 2px solid ${props => props.theme.panels};
-`
-
-const EditPic = styled.img`
-  position: absolute;
-  bottom: -130px;
-  left: 30px;
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  border: 1px solid ${props => props.theme.shadow};
-`
-
-const EditPicButton = styled.button`
-  padding: 0;
-  padding-bottom: 2px;
-  position: absolute;
-  bottom: -70px;
-  left: 25px;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 1px solid ${props => props.theme.shadow};
-`
-
-const Section = styled.div`
-  position: relative;
-  height: 450px;
-  padding: 20px;
-  border-radius: 2px;
-  border: 1px solid ${props => props.theme.shadow};
-  color: ${props => props.theme.text};
-  background-color: ${props => props.theme.panels};
-`
-
-const PageTitle = styled.div`
-  font-size: 1.5rem;
-  font-weight: 600;
-  margin: 30px 0;
-  text-align: center;
-  color: ${props => props.theme.text};
-`
-
-const SectionTitle = styled.div`
-  font-size: 1.2rem;
-  font-weight: 600;
-  margin-bottom: 30px;
-`
-
-const Button = styled.button`
-  position: absolute;
-  bottom: 10px;
-  right: ${props => `${props.position * 120 + 20}px`};
-  width: 100px;
-  padding: 10px;
-  border-radius: 2px;
-  border: 2px solid ${props => props.theme.primary};
-  background-color: ${props => props.theme.background};
-  color: ${props => props.theme.text};
-`
-
-const EditForm = styled.div`
-  position: relative;
-  > * {
-    margin: 5px 0;
-  }
+  /* position: relative; */
+  position: fixed;
+  top: calc(3rem + 10px);
+  left: 10px;
+  /* background-image: ${props => props.image} */
+  /* background-size: contain; */
+  background-color: palevioletred;
+  width: calc(230px - 3rem);
+  height: calc(230px - 3rem);
+  border-radius: 4px;
+  opacity: 0.5;
 `
 
 class Profile extends React.Component {
@@ -102,13 +78,15 @@ class Profile extends React.Component {
   state = {
     userData: null,
     pendingUserData: null,
+    userCampaigns: [],
     skills: null,
     formData: {
       user_skills: null,
       schedule: Array.from({ length: 14 }).fill(false)
     },
     editMode: false,
-    newPic: null
+    newPic: null,
+    section: { label: 'profile', value: 'profile' }
   }
 
   componentDidMount = async () => {
@@ -122,12 +100,17 @@ class Profile extends React.Component {
     
     const { username, first_name, last_name, email, phone, profile_image, user_skills } = response.data
     const userData = { username, first_name, last_name, email, phone, profile_image }
+
+    const { owned_campaigns: owned, coord_campaigns: coord, conf_campaigns: volunteer } = response.data
+    const userCampaigns = [...owned, ...coord, ...volunteer]
+
+    console.log(response.data)
     
     const schedule = [...this.state.formData.schedule]
     response.data.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
     const formData = { user_skills, schedule }
     
-    this.setState({ userData, pendingUserData: userData, formData }, () => console.log(this.state.formData)) 
+    this.setState({ userData, pendingUserData: userData, userCampaigns, formData }) 
   }
 
   showWidget = () => {
@@ -197,13 +180,15 @@ class Profile extends React.Component {
   }
 
   saveShiftsSkills = async () => {
-    console.log( this.state.formData )
+    const { formData: { user_skills, schedule } } = this.state
+
     try {
       const userID = localStorage.getItem('user_id')
-      const shiftResponse = await updateProfileShifts(userID, { 'schedule': this.state.formData.schedule })
-      const skillIds = this.state.formData.user_skills.map(skill => skill.id)
-      const skillsResponse = await updateProfileSkills(userID, { 'user_skills': skillIds })
-      console.log(shiftResponse.data.message, skillsResponse.data.message)
+      const skillIds = user_skills.map(skill => skill.id)
+
+      await updateProfileShifts(userID, { schedule })
+      await updateProfileSkills(userID, { 'user_skills': skillIds })
+
       this.props.app.showNotification('your preferences have been updated')
     } catch (err) {
       console.log(err)
@@ -215,9 +200,13 @@ class Profile extends React.Component {
     this.props.history.push('/campaigns')
   }
 
+  changeSection = section => {
+    this.setState({ section })
+  }
+
   render() {
-    // const { app } = this.props
-    const { userData, pendingUserData, skills, editMode, formData } = this.state
+    const { app, history } = this.props
+    const { userData, pendingUserData, userCampaigns, skills, editMode, formData, section } = this.state
     const { schedule } = this.state.formData
 
     const selectStyles = {
@@ -226,77 +215,72 @@ class Profile extends React.Component {
         backgroundColor: this.props.theme.background,
         borderRadius: '2px',
         borderColor: this.props.theme.shadow,
-        height: '5rem'
+        height: 'calc(2rem)'
       }),
-      singleValue: (styles) => ({
+      singleValue: styles => ({
         ...styles,
         color: this.props.theme.text,
         fontWeight: this.props.theme.fontWeight,
         letterSpacing: this.props.theme.letterSpacing,
-        fontSize: '0.85rem'
-      })
+        left: '50%',
+        transform: 'translate(calc(-50% + 1rem), -50%)'
+      }),
+      menu: styles => ({
+        ...styles,
+        backgroundColor: this.props.theme.background,
+        color: this.props.theme.text,
+        borderRadius: '2px',
+        textAlign: 'center'
+      }),
+      indicatorSeparator: () => ({ width: 0 })
     }
 
-    if (!userData) return null
-    console.log(userData.profile_image)
+    const menu = [
+      { label: 'profile', value: 'profile' },
+      { label: 'settings', value: 'settings' },
+      { label: 'campaigns', value: 'campaigns' }
+    ]
 
+
+    if (!userData) return null
 
     // Shape data into react-select options object
     const userSkills = formData.user_skills.map(skill => ({ value: skill.id, label: skill.name }))
 
+
     return (
       <Wrapper>
-        <BannerImage src={'http://backgroundlabs.com/wp-content/uploads/2014/10/yellow-triangles-background.jpg'}>
-          <ProfilePic src={userData.profile_image} />
-          <div style={{ position: 'absolute', top: '40px', right: '120px', height: '2rem' }}>
-            <Button onClick={this.logout}>Logout</Button>
+        <div style={{ position: 'fixed', top: '3rem', width: 'calc(100% - 3px)', pointerEvents: 'none' }} >
+          <BannerImage src={require('../../images/yellow-triangles-background.jpg')} />
+        </div>
+        <ProfilePic image={userData.profile_image} />
+        <Logout onClick={this.logout}>Logout</Logout>
+
+        <Panel>
+          <Title>{`${userData.first_name} ${userData.last_name}`}</Title>
+          <SelectWrapper>
+            <Select styles={selectStyles} options={menu} value={section} onChange={this.changeSection} isSearchable={false} />
+          </SelectWrapper>
+          <div style={{ padding: '20px' }}>
+            {section.value === 'profile' && <>
+              Lorem ipsum dolor sit, amet consectetur adipisicing elit. Sit porro, voluptas voluptatum voluptatibus sint assumenda commodi corrupti laudantium nobis nihil, architecto nisi, esse repellendus facere. Odit, provident aliquam amet ut incidunt nam quo voluptatem tempore eos odio nihil et tenetur commodi quidem a dignissimos illo dolor fuga modi magni? Quaerat?
+            </>}
+            {section.value === 'settings' && <>
+              <p>Availability</p>
+              <Schedule schedule={schedule} />
+              <p>Skills</p>
+              <Select />
+            </>}
+            {section.value === 'campaigns' && <>
+              <div style={{ }}>
+                {userCampaigns.map((campaign, i) =>
+                  <button key={i} style={{ display: 'block', marginBottom: '5px' }} onClick={() => history.push(`/campaigns/${campaign.id}`)}>{campaign.name}</button>)}
+              </div>
+              <button onClick={() => history.push('/campaigns/new')}>new campaign</button>
+            </>}
           </div>
-        </BannerImage>
-        <PageTitle>{userData.username}</PageTitle>
-
-
-        <SplitContain>
-          <SplitRow>
-            <Section>
-              {!editMode
-                ?
-                <>
-                  <SectionTitle > My Profile</SectionTitle>
-                  <p>{userData.first_name} {userData.last_name}</p>
-                  <p>email: {userData.email}</p>
-                  <p style={{ marginTop: '-15px' }}>phone: {userData.phone}</p>
-                  <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil molestias sed adipisci nulla! Neque hic omnis nam harum! Eligendi quasi fugiat enim odit commodi nam optio nesciunt laboriosam cum eius quam aspernatur minus fuga quia tempora animi inventore numquam quas ducimus unde, temporibus tenetur velit. Tenetur necessitatibus ducimus nam at.</p>
-                  <Button position={0} onClick={this.handleEditMode}>Edit</Button>
-                </>
-                :
-                <>
-                  <SectionTitle>Edit Profile</SectionTitle>
-                  <EditForm>
-                    <InputText name='first_name' value={pendingUserData.first_name} label='First Name'  returnValue={this.handleEditChange}></InputText>
-                    <InputText name='last_name' value={pendingUserData.last_name} label='Last Name' returnValue={this.handleEditChange}></InputText>
-                    <InputText name='email' value={pendingUserData.email} label='Email' returnValue={this.handleEditChange}></InputText>
-                    <InputText name='phone' value={pendingUserData.phone} label='Phone' returnValue={this.handleEditChange}></InputText>
-                    <EditPic src={pendingUserData.profile_image} />
-                    <EditPicButton onClick={this.showWidget}>
-                      {icons.edit('#232323', 18)}
-                    </EditPicButton>
-                  </EditForm>
-                  <Button position={1} onClick={this.saveEdits}>Save</Button>
-                  <Button position={0} onClick={this.discardEdits}>Cancel</Button>
-                </>
-              }
-            </Section>
-            <Section>
-              <SectionTitle>My Preferences</SectionTitle>
-              <p>availability</p>
-              <Schedule handleClick={this.editSchedule} schedule={schedule} />
-              <p>skills</p>
-              <Select styles={selectStyles} value={userSkills} options={skills} isMulti onChange={this.editSkills}/>
-              <Button position={0} onClick={this.saveShiftsSkills}>Save</Button>
-            </Section>
-          </SplitRow>
-        </SplitContain>
-        
+        </Panel>
+           
       </Wrapper>
     )
   }

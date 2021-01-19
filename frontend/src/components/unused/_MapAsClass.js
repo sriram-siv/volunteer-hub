@@ -2,8 +2,8 @@ import React from 'react'
 import MapGL from '@urbica/react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
-import Pin from './Pin'
-import MapHelper from './MapHelper'
+import Pin from '../map/Pin'
+import MapHelper from '../map/MapHelper'
 
 class Map extends React.Component {
 

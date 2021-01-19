@@ -12,7 +12,7 @@ const Wrapper = styled.form`
   right: 5px;
   width: 20rem;
   padding: 5px;
-  z-index: 9;
+  z-index: 8;
   border-radius: 3px;
   
   background-color: #fffa;
@@ -23,12 +23,15 @@ const Wrapper = styled.form`
     margin-bottom: 5px;
   }
 `
-// TODO change to button for accessibility
-const ChangeMode = styled.p`
+
+const ChangeMode = styled.button`
+  display: block;
   font-size: 0.7rem;
-  text-align: center;
+  margin: auto;
+  border: none;
+  font-family: 'Open Sans', sans-serif;
   color: ${props => props.theme.text};
-  cursor: pointer;
+  background-color: transparent;
 `
 
 class UserForms extends React.Component {
@@ -53,19 +56,20 @@ class UserForms extends React.Component {
     if (prevProps.visible !== this.props.visible) this.setState({ mode: 'login' })
   }
   
-  switchMode = () => {
+  switchMode = event => {
+    event.preventDefault()
     const mode = this.state.mode === 'login' ? 'register' : 'login'
     this.setState({ mode, registerErrors: {} })
   }
 
-  handleChange = event => {
+  handleChange = ({ target: { name, value } }) => {
     const formData = {
       ...this.state.formData,
-      [event.target.name]: event.target.value
+      [name]: value
     }
     const registerErrors = {
       ...this.state.registerErrors,
-      [event.target.name]: ''
+      [name]: ''
     }
     this.setState({ formData, registerErrors })
   }
@@ -73,56 +77,56 @@ class UserForms extends React.Component {
   handleSubmit = async event => {
     event.preventDefault()
 
-    // Prepare separate form for login so that autologin can complete upon register
-    const loginData = {
-      email: this.state.formData.email,
-      password: this.state.formData.password
-    }
-    
-    if (this.state.mode === 'register') {
+    const { mode, formData } = this.state
+    const { app, onLogin } = this.props
+
+    if (mode === 'register') {
       try {
-        const response = await registerUser(this.state.formData)
+        const response = await registerUser(formData)
         if (response.status !== 201) return
       } catch (err) {
-        console.log(err.response.data)
         this.setState({ registerErrors: err.response.data })
         return
       }
     }
     try {
-      const response = await loginUser(loginData)
-      localStorage.setItem('token', response.data.token)
-      localStorage.setItem('user_id', response.data.id)
-      if (response.status === 200) {
-        this.props.app.getUser(response.data.id)
-        this.props.onLogin()
+      const loginData = {
+        email: formData.email,
+        password: formData.password
+      }
+      const { data, status } = await loginUser(loginData)
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('user_id', data.id)
+      if (status === 200) {
+        app.getUser(data.id)
+        onLogin()
       }
     } catch (err) {
-      this.props.app.showNotification(err.response.data.detail)
-      const formData = { ...this.state.formData, email: '', password: '' }
-      this.setState({ formData })
+      app.showNotification(err.response.data.detail)
+      this.setState({ formData: { ...formData, email: '', password: '' } })
     }
   }
 
   render() {
-    const { mode, registerErrors } = this.state
-    const { username, email, password, password_confirmation: passwordConfirmation, first_name: firstName, last_name: lastName, phone } = this.state.formData
+    const { mode, registerErrors: err } = this.state
+    const { username, email, password, password_confirmation: passConf, first_name: firstName, last_name: lastName, phone } = this.state.formData
+    const register = mode === 'register'
     return (
       <Wrapper visible={this.props.visible} onSubmit={this.handleSubmit}>
-        {mode === 'register' &&
-          <InputText label="username" name="username" value={username} returnValue={this.handleChange} error={registerErrors.username} />}
-        {mode === 'register' &&
-          <InputText label="first name" name="first_name" value={firstName} returnValue={this.handleChange} error={registerErrors.first_name && registerErrors.first_name[0]} />}
-        {mode === 'register' &&
-          <InputText label="last name" name="last_name" value={lastName} returnValue={this.handleChange} error={registerErrors.last_name && registerErrors.last_name[0]} />}
-        <InputText label="email" name="email" value={email} returnValue={this.handleChange} error={registerErrors.email && registerErrors.email[0]} />
-        {mode === 'register' &&
-          <InputText label="phone" name="phone" value={phone} type="number" returnValue={this.handleChange} error={registerErrors.phone && registerErrors.phone[0]} />}
-        <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange} error={registerErrors.password && registerErrors.password[0]} />
-        {mode === 'register' &&
-          <InputText label="confirm password" name="password_confirmation" value={passwordConfirmation} type="password" returnValue={this.handleChange} error={registerErrors.password_confirmation && registerErrors.password_confirmation[0]} />}
+        {register && <>
+          <InputText label="username" name="username" value={username} returnValue={this.handleChange} error={err.username} />
+          <InputText label="first name" name="first_name" value={firstName} returnValue={this.handleChange} error={err.first_name} />
+          <InputText label="last name" name="last_name" value={lastName} returnValue={this.handleChange} error={err.last_name} />
+        </>}
+        <InputText label="email" name="email" value={email} returnValue={this.handleChange} error={err.email} />
+        {/* TODO Remove phone number from model? */}
+        {register &&
+          <InputText label="phone" name="phone" value={phone} type="number" returnValue={this.handleChange} error={err.phone} />}
+        <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange} error={err.password} />
+        {register &&
+          <InputText label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={this.handleChange} error={err.password_confirmation} />}
         <Button label={mode} primary={true} width={'100%'} />
-        <ChangeMode onClick={this.switchMode}>{mode === 'login' ? 'new user' : ' I have an account'}</ChangeMode>
+        <ChangeMode onClick={this.switchMode}>{register ? ' I have an account' : 'new user'}</ChangeMode>
       </Wrapper>
     )
   }

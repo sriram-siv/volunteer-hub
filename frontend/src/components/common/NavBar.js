@@ -1,11 +1,9 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
-import Select from 'react-select'
 
 import icons from '../../lib/icons'
 import UserForms from '../elements/UserForms'
-import UserPanel from '../elements/UserPanel'
 
 const NavBarContainer = styled.div`
   display: flex;
@@ -17,101 +15,59 @@ const NavBarContainer = styled.div`
   z-index: 10;
 `
 
-class NavBar extends React.Component {
+const Title = styled.div`
+    padding-left: 30px;
+      font-family: 'Montserrat Alternates', sans-serif;
+      font-size: 1.1.rem;
+      pointer-events: none;
+      &::selection {
+        background-color: transparent;
+      }
+    `
 
-  state = {
-    showForm: false,
-    showUserOptions: false
+// TODO make these buttons - for accessibility
+const Items = styled.div`
+  position: absolute;
+  right: 25px;
+  > * {
+    margin-left: 10px;
+    cursor: pointer;
   }
+`
 
-  selectStyles = {
-    control: styles => ({
-      ...styles,
-      backgroundColor: this.props.theme.background,
-      borderRadius: '2px',
-      borderColor: this.props.theme.shadow,
-      height: 'calc(2rem)'
-    }),
-    singleValue: (styles) => ({
-      ...styles,
-      color: this.props.theme.text,
-      fontWeight: this.props.theme.fontWeight,
-      letterSpacing: this.props.theme.letterSpacing,
-      fontSize: '0.85rem'
-    }),
-    menu: (styles) => ({
-      ...styles,
-      backgroundColor: this.props.theme.background,
-      color: this.props.theme.text,
-      borderRadius: '2px'
-    })
-  }
-  
-  componentDidMount = () => {
-    
-  }
+const NavBar = ({ app, history, changeTheme, theme }) => {
 
-  selectSection = (event) => {
-    this.props.history.push(event.value)
-  }
+  const [showForm, setShowForm] = React.useState(false)
 
-  openUserPanel = () => {
-    if (!localStorage.getItem('user_id')) this.setState({ showForm: !this.state.showForm })
-    else this.setState({ showUserOptions: !this.state.showUserOptions })
-  }
+  const navUser = <>
+    <span onClick={() => history.push('/profile')}>
+      {icons.user()}
+    </span>
+    <span onClick={() => history.push('/campaigns')}>
+      {icons.home()}
+    </span>
+    <span onClick={changeTheme}>
+      {theme.name === 'light' ? icons.sun() : icons.moon()}
+    </span>
+  </>
 
-  openProfile = () => {
-    this.props.history.push('/profile')
-    this.setState({ showUserOptions: false })
-  }
+  const navGuest = <>
+    <span onClick={() => setShowForm(!showForm)}>
+      login
+    </span>
+  </>
 
-  handleLogin = async (id) => {
-    this.props.app.getUser(id)
-    this.setState({ showForm: false })
-  }
-
-  handleLogout = () => {
-    this.props.app.logout()
-    this.setState({ showUserOptions: false })
-    this.props.history.push('/campaigns')
-  }
-
-  render() {
-    let options = [{ value: '/campaigns', label: 'Campaign Index' }]
-    if (localStorage.getItem('user_id')) options.push({ value: '/campaigns/new', label: 'New Campaign' })
-    const { changeTheme, theme, campaignList } = this.props
-    const { showForm, showUserOptions } = this.state
-
-    if (this.props.location.pathname === '/') return null
-
-    if (campaignList) options = [...campaignList, ...options]
-    
-    return (
-      <>
-        <UserPanel visible={showUserOptions} openProfile={this.openProfile} logout={this.handleLogout} />
-        <UserForms visible={showForm} onLogin={this.handleLogin} app={this.props.app}/>
-        <NavBarContainer>
-          <div className="nav-left">
-            <span onClick={changeTheme}>
-              {theme.name === 'light' ? icons.sun() : icons.moon()}
-            </span>
-            <span onClick={this.openUserPanel}>
-              {icons.user()}
-            </span>
-          </div>
-          <div className="nav-center">Volunteer.io</div>
-          <div className="nav-right">
-            <Select
-              styles={this.selectStyles}
-              options={options}
-              defaultValue={{ value: '/campaigns', label: 'Campaign Index' }}
-              onChange={this.selectSection}
-            />
-          </div>
-        </NavBarContainer>
-      </>
-    )
-  }
+  return (
+    <>
+      <UserForms visible={showForm} onLogin={() => setShowForm(!showForm)} app={app}/>
+      <NavBarContainer>
+        <Title>VolunteerHub</Title>
+        <Items>
+          {app.currentUser() ? navUser : navGuest }
+        </Items>
+      </NavBarContainer>
+    </>
+  )
 }
 
 export default withRouter(withTheme(NavBar))

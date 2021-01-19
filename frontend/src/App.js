@@ -1,17 +1,17 @@
 import React from 'react'
-import { BrowserRouter, Switch, Route, withRouter } from 'react-router-dom'
+import { BrowserRouter, Switch, Route } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
 import { getSingleProfile } from './lib/api'
 
-import NavBar from './components/common/NavBarAlt'
+import NavBar from './components/common/NavBar'
 import Notification from './components/common/Notification'
 
 import Home from './components/common/Home'
 import Room from './components/common/Room'
 import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
-import CampaignCreate from './components/common/CampaignCreate'
+import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
 
 import ShowTest from './components/common/ShowTest'
@@ -71,8 +71,10 @@ class App extends React.Component {
     localStorage.removeItem('user_id')
     this.setState({ userData: null, userCampaigns: null })
     this.showNotification('you are now logged out')
+    // TODO push browser location here ?
   }
 
+  // TODO remove this if unused
   getUserCampaigns = () => {
     if (!this.state.userData) return
     const { owned_campaigns: owned, coord_campaigns: coord, conf_campaigns: volunteer } = this.state.userData
@@ -93,22 +95,23 @@ class App extends React.Component {
     logout: this.logout,
     showNotification: this.showNotification,
     currentUser: this.currentUser
+    // TODO move changeTheme here?
   }
 
   render() {
     const { theme, userCampaigns, notification } = this.state
-    const path = window.location.pathname
+    const { pathname } = window.location
     return (
       <ThemeProvider theme={this.themes[theme]}>
         <BrowserRouter>
           <Notification notification={notification}/>
-          {path !== '/' && <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns} />}
+          {pathname !== '/' && <NavBar changeTheme={this.changeTheme} app={this.app} campaignList={userCampaigns} />}
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/profile" render={() => <Profile app={this.app} />} />
             <Route path="/chat/:room" component={Room} />
-            <Route path='/campaigns/new' component={CampaignCreate} />
-            <Route path='/campaigns/:id/edit' component={CampaignCreate} />
+            <Route path='/campaigns/new' component={CampaignForm} />
+            <Route path='/campaigns/:id/edit' component={CampaignForm} />
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' render={() => <CampaignIndex app={this.app} />} />
             <Route path="/test" component={ShowTest} />
