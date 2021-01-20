@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 
 const ScheduleContainer = styled.div`
-  background-color: ${props => props.theme.panels};
+  background-color: ${props => props.theme.background};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   margin-bottom: 15px;

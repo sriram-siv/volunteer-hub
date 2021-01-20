@@ -14,8 +14,6 @@ import CampaignShow from './components/common/CampaignShow'
 import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
 
-import ShowTest from './components/common/ShowTest'
-
 class App extends React.Component {
 
   state = {
@@ -35,7 +33,8 @@ class App extends React.Component {
       fontWeight: 300,
       letterSpacing: '-0.002rem',
       accent: '#999',
-      panels: '#131d25'
+      panels: '#131d25',
+      glass: '#999d'
     },
     light: {
       name: 'light',
@@ -46,7 +45,8 @@ class App extends React.Component {
       fontWeight: 400,
       letterSpacing: 0,
       accent: '#eee',
-      panels: 'papayawhip'
+      panels: 'papayawhip',
+      glass: '#eeed'
     }
   }
 
@@ -114,7 +114,7 @@ class App extends React.Component {
             <Route path='/campaigns/:id/edit' component={CampaignForm} />
             <Route path='/campaigns/:id' component={CampaignShow} />
             <Route path='/campaigns' render={() => <CampaignIndex app={this.app} />} />
-            <Route path="/test" component={ShowTest} />
+            {/* <Route path="/test" render={() => <Show title='my campaign' menu />} /> */}
           </Switch>
         </BrowserRouter>
       </ThemeProvider>
