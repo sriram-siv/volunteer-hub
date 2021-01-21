@@ -16,36 +16,6 @@ button {
   font-family: 'Montserrat Alternates', sans-serif;
 }
 
-.nav-right {
-  margin-right: 5px;
-  width: 200px;
-}
-
-.nav-left {
-  margin-left: 20px;
-  > * {
-    margin-right: 10px;
-  }
-}
-  
-.nav-center {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-family: 'Montserrat Alternates', sans-serif;
-  font-size: 1.1rem;
-  &::selection {
-    background-color: transparent;
-  }
-}
-
-// Map
-
-.mapboxgl-map {
-  // TODO focus styles
-}
-
-
 // GEOCODER
 
 .react-geocoder {

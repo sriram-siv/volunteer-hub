@@ -4,8 +4,10 @@ import styled, { withTheme } from 'styled-components'
 
 import Schedule from './Schedule'
 import InputText from '../elements/InputText'
+import Button from '../elements/Button'
 
 import { getAllSkills } from '../../lib/api'
+import styles from '../../lib/styles' 
 
 const Wrapper = styled.div`
   height: 100%;
@@ -15,7 +17,7 @@ const Wrapper = styled.div`
   text-align: center;
   
   > * {
-    margin: 10px auto;
+    margin: 10px auto 0;
   }
 `
 
@@ -29,6 +31,17 @@ const Title = styled.div`
 const CheckBox = styled.div`
   text-align: right;
   > * { margin-right: 15px }
+`
+
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  > button {
+    width: calc(50% - 5px);
+    margin: 0;
+  }
 `
 
 class FilterVolunteers extends React.Component {
@@ -48,31 +61,14 @@ class FilterVolunteers extends React.Component {
   }
 
   render() {
-    const { schedule, skills, selectSchedule, selectSkills, selectStrict, strictSkills, strictSchedule, groupName, editGroupName } = this.props
+    const { schedule, skills, selectSchedule, selectSkills, selectStrict, strictSkills, strictSchedule, groupName, editGroupName, createNewGroup } = this.props
     const { skillsOptions } = this.state
-
-    const selectStyles = {
-      control: styles => ({
-        ...styles,
-        backgroundColor: this.props.theme.background,
-        borderRadius: '2px',
-        borderColor: this.props.theme.shadow,
-        height: '5rem'
-      }),
-      singleValue: styles => ({
-        ...styles,
-        color: this.props.theme.text,
-        fontWeight: this.props.theme.fontWeight,
-        letterSpacing: this.props.theme.letterSpacing,
-        fontSize: '0.85rem'
-      })
-    }
 
     return (
       <Wrapper>
-        <Title>Organise Volunteers</Title>
+        {/* <Title>Organise Volunteers</Title> */}
         <p>show volunteers with these skills</p>
-        <Select styles={selectStyles} value={skills} options={skillsOptions} onChange={selectSkills} isMulti />
+        <Select styles={styles.select(this.props.theme)} value={skills} options={skillsOptions} onChange={selectSkills} isMulti />
         <CheckBox>
           <label htmlFor="strictSkills">All</label>
           <input type="checkbox" id="strictSkills" checked={strictSkills} onChange={selectStrict}/>
@@ -84,6 +80,10 @@ class FilterVolunteers extends React.Component {
           <input type="checkbox" id="strictSchedule" checked={strictSchedule} onChange={selectStrict}/>
         </CheckBox>
         <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
+        <ButtonGroup>
+          <Button label="select all" />
+          <Button primary label="create group" onClick={createNewGroup} />
+        </ButtonGroup>
       </Wrapper>
     )
   }

@@ -5,7 +5,6 @@ import { withRouter } from 'react-router-dom'
 
 import { updateVolunteers, createRoom } from '../../lib/api'
 
-// import MultiListVolunteer from '../elements/MultiListVolunteers'
 import FilterVolunteers from '../elements/FilterVolunteers'
 import VolunteerList from '../elements/VolunteerList'
 
@@ -145,7 +144,7 @@ class AdminPanel extends React.Component {
 
   render() {
     const {
-      pendingVolunteers,
+      filteredVolunteers,
       skills,
       schedule,
       strictSkills,
@@ -153,23 +152,27 @@ class AdminPanel extends React.Component {
       groupName
     } = this.state
 
+    const { isAdmin } = this.props
+
+
     return (
       <Wrapper>
 
-        <VolunteerList openList actions={{}} list={pendingVolunteers} />
+        <VolunteerList openList actions={{}} list={filteredVolunteers} />
 
-        <FilterVolunteers
-          skills={skills}
-          schedule={schedule}
-          selectSkills={this.selectSkills}
-          selectSchedule={this.selectSchedule}
-          strictSkills={strictSkills}
-          strictSchedule={strictSchedule}
-          selectStrict={this.selectStrict}
-          groupName={groupName}
-          editGroupName={this.editGroupName}
-          createNewGroup={this.createNewGroup}
-        />
+        {isAdmin &&
+          <FilterVolunteers
+            skills={skills}
+            schedule={schedule}
+            selectSkills={this.selectSkills}
+            selectSchedule={this.selectSchedule}
+            strictSkills={strictSkills}
+            strictSchedule={strictSchedule}
+            selectStrict={this.selectStrict}
+            groupName={groupName}
+            editGroupName={this.editGroupName}
+            createNewGroup={this.createNewGroup}
+          />}
 
       </Wrapper>
     )

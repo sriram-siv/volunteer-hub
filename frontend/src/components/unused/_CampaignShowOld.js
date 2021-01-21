@@ -8,7 +8,7 @@ import BannerImage from '../elements/BannerImage'
 import MultiList from '../elements/MultiList'
 import CampaignInfo from '../elements/CampaignInfo'
 import NoticeBox from '../elements/NoticeBox'
-import AdminPanel from './AdminPanel'
+import AdminPanel from '../common/AdminPanel'
 
 const Wrapper = styled.div`
   display: flex;

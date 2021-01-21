@@ -1,113 +1,89 @@
-import React from 'react'
+/* eslint-disable camelcase */
+import React, { useEffect, useState } from 'react'
 // import styled from 'styled-components'
 // import Select from 'react-select'
 
 import { getSingleCampaign } from '../../lib/api'
+import { selectMenu } from '../../lib/helper'
 
 import Show from './Show'
 import NoticeBox from '../elements/NoticeBox'
-// import AdminPanel from './AdminPanel'
+import UserCard from '../elements/UserCard'
+import VolunteersPanel from './VolunteersPanel'
+import AdminPanel from './AdminPanel'
 
-class CampaignShow extends React.Component {
+const CampaignShow = ({ history, match }) => {
 
-  state = {
-    campaignData: null,
-    members: null,
-    rooms: null,
-    admin: false,
+  const [campaignData, setCampaignData] = useState()
+  const [members, setMembers] = useState([])
+  const [rooms, setRooms] = useState([])
+  const [isAdmin, setIsAdmin] = useState(false)
+  const [section, setSection] = useState(selectMenu('about'))
 
-    section: { label: 'about', value: 'about' }
-  }
-  
-  componentDidMount = () => {
-    this.getCampaign()
-  }
-
-  componentDidUpdate = prevProps => {
-    if (this.props.match.params.id !== prevProps.match.params.id) {
-      this.getCampaign()
-    }
-  }
-
-  getCampaign = async () => {
+  const getCampaign = async () => {
     try {
-      // Get campaign data and set filtered volunteer list to be all members
-      const { data: campaignData } = await getSingleCampaign(this.props.match.params.id)
-
-      // Format rooms to be usuable by list component
-      const roomItems = campaignData.message_rooms.filter(room => {
-        const userID = Number(localStorage.getItem('user_id'))
-        return room.members.includes(userID)
-      }).map(room => ({ name: room.name, id: room.id, onClick: () => this.openChatRoom(room.id) }))
-      const rooms = { title: 'groups', items: roomItems }
-
-
-      // Format members for the same purpose
-      const allMembers = [ campaignData.owner, ...campaignData.coordinators, ...campaignData.conf_volunteers ]
-      const memberItems = allMembers.map(volunteer => ({ name: volunteer.username, id: volunteer.id, onClick: () => console.log('user ' + volunteer.username) }))
-      const members = { title: 'members', items: memberItems }
-
+      const { data } = await getSingleCampaign(match.params.id)
+      const { message_rooms, owner, coordinators, conf_volunteers } = data
       
+      const userID = Number(localStorage.getItem('user_id'))
+
+      // This should be filtered on the backend for privacy
+      setRooms(message_rooms
+        .filter(({ members }) => members.includes(userID)))
+
+      setMembers([owner, ...coordinators, ...conf_volunteers])
       
-      this.setState({ campaignData, rooms, members, admin: this.isAdmin(campaignData) })
+      setIsAdmin([owner.id, ...coordinators].includes(userID))
+
+      setCampaignData(data)
     } catch (err) {
-      // Go back a page if user is not authorized to view the page
-      console.log(err.response)
-      this.props.history.goBack()
+      history.goBack()
     }
   }
 
-  openChatRoom = roomID => {
-    this.props.history.push(`/chat/${roomID}`)
+  // onMount
+  useEffect(getCampaign, [])
+
+  // const openChatRoom = roomID => {
+  //   history.push(`/chat/${roomID}`)
+  // }
+
+  // const editCampaign = () => {
+  //   history.push(`/campaigns/${campaignData.id}/edit`)
+  // }
+
+  // const hash = history.location.hash.replace('#', '')
+
+  const menu = {
+    options: ['about', 'notices', 'chats', 'members'].map(selectMenu),
+    value: section,
+    onChange: setSection
   }
 
-  isAdmin = ({ owner, coordinators }) => {
-    const userId = Number(localStorage.getItem('user_id'))
-    const isOwner = owner.id === userId
-    const isCoord = coordinators.includes(userId)
-    return isOwner || isCoord
-  }
+  if (isAdmin) menu.options.push(selectMenu('admin'))
 
-  editCampaign = () => {
-    this.props.history.push(`/campaigns/${this.state.campaignData.id}/edit`)
-  }
+  // if (menu.options.some(opt => opt.value === hash) && section.value !== hash) {
+  //   setSection({ label: hash, value: hash })
+  // }
 
-  changeSection = section => {
-    this.setState({ section })
-  }
+  if (!campaignData) return null
 
-  
-  render() {
-    
-    const { campaignData, members, rooms, section } = this.state
-    if (!campaignData) return null
+  // Can there be a subrouter here?
 
-    const menu = {
-      options: [
-        { label: 'about', value: 'about' },
-        { label: 'notices', value: 'notices' },
-        { label: 'chats', value: 'chats' },
-        { label: 'members', value: 'members' },
-        { label: 'admin', value: 'admin' }
-      ],
-      value: section,
-      onChange: this.changeSection
-    }
-
-    return (
-
-      <Show
-        title={campaignData.name}
-        menu={menu}
-        // banner
-      >
-        {section.label === 'about' && campaignData.description.split('\n').map((para, i) => (
-          <p key={i}>{para}</p>
-        ))}
-        {section.label === 'notices' && <NoticeBox campaignData={campaignData} admin={true} />}
-      </Show>
-    )
-  }
+  return (
+    <Show title={campaignData.name} menu={menu}>
+      {section.label === 'about' &&
+        campaignData.description.split('\n').map((para, i) => <p key={i}>{para}</p>)}
+      {section.label === 'notices' &&
+        <NoticeBox campaignData={campaignData} admin={isAdmin} />}
+      {section.label === 'members' &&
+        <VolunteersPanel campaignData={campaignData} isAdmin={isAdmin} />}
+      {section.label === 'chats' &&
+        rooms.map((room, i) => <p key={i}>{room.name}</p>)}
+      {section.label === 'admin' &&
+        <AdminPanel campaignData={campaignData} />}
+    </Show>
+  )
 }
 
 export default CampaignShow

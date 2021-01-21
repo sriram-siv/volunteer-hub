@@ -14,12 +14,12 @@ const NoticeContain = styled.div`
   display: flex;
   flex-direction: column-reverse;
   position: relative;
-  border: 1px solid ${props => props.theme.shadow};
-  border-bottom: ${props => props.showInput ? 'none' : ''};
-  background-color: ${props => props.theme.panels};
-  overflow-y: scroll;
+  /* border: 1px solid ${props => props.theme.shadow}; */
+  /* border-bottom: ${props => props.showInput ? 'none' : ''}; */
+  /* background-color: ${props => props.theme.panels}; */
+  /* overflow-y: scroll; */
   overflow-x: hidden;
-  height: ${props => props.showInput ? '300px' : 'calc(4rem + 330px)'};
+  /* height: ${props => props.showInput ? '300px' : 'calc(4rem + 330px)'}; */
 `
 
 const NoticeText = styled.div`
@@ -133,10 +133,10 @@ class NoticeBox extends React.Component {
           <div style={{ height: '0px' }}>&nbsp;</div>
         </NoticeContain>
         {this.props.admin &&
-          <>
+          <div style={{ position: 'absolute', left: 0, bottom: 0, width: '100%' }}>
             <InputArea width='100%' submit={this.handleSubmit} name='textArea' label='Post a notice to the team' hideLabel value={noticeText} returnValue={this.handleChange} />
             <ChatControl send={this.handleSubmit} />
-          </>}
+          </div>}
       </Wrapper>
     )
   }

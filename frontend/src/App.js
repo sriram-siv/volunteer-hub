@@ -34,7 +34,7 @@ class App extends React.Component {
       letterSpacing: '-0.002rem',
       accent: '#999',
       panels: '#131d25',
-      glass: '#999d'
+      glass: '#cccd'
     },
     light: {
       name: 'light',
@@ -46,7 +46,7 @@ class App extends React.Component {
       letterSpacing: 0,
       accent: '#eee',
       panels: 'papayawhip',
-      glass: '#eeed'
+      glass: '#fafafada'
     }
   }
 

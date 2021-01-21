@@ -7,8 +7,10 @@ const MultiListVolunteer = ({ lists, actions }) => {
   const toggleList = listName => {
     setOpenList(listName === openList ? '' : listName)
   }
-  return lists.map((list, i) => (
-    <VolunteerList key={i} openList={openList} actions={actions} list={list} onToggle={toggleList} />))
+  return <div style={{ height: '100%' }}>
+    {lists.map((list, i) => (
+      <VolunteerList key={i} openList={openList} actions={actions} list={list} onToggle={toggleList} />))}
+  </div>
 }
 
 export default MultiListVolunteer

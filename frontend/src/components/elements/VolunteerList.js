@@ -1,18 +1,12 @@
 import React from 'react'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 
-import icons from '../../lib/icons'
 import UserCard from './UserCard'
 
 const Wrapper = styled.div`
   position: relative;
-  overflow-y: hidden;
+  overflow-y: scroll;
   width: 100%;
-  height: ${props => {
-    if (props.open) return '100%'
-    if (props.show) return '45px'
-    return 0
-  }};
   margin-bottom: ${props => props.show && !props.open ? '5px' : 0};
   opacity: ${props => props.show ? 1 : 0};
   background-color: ${props => `${props.theme.background}e`};
@@ -70,25 +64,19 @@ class VolunteerList extends React.Component {
 
   render() {
     const { isHidden, userShowingDetail } = this.state
-    const { list, actions, theme, openList } = this.props
-    
-    const open = openList === list.label
-    const show = !openList || open
+    const { title, list, actions } = this.props
 
     return (
-      <Wrapper open={open} show={show} isHidden={isHidden}>
-        <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(theme.text)}</Toggle>
-        <Title>{list.label}</Title>
+      <Wrapper open show isHidden={isHidden}>
+        {title && <Title>{title}</Title>}
         <ListScroll scroll={userShowingDetail === -1}>
-          {list.users && list.users.map((user, i) => (
+          {list && list.map((user, i) => (
             <UserCard
               key={i}
               user={user}
               expanded={user.id === userShowingDetail}
               showDetail={this.showDetail}
-              select={list.label === 'volunteers' && actions.selectVolunteer}
-              confirm={list.label === 'pending' && actions.confirmVolunteer}
-              deny={list.label === 'pending' && actions.denyVolunteer}
+              select={actions.selectVolunteer}
             />
           ))}
         </ListScroll>
@@ -97,4 +85,4 @@ class VolunteerList extends React.Component {
   }
 }
 
-export default withTheme(VolunteerList)
+export default VolunteerList
