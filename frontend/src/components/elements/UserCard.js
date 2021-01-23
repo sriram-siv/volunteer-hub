@@ -1,130 +1,115 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 
 import Schedule from './Schedule'
 
 const Wrapper = styled.div`
-  margin: 5px;
-  margin-right: 2px;
   position: relative;
-  height: ${props => props.expanded ? '19 rem' : '3rem'};
-  transition: all 0.2s;
-  background-color: ${props => props.isSelected ? 'lightgreen' : props.theme.panels};
+  height: ${props => props.isExpanded ? 'calc(19rem + 4px)' : '3rem'};
+  background-color: ${props => props.isSelected ? props.theme.primary : props.theme.glass};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   font-size: 0.85rem;
   line-height: 1.5rem;
-  color: ${props => props.isSelected ? '#333' : props.theme.text};
-  font-weight: ${props => props.theme.fontWeight};
+  color: #333;
   overflow-y: hidden;
+  transition: height 0.3s;
+  padding: 0 5px;
 `
 
 const Header = styled.div`
   display: flex;
-  height: 3rem;
+  margin: 0 -5px;
 `
 
 const Title = styled.div`
-  width: calc(100% - 120px);
+  width: 100%;
   line-height: 3rem;
   padding-left: 15px;
 `
 
-const Control = styled.div`
-  display: flex;
-  flex-direction: row;
-  width: 120px;
-`
-
 const Button = styled.button`
-  width: 100%;
-  min-width: 60px;
-  height: 3rem;
+  width: 6rem;
+  height: calc(3rem - 2px);
   border: none;
-  background-color: ${props => props.isSelected ? 'transparent' : props.theme.panels};
-  transition: all 0.2s;
+  background-color: transparent;
+  transition: background-color 0.2s;
   &:hover {
     background-color: ${props => props.color};
   }
   &:focus {
     outline: none;
   }
-`
-
-const Body = styled.div`
-  padding: 5px 10px;
-  display: flex;
-  height: 8rem;
+  &:focus-visible {
+    outline: 2px solid blue;
+    outline-offset: -2px;
+  }
 `
 
 const ProfilePic = styled.img`
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 2px;
+  background-color: palevioletred;
 `
 
 const Details = styled.div`
-  margin: 0 15px;
+  height: 7rem;
+  margin: 10px;
   p {
-    margin-bottom: 5px;
     line-height: 1.5rem;
   }
 `
 
-class UserCard extends React.Component {
+const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpanded }) => {
 
-  state = {
-    denyActive: false,
-    isSelected: false
+  const theme = React.useContext(ThemeContext)
+
+  const [denyActive, setDenyActive] = React.useState(false)
+
+  React.useEffect(
+    () => setTimeout(() => setDenyActive(false), 2000),
+    [denyActive]
+  )
+
+  const clickDeny = () => {
+    if (!denyActive) setDenyActive(true)
+    else deny(user.id)
   }
 
-  clickDeny = () => {
-    if (!this.state.denyActive) {
-      this.setState({ denyActive: true }, () => {
-        this.clickInterval = setTimeout(() => this.setState({ denyActive: false }), 2000)
-      })
-    } else this.props.deny(this.props.user.id)
-  }
+  const schedule = Array.from(
+    { length: 14 },
+    (_, i) => user.user_shifts.some(shift => shift.id === i + 1)
+  )
 
-  clickSelect = () => {
-    this.props.select(this.props.user.id)
-    this.setState({ isSelected: !this.state.isSelected })
-  }
+  return (
+    <Wrapper isExpanded={isExpanded} isSelected={isSelected} >
+      <Header>
+        <ProfilePic src={user.profile_image} />
+        <Title onClick={() => showDetail(user.id)}>{user.username}</Title>
 
-  componentWillUnmount = () => {
-    clearInterval(this.clickInterval)
-  }
+        {confirm &&
+          <Button color="#afa" onClick={() => confirm(user.id)}>
+            accept
+          </Button>}
+        {deny &&
+          <Button color={denyActive ? '#f55' : '#faa'} onClick={clickDeny}>
+            {denyActive ? 'sure?' : 'deny'}
+          </Button>}
+        {select &&
+          <Button color={theme.primary} onClick={() => select(user.id)}>
+            {isSelected ? 'deselect' : 'select'}
+          </Button>}
+      </Header>
+      
+      <Details>
+        <p>{user.first_name} {user.last_name}</p>
+        <p>{user.user_skills.map(skill => skill.name).join(', ')}</p>
+      </Details>
+      <Schedule schedule={schedule} hideBorder />
 
-  render() {
-    const { user, confirm, showDetail, expanded, pending } = this.props
-    const { denyActive, isSelected } = this.state
-
-    const schedule = Array.from({ length: 14 }).fill(false)
-    user.user_shifts.forEach(shift => schedule[shift.id - 1] = true)
-
-    return (
-      <Wrapper expanded={expanded} isSelected={isSelected} >
-        <Header>
-          <Title fullWidth={!pending} onClick={() => showDetail(user.id)}>{user.username}</Title>
-          <Control>
-            {this.props.confirm && <Button color="#afa" onClick={() => confirm(user.id)}>accept</Button>}
-            {this.props.deny && <Button color={denyActive ? '#f55' : '#faa'} onClick={this.clickDeny}>{denyActive ? 'sure?' : 'deny'}</Button>}
-            {this.props.select && <Button isSelected={isSelected} onClick={this.clickSelect}>{isSelected ? 'deselect' : 'select'}</Button>}
-          </Control>
-        </Header>
-        <Body>
-          <ProfilePic src={user.profile_image} />
-          <Details>
-            <p>{user.first_name} {user.last_name}</p>
-            <p>{user.user_skills.map(skill => skill.name).join(', ')}</p>
-          </Details>
-        </Body>
-        <div style={{ margin: '5px auto', width: 'calc(100% - 10px)' }}>
-          <Schedule schedule={schedule} />
-        </div>
-      </Wrapper>
-    )
-  }
+    </Wrapper>
+  )
 }
 
 export default UserCard

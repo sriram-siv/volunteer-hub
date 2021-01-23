@@ -5,9 +5,8 @@ import { withRouter } from 'react-router-dom'
 
 import { updateVolunteers, createRoom } from '../../lib/api'
 
-// import MultiListVolunteer from '../elements/MultiListVolunteers'
 import FilterVolunteers from '../elements/FilterVolunteers'
-import VolunteerList from '../elements/VolunteerList'
+import List from '../elements/List'
 
 const Wrapper = styled.div`
   position: relative;
@@ -137,26 +136,22 @@ class AdminPanel extends React.Component {
     }
   }
 
-  volunteerActions = {
-    selectVolunteer: this.selectVolunteer,
-    confirmVolunteer: this.confirmVolunteer,
-    denyVolunteer: this.denyVolunteer
-  }
-
   render() {
     const {
       pendingVolunteers,
       skills,
       schedule,
       strictSkills,
-      strictSchedule,
-      groupName
+      strictSchedule
     } = this.state
 
     return (
       <Wrapper>
 
-        <VolunteerList openList actions={{}} list={pendingVolunteers} />
+        <List
+          title="pending requests"
+          items={pendingVolunteers}
+        />
 
         <FilterVolunteers
           skills={skills}
@@ -166,9 +161,6 @@ class AdminPanel extends React.Component {
           strictSkills={strictSkills}
           strictSchedule={strictSchedule}
           selectStrict={this.selectStrict}
-          groupName={groupName}
-          editGroupName={this.editGroupName}
-          createNewGroup={this.createNewGroup}
         />
 
       </Wrapper>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-import VolunteerList from './VolunteerList'
+import VolunteerList from '../elements/VolunteerList'
 
 const MultiListVolunteer = ({ lists, actions }) => {
   const [openList, setOpenList] = React.useState('')

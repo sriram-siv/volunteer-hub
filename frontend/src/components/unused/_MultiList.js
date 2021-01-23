@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import List from './List'
+import List from '../elements/List'
 
 
 const Wrapper = styled.div`

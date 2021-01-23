@@ -54,54 +54,41 @@ const Highlight = styled.div`
   transition: all 0;
 `
 
-/** my oducmentation for this class */
-class InputField extends React.Component {
+/** my documentation for this class */
+// Add docstring to say that returnValue and name must always be provided
+const InputArea = ({ name, value, width, returnValue, label, height, hideLabel, submit }) => {
 
-  /* Add docstring to say that returnValue and name must always be provided */
+  const [shiftActive, setShiftActive] = React.useState(0)
+  const [hasFocus, setHasFocus] = React.useState(false)
 
-  state = {
-    shiftPressed: 0,
-    focus: false
-  }
-
-  handleChange = event => {
-    this.props.returnValue({ name: this.props.name, value: event.target.value })
-  }
-  handleFocus = () => {
-    this.setState({ focus: true })
-  }
-  handleBlur = () => {
-    this.setState({ focus: false })
-  }
-  keyDown = event => {
-    if (!this.props.submit) return
-    if (event.keyCode === 16) this.setState({ shiftPressed: this.state.shiftPressed + 1 })
-    if (event.keyCode === 13 && !this.state.shiftPressed) {
-      this.props.submit(event)
-    }
-  }
-  keyUp = event => {
-    if (event.keyCode === 16) this.setState({ shiftPressed: this.state.shiftPressed - 1 })
+  const keyDown = event => {
+    if (event.key === 'Shift') setShiftActive(shiftActive + 1)
+    if (event.key === 'Enter' && !shiftActive && submit) submit(event)
   }
 
-  render() {
-    const { focus } = this.state
-    const { name, value, width, returnValue, label, height, hideLabel } = this.props
-    return (
-      <Wrapper width={width} onFocus={this.handleFocus} onBlur={this.handleBlur}>
-        <Input
-          ref={input => this.input = input}
-          name={name} value={value}
-          onChange={returnValue}
-          onKeyDown={this.keyDown}
-          onKeyUp={this.keyUp}
-          height={height}
-        />
-        <Label focus={focus || value} hideLabel={hideLabel}>{label}</Label>
-        <Highlight focus={focus} />
-      </Wrapper>
-    )
+  const keyUp = event => {
+    if (event.key === 'Shift') setShiftActive(shiftActive - 1)
   }
+
+  return (
+    <Wrapper
+      width={width}
+      onFocus={() => setHasFocus(true)}
+      onBlur={() => setHasFocus(false)}
+    >
+      <Input
+        name={name}
+        value={value}
+        onChange={returnValue}
+        onKeyDown={keyDown}
+        onKeyUp={keyUp}
+        height={height}
+      />
+      <Label focus={hasFocus || value} hideLabel={hideLabel}>{label}</Label>
+      <Highlight focus={hasFocus} />
+    </Wrapper>
+  )
+
 }
 
-export default InputField
+export default InputArea

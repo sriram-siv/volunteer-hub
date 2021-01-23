@@ -3,16 +3,18 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import { updateVolunteers, createRoom } from '../../lib/api'
+import { createRoom } from '../../lib/api'
 
-import FilterVolunteers from '../elements/FilterVolunteers'
-import VolunteerList from '../elements/VolunteerList'
+import FilterControls from '../elements/FilterControls'
+import List from '../elements/List'
+import UserCard from '../elements/UserCard'
 
 const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;
+  height: calc(100vh - 6rem - 65px);
 
   > * {
     position: relative;
@@ -21,91 +23,110 @@ const Wrapper = styled.div`
   }
 `
 
-class AdminPanel extends React.Component {
+class VolunteersPanel extends React.Component {
 
   state = {
-    campaignID: null,
-    volunteers: null,
-    filteredVolunteers: null,
-    pendingVolunteers: null,
-    skills: [],
-    schedule: Array.from({ length: 14 }),
-    strictSkills: true,
-    strictSchedule: true,
+    filteredUsers: null,
+    listDisplay: 'volunteers',
+    skills: {
+      values: [],
+      strict: true
+    },
+    schedule: {
+      values: Array.from({ length: 14 }),
+      strict: true
+    },
     selectedVolunteers: [],
     groupName: ''
   }
 
   componentDidMount = () => {
-    this.getCampaignData() 
+    this.filterUsers()
   }
 
-  getCampaignData = () => {
-    const { id, owner, coordinators, conf_volunteers: volunteers, pend_volunteers: pendingVolunteers } = this.props.campaignData
-    this.setState({
-      campaignID: id,
-      volunteers: [owner, ...coordinators, ...volunteers],
-      filteredVolunteers: [owner, ...coordinators, ...volunteers],
-      pendingVolunteers
-    })   
+  toggleUserList = () => {
+    const listDisplay = this.state.listDisplay === 'volunteers' ? 'pending' : 'volunteers'
+    this.setState({ listDisplay }, this.filterUsers)
   }
 
   selectSchedule = slot => {
-    const schedule = [...this.state.schedule]
-    schedule[slot] = !schedule[slot]
-    this.setState({ schedule }, this.filterVolunteers)
+    const values = [...this.state.schedule.values]
+    values[slot] = !values[slot]
+    this.setState({ schedule: { ...this.state.schedule, values } }, this.filterUsers)
   }
 
-  selectSkills = selected => {
-    this.setState({ skills: selected }, this.filterVolunteers)
+  selectSkills = values => {
+    this.setState({ skills: { ...this.state.skills, values } }, this.filterUsers)
   }
 
-  filterVolunteers = () => {
-    const { volunteers, schedule, skills, strictSchedule, strictSkills } = this.state
+  filterUsers = () => {
+    const { listDisplay, schedule, skills } = this.state
+    const { campaignData } = this.props
+
+    const volunteers = listDisplay === 'volunteers'
+      ? ['owner', 'coordinators', 'conf_volunteers']
+        .reduce((arr, prop) => arr.concat(campaignData[prop]), [])
+      : campaignData.pend_volunteers
 
     const isAvailable = userShifts => (
-      strictSchedule
-        ? schedule.every((slot, i) => !slot || userShifts.some(({ id }) => id - 1 === i))
-        : schedule.some((slot, i) => slot && userShifts.some(({ id }) => id - 1 === i))
+      schedule.strict
+        ? schedule.values.every((slot, i) => !slot || userShifts.some(({ id }) => id - 1 === i))
+        : schedule.values.some((slot, i) => slot && userShifts.some(({ id }) => id - 1 === i))
     )
 
     const hasSkills = userSkills => (
-      strictSkills
-        ? skills.every(({ value }) => userSkills.some(({ id }) => value === id))
-        : skills.some(({ value }) => userSkills.some(({ id }) => value === id))
+      skills.strict
+        ? skills.values.every(({ value }) => userSkills.some(({ id }) => value === id))
+        : skills.values.some(({ value }) => userSkills.some(({ id }) => value === id))
     )
 
-    const filteredVolunteers = volunteers
-      .filter(({ user_skills }) => !skills?.length || hasSkills(user_skills))
-      .filter(({ user_shifts }) => schedule.every(slot => !slot) || isAvailable(user_shifts))
+    const filteredUsers = volunteers
+      .filter(({ user_skills }) => !skills.values?.length || hasSkills(user_skills))
+      .filter(({ user_shifts }) => schedule.values.every(slot => !slot) || isAvailable(user_shifts))
     
-    this.setState({ filteredVolunteers })
+    this.setState({ filteredUsers })
+
+    // TODO remove ids from selectedVols that arent in the filtered list
   }
 
-  selectStrict = (event) => {
-    this.setState({ [event.target.id]: event.target.checked }, this.filterVolunteers)
+  toggleStrict = (event) => {
+    this.setState(
+      { [event.target.id]: { ...this.state[event.target.id], strict: event.target.checked } },
+      this.filterUsers
+    )
   }
 
-  editGroupName = (event) => {
+  editGroupName = event => {
     this.setState({ [event.target.name]: event.target.value })
   }
 
   selectVolunteer = id => {
-    let selectedVolunteers = [...this.state.selectedVolunteers]
-    if (selectedVolunteers.includes(id)) selectedVolunteers = selectedVolunteers.filter(vol => vol !== id)
-    else selectedVolunteers.push(id)
+    const { selectedVolunteers } = this.state
+
+    if (selectedVolunteers.includes(id)) {
+      this.setState({ selectedVolunteers: [...selectedVolunteers].filter(vol => vol !== id) })
+    } else {
+      this.setState({ selectedVolunteers: selectedVolunteers.concat(id) })
+    }
+  }
+
+  selectAll = () => {
+    const selectedVolunteers = this.state.filteredUsers
+      .map(({ id }) => id)
+
     this.setState({ selectedVolunteers })
   }
 
   createNewGroup = async () => {
-    const { groupName, selectedVolunteers, campaignID } = this.state
-    if (!groupName || selectedVolunteers.length === 0) return
+    const { groupName, selectedVolunteers } = this.state
+    const { campaignData } = this.props
+    if (!groupName || !selectedVolunteers.length) return
     const userID = Number(localStorage.getItem('user_id'))
     if (!selectedVolunteers.includes(userID)) selectedVolunteers.unshift(userID)
     const formData = {
       name: groupName,
       members: selectedVolunteers,
-      campaign: campaignID
+      campaign: campaignData.id
     }
     
     const response = await createRoom(formData)
@@ -114,63 +135,47 @@ class AdminPanel extends React.Component {
     }
   }
 
-  confirmVolunteer = async volunteerID => {
-    try {
-      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'confirm' })
-      const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
-      const volunteers = [...this.state.volunteers, confirmedVolunteer]
-      const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
-      this.setState({ volunteers, pendingVolunteers }, this.filterVolunteers)
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  denyVolunteer = async volunteerID => {
-    try {
-      await updateVolunteers(this.state.campaignID, { volunteer_id: volunteerID, action: 'delete' })
-      const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
-      this.setState({ pendingVolunteers })
-    } catch (err) {
-      console.log(err)
-    }
-  }
-
-  volunteerActions = {
-    selectVolunteer: this.selectVolunteer,
-    confirmVolunteer: this.confirmVolunteer,
-    denyVolunteer: this.denyVolunteer
-  }
-
   render() {
     const {
-      filteredVolunteers,
+      filteredUsers,
+      selectedVolunteers,
       skills,
       schedule,
-      strictSkills,
-      strictSchedule,
       groupName
     } = this.state
 
     const { isAdmin } = this.props
 
+    const itemElement = (user, i, itemExpanded, showDetail) => (
+      <UserCard
+        key={i}
+        user={user}
+        isSelected={selectedVolunteers.includes(user.id)}
+        isExpanded={user.id === itemExpanded}
+        showDetail={showDetail}
+        select={this.selectVolunteer}
+      />
+    )
 
     return (
       <Wrapper>
 
-        <VolunteerList openList actions={{}} list={filteredVolunteers} />
+        <List
+          items={filteredUsers}
+          itemElement={itemElement}
+        />
 
         {isAdmin &&
-          <FilterVolunteers
+          <FilterControls
             skills={skills}
             schedule={schedule}
             selectSkills={this.selectSkills}
             selectSchedule={this.selectSchedule}
-            strictSkills={strictSkills}
-            strictSchedule={strictSchedule}
-            selectStrict={this.selectStrict}
+            toggleStrict={this.toggleStrict}
+            toggleList={this.toggleUserList}
             groupName={groupName}
             editGroupName={this.editGroupName}
+            selectAll={this.selectAll}
             createNewGroup={this.createNewGroup}
           />}
 
@@ -179,4 +184,4 @@ class AdminPanel extends React.Component {
   }
 }
 
-export default withRouter(AdminPanel)
+export default withRouter(VolunteersPanel)

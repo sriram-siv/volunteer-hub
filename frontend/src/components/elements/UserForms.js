@@ -125,7 +125,7 @@ class UserForms extends React.Component {
         <InputText label="password" name="password" value={password} type="password" returnValue={this.handleChange} error={err.password} />
         {register &&
           <InputText label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={this.handleChange} error={err.password_confirmation} />}
-        <Button label={mode} primary={true} width={'100%'} />
+        <Button primary={true} width={'100%'}>{mode}</Button>
         <ChangeMode onClick={this.switchMode}>{register ? ' I have an account' : 'new user'}</ChangeMode>
       </Wrapper>
     )

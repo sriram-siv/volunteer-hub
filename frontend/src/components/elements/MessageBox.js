@@ -60,8 +60,7 @@ class MessageBox extends React.Component {
   `
 
   Link = styled.a`
-    background-color: pink;
-    cursor: pointer;
+    color: palevioletred;
   `
 
   linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
@@ -93,7 +92,7 @@ class MessageBox extends React.Component {
     const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link, linkMatch } = this
     const consecutiveMessage = prevMessage
       ? prevMessage.user.id === data.user.id : false
-    console.log(consecutiveMessage)
+
     return (
       <Wrapper consecutive={consecutiveMessage}>
         <AccentShadow/>

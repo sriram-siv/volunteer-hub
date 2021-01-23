@@ -20,6 +20,7 @@ const Mask = styled.div`
   position: fixed;
   top: 3rem;
   width: calc(100% - 3px);
+  max-width: 900px;
   height: 15px;
   z-index: 3;
   background: url(${props => props.src});

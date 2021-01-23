@@ -8,7 +8,7 @@ import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, upd
 import styles from '../../lib/styles'
 import { update } from '../../lib/helper'
 
-import Button from '../elements/Button'
+// import Button from '../elements/Button'
 import Show from '../common/Show'
 import CampaignCard from '../elements/CampaignCard'
 import Schedule from '../elements/Schedule'
@@ -136,7 +136,8 @@ class Profile extends React.Component {
 
   saveSettings = async () => {
     const { user_skills, schedule } = this.state
-    const { currentUser, showNotification } = this.props.app
+    // const { currentUser, showNotification } = this.props.app
+    const { showNotification } = this.props.app
 
     try {
       // TODO check if this works - does backend care if id is number or string

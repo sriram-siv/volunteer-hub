@@ -20,7 +20,7 @@ const Panel = styled.div`
   top: calc(255px - 3rem);
   left: 10px;
   width: calc(100vw - 23px);
-  min-height: calc(100vh - 3rem - 20px);
+  min-height: calc(100vh - 3rem - 25px);
   padding: 20px;
   padding-top: calc(3rem + 20px);
   background-color: ${props => props.theme.glass};
@@ -76,8 +76,7 @@ const ImageLabel = styled.div`
   line-height: 1.5rem;
   background-color: ${props => props.theme.glass};
   color: ${props => props.theme.text};
-  border-top-left-radius: 4px;
-  border-top-right-radius: 4px;
+  border-radius: 4px 4px 0 0;
 `
 
 const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }) => {
@@ -88,7 +87,7 @@ const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }
   const [stickyTitle, setStickyTitle] = React.useState(false)
 
   const toggleStickyTitleBar = event => {
-    setStickyTitle(event.target.scrollTop >= 192)
+    setStickyTitle(event.target.scrollTop >= 190)
   }
 
   return (

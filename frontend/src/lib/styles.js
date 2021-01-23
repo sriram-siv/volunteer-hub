@@ -19,7 +19,8 @@ const select = theme => ({
     backgroundColor: theme.background,
     color: theme.text,
     borderRadius: '2px',
-    textAlign: 'center'
+    textAlign: 'center',
+    fontWeight: theme.fontWeight
   }),
   indicatorSeparator: () => ({ width: 0 })
 })
