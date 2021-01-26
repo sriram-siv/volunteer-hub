@@ -3,8 +3,9 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   position: absolute;
-  top: 0;
+  top: 3rem;
   height: fit-content;
+  min-height: 3rem;
   width: 100%;
   padding: 5px;
   z-index: 9;
@@ -19,21 +20,23 @@ const Wrapper = styled.div`
   opacity: 0.9;
   backdrop-filter: blur(4px);
 
-  animation-name: toastAuto;
-  animation-duration: 4s;
-  animation-fill-mode: forwards;
+  transform: translateY(${props => props.show ? 0 : '-100%'});
+  transition: transform 1s ${props => props.show ? 'ease-out' : 'ease-in'};
 `
 
 const Notification = ({ notification }) => {
-  
-  const [message, setMessage] = React.useState('')
+
+  const [show, setShow] = React.useState(false)
 
   React.useEffect(() => {
-    setMessage(notification.message)
-    setTimeout(() => setMessage(''), 4000)
+    if (notification.message) setTimeout(() => setShow(true), 1000)
+    if (notification.autoDismiss) setTimeout(() => setShow(false), 4000)
   }, [notification])
 
-  return message ? <Wrapper>{message}</Wrapper> : null
+  return <Wrapper show={show}>
+    {notification.message}
+    {notification.autoDismiss === false && <div>ok</div>}
+  </Wrapper>
 }
 
 export default Notification

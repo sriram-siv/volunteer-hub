@@ -2,16 +2,16 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
-import Select from 'react-select'
 
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
-import styles from '../../lib/styles'
+// import icons from '../../lib/icons'
+// import styles from '../../lib/styles'
 import { update } from '../../lib/helper'
 
 // import Button from '../elements/Button'
 import Show from '../common/Show'
 import CampaignCard from '../elements/CampaignCard'
-import Schedule from '../elements/Schedule'
+import UserDetails from './UserDetails'
 
 const NewCampaign = styled.button`
   position: relative;
@@ -48,11 +48,11 @@ class Profile extends React.Component {
 
     const userData = [
       'username', 'first_name', 'last_name', 'email', 'phone', 'profile_image'
-    ].reduce((obj, prop) => ({ ...obj, [prop]: data[prop] }))
+    ].reduce((obj, prop) => ({ ...obj, [prop]: data[prop] }), {})
 
     const userCampaigns = [
       'owned_campaigns', 'coord_campaigns', 'conf_campaigns'
-    ].reduce((arr, prop) => [ ...arr, ...data[prop] ], [])
+    ].reduce((arr, prop) => [...arr, ...data[prop]], [])
 
     const userShifts = data.user_shifts.reduce((arr, { id }) => [...arr, id], [])
     const schedule = Array.from({ length: 14 }, (val, i) => userShifts.includes(++i))
@@ -165,7 +165,7 @@ class Profile extends React.Component {
 
   render() {
     const { history } = this.props
-    const { userData, userCampaigns, skills, section, schedule, user_skills } = this.state
+    const { userData, userCampaigns, skills, section, schedule, user_skills, editMode } = this.state
 
     const menu = {
       options: [
@@ -177,9 +177,6 @@ class Profile extends React.Component {
 
     if (!userData) return null
 
-    // Shape data into react-select options object
-    const userSkills = user_skills.map(skill => ({ value: skill.id, label: skill.name }))
-
     return (
       <Show
         title={`${userData.first_name} ${userData.last_name}`}
@@ -190,22 +187,17 @@ class Profile extends React.Component {
         onImageClick={this.showWidget}
       >
 
-        {section.value === 'profile' && <>
-          <p>&nbsp;About</p>
-          <p style={{ paddingLeft: '5px' }}>
-            Lorem ipsum dolor sit, amet consectetur adipisicing elit. Harum, cumque repellat dolorum modi, 
-            obcaecati corrupti laboriosam sint quidem rerum autem non nesciunt nihil consequatur nostrum! 
-            Doloribus voluptas recusandae nam aliquid!
-          </p>
-          <p>&nbsp;Contact Info</p>
-          <p>&nbsp;{userData.email}</p>
-          <p>&nbsp;{userData.phone}</p>
-          <p>&nbsp;Skills</p>
-          <Select styles={styles.select(this.props.theme)} options={skills} value={userSkills} onChange={this.editSkills} isMulti />
-          <br/>
-          <p>&nbsp;Availability</p>
-          <Schedule schedule={schedule} handleClick={this.editSchedule} />
-        </>}
+        {section.value === 'profile' &&
+          <UserDetails
+            editInfo={this.toggleEditMode}
+            userData={userData}
+            userSkills={user_skills}
+            skills={skills}
+            schedule={schedule}
+            editSkills={this.editSkills}
+            editSchedule={this.editSchedule}
+          />
+        }
 
         {section.value === 'campaigns' && <>
           <NewCampaign onClick={() => history.push('/campaigns/new')}>New Campaign</NewCampaign>

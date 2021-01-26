@@ -27,6 +27,14 @@ const Slot = styled.div`
   width: 2rem;
   height: 2rem;
   background-color: ${props => props.active ? props.theme.primary : 'transparent'};
+  outline: 0px solid white;
+
+  &:hover {
+    background-color: ${props => props.theme.primary};
+    opacity: ${props => props.active ? 1 : 0.5};
+    outline: 3px solid white;
+    outline-offset: -3px;
+  }
 `
 
 const Label = styled.div`

@@ -10,7 +10,7 @@ const Banner = styled.div`
   background-position: top;
   height: 250px;
   width: calc(100% - 3px);
-  max-width: 900px;
+  max-width: calc(900px - 3px);
   margin: auto;
   z-index: 0;
   pointer-events: none;
@@ -20,7 +20,7 @@ const Mask = styled.div`
   position: fixed;
   top: 3rem;
   width: calc(100% - 3px);
-  max-width: 900px;
+  max-width: calc(900px - 3px);
   height: 15px;
   z-index: 3;
   background: url(${props => props.src});

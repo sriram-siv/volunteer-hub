@@ -9,11 +9,17 @@ export default styled.button`
   margin: auto;
   height: 3rem;
   border: 2px solid #fef15e;
-  transition: all 0.15s;
+  transition: background-color 0.15s;
   font-family: 'Montserrat Alternates', sans-serif;
 
   &:hover {
     background-color: ${props => props.theme.primary};
     color: #333;
+  }
+  &:focus {
+    outline: none;
+  }
+  &:focus-visible {
+    outline: 2px solid blue;
   }
 `

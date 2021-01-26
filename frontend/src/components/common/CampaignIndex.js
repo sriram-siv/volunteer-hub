@@ -84,6 +84,7 @@ class CampaignIndex extends React.Component {
   }
 
   getBounds = map => {
+    // const { _ne: ne, _sw: sw } = map.getMap().getBounds()
     this.setState({ bounds: map.getMap().getBounds() }, this.getResults)
   }
 

@@ -78,10 +78,14 @@ const ImageLabel = styled.div`
   color: ${props => props.theme.text};
   border-radius: 4px 4px 0 0;
 `
-
+/**
+ * Template for show pages, with sticky title bar, glassy panel and masked banner image
+ * Child components displayed inside panel. Optional inner image that lays on top of banner.
+ * Optional menu object that needs value, onChange and options (react-select options array)
+ */
 const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }) => {
   
-  const themeContext = React.useContext(ThemeContext)
+  const theme = React.useContext(ThemeContext)
   
   const [imageLabelVisible, setImageLabelVisible] = React.useState(false)
   const [stickyTitle, setStickyTitle] = React.useState(false)
@@ -111,7 +115,7 @@ const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }
         {menu &&
           <Select
             className="menu"
-            styles={styles.select(themeContext)}
+            styles={styles.select(theme)}
             options={menu.options}
             value={menu.value}
             onChange={menu.onChange}

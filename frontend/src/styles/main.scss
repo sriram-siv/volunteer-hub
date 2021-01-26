@@ -36,15 +36,6 @@ body {
   background-color: #aeb4ba;
 }
 
-@keyframes toastAuto {
-  0%, 100% {
-    top: 0;
-  }
-  25%, 75% {
-    top: calc(3rem - 2px);
-  }
-}
-
 // EMOJI
 
 .emoji-mart {

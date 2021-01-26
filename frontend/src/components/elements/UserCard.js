@@ -49,7 +49,8 @@ const Button = styled.button`
 const ProfilePic = styled.img`
   width: 3rem;
   height: 3rem;
-  border-radius: 2px;
+  /* border-radius: 2px; */
+  /* border-radius: 1px 0 2px 0; */
   background-color: palevioletred;
 `
 
@@ -82,10 +83,13 @@ const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpan
     (_, i) => user.user_shifts.some(shift => shift.id === i + 1)
   )
 
+  const showDefaultProfile = user.profile_image.includes('fg5afp4hagsrz2fgkbwd')
+
   return (
     <Wrapper isExpanded={isExpanded} isSelected={isSelected} >
       <Header>
-        <ProfilePic src={user.profile_image} />
+        {!showDefaultProfile && <ProfilePic src={user.profile_image} />}
+        {showDefaultProfile && <ProfilePic src={require('../../images/default_profile.png')} />}
         <Title onClick={() => showDetail(user.id)}>{user.username}</Title>
 
         {confirm &&

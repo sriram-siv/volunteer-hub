@@ -227,10 +227,10 @@ class CampaignForm extends React.Component {
             <Map setRef={this.setMapRef} flyTo={this.state.flyTo}/>
           </MapContain>
           <div style={{ position: 'fixed', bottom: '25px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Save your campaign' onClick={this.handleSubmit}/>
+            <Button width="10rem" onClick={this.handleSubmit}>Save Campaign</Button>
           </div>
           <div style={{ position: 'fixed', bottom: '85px', right: '25px', zIndex: 2 }}>
-            <Button width="10rem" label='Change banner image' onClick={this.showImagePicker}/>
+            <Button width="10rem" onClick={this.showImagePicker}>Change Banner Image</Button>
           </div>
         </Form>
       </Wrapper>

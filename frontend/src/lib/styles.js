@@ -1,3 +1,30 @@
+const themes = {
+  dark: {
+    name: 'dark',
+    primary: '#ffff50',
+    shadow: '#aeb4ba',
+    background: '#222',
+    text: '#ccc',
+    fontWeight: 300,
+    letterSpacing: '-0.002rem',
+    accent: '#999',
+    panels: '#131d25',
+    glass: '#cccd'
+  },
+  light: {
+    name: 'light',
+    primary: '#ffff50',
+    shadow: '#aeb4ba',
+    background: '#fff',
+    text: '#333',
+    fontWeight: 400,
+    letterSpacing: 0,
+    accent: '#eee',
+    panels: 'papayawhip',
+    glass: '#fafafada'
+  }
+}
+
 const select = theme => ({
   control: styles => ({
     ...styles,
@@ -25,4 +52,4 @@ const select = theme => ({
   indicatorSeparator: () => ({ width: 0 })
 })
 
-export default { select }
+export default { themes, select }

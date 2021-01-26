@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { withRouter } from 'react-router-dom'
 
-import { createRoom } from '../../lib/api'
+import { createRoom, updateVolunteers } from '../../lib/api'
 
 import FilterControls from '../elements/FilterControls'
 import List from '../elements/List'
@@ -26,8 +26,9 @@ const Wrapper = styled.div`
 class VolunteersPanel extends React.Component {
 
   state = {
-    filteredUsers: null,
-    listDisplay: 'volunteers',
+    filteredUsers: [],
+    memberList: [],
+    listDisplay: 'members',
     skills: {
       values: [],
       strict: true
@@ -41,12 +42,19 @@ class VolunteersPanel extends React.Component {
   }
 
   componentDidMount = () => {
-    this.filterUsers()
+    this.toggleUserList('members')
   }
 
-  toggleUserList = () => {
-    const listDisplay = this.state.listDisplay === 'volunteers' ? 'pending' : 'volunteers'
-    this.setState({ listDisplay }, this.filterUsers)
+  toggleUserList = list => {
+
+    const { campaignData } = this.props
+
+    const memberList = list === 'members'
+      ? ['owner', 'coordinators', 'conf_volunteers']
+        .reduce((arr, prop) => arr.concat(campaignData[prop]), [])
+      : campaignData.pend_volunteers
+
+    this.setState({ listDisplay: list, memberList, selectedVolunteers: [] }, this.filterUsers)
   }
 
   selectSchedule = slot => {
@@ -60,13 +68,7 @@ class VolunteersPanel extends React.Component {
   }
 
   filterUsers = () => {
-    const { listDisplay, schedule, skills } = this.state
-    const { campaignData } = this.props
-
-    const volunteers = listDisplay === 'volunteers'
-      ? ['owner', 'coordinators', 'conf_volunteers']
-        .reduce((arr, prop) => arr.concat(campaignData[prop]), [])
-      : campaignData.pend_volunteers
+    const { memberList, schedule, skills, selectedVolunteers } = this.state
 
     const isAvailable = userShifts => (
       schedule.strict
@@ -80,13 +82,13 @@ class VolunteersPanel extends React.Component {
         : skills.values.some(({ value }) => userSkills.some(({ id }) => value === id))
     )
 
-    const filteredUsers = volunteers
+    const filteredUsers = memberList
       .filter(({ user_skills }) => !skills.values?.length || hasSkills(user_skills))
       .filter(({ user_shifts }) => schedule.values.every(slot => !slot) || isAvailable(user_shifts))
     
-    this.setState({ filteredUsers })
-
-    // TODO remove ids from selectedVols that arent in the filtered list
+    const newSelected = selectedVolunteers.filter(id => filteredUsers.map(({ id }) => id).includes(id))
+    
+    this.setState({ filteredUsers, selectedVolunteers: newSelected })
   }
 
   toggleStrict = (event) => {
@@ -100,6 +102,30 @@ class VolunteersPanel extends React.Component {
     this.setState({ [event.target.name]: event.target.value })
   }
 
+  confirmVolunteer = async volunteerID => {
+    const { campaignData } = this.props
+    try {
+      const { data } = await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'confirm' })
+      // const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
+      // const volunteers = [...this.state.volunteers, confirmedVolunteer]
+      // const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
+      // this.setState({ volunteers, pendingVolunteers }, this.filterVolunteers)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  denyVolunteer = async volunteerID => {
+    const { campaignData } = this.props
+    try {
+      await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'delete' })
+      // const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
+      // this.setState({ pendingVolunteers })
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
   selectVolunteer = id => {
     const { selectedVolunteers } = this.state
 
@@ -111,10 +137,13 @@ class VolunteersPanel extends React.Component {
   }
 
   selectAll = () => {
-    const selectedVolunteers = this.state.filteredUsers
-      .map(({ id }) => id)
 
-    this.setState({ selectedVolunteers })
+    const { selectedVolunteers, memberList, filteredUsers } = this.state
+    const allSelected = selectedVolunteers.length === memberList.length
+
+    const newSelection = allSelected ? [] : filteredUsers.map(({ id }) => id)
+
+    this.setState({ selectedVolunteers: newSelection })
   }
 
   createNewGroup = async () => {
@@ -138,6 +167,7 @@ class VolunteersPanel extends React.Component {
   render() {
     const {
       filteredUsers,
+      listDisplay,
       selectedVolunteers,
       skills,
       schedule,
@@ -153,7 +183,9 @@ class VolunteersPanel extends React.Component {
         isSelected={selectedVolunteers.includes(user.id)}
         isExpanded={user.id === itemExpanded}
         showDetail={showDetail}
-        select={this.selectVolunteer}
+        select={listDisplay === 'members' && this.selectVolunteer}
+        confirm={listDisplay === 'pending' && this.confirmVolunteer}
+        deny={listDisplay === 'pending' && this.denyVolunteer}
       />
     )
 
@@ -177,6 +209,7 @@ class VolunteersPanel extends React.Component {
             editGroupName={this.editGroupName}
             selectAll={this.selectAll}
             createNewGroup={this.createNewGroup}
+            showChatCreate={listDisplay === 'members'}
           />}
 
       </Wrapper>

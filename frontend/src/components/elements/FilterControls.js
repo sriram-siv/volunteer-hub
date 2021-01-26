@@ -36,6 +36,14 @@ const ButtonGroup = styled.div`
   }
 `
 
+const RadioGroup = styled.div`
+  input {
+    position: relative;
+    top: 1px;
+    margin: 10px;
+  }
+`
+
 const FilterControls = props => {
 
   const {
@@ -49,7 +57,8 @@ const FilterControls = props => {
     groupName,
     editGroupName,
     selectAll,
-    createNewGroup
+    createNewGroup,
+    showChatCreate
   } = props
 
   const [skillsOptions, setSkillsOptions] = React.useState()
@@ -67,8 +76,12 @@ const FilterControls = props => {
 
   return (
     <Wrapper>
-      <Button onClick={toggleList}>togglelist</Button>
-
+      <RadioGroup>
+        <label htmlFor="members">Members</label>
+        <input type="radio" name="listDisplay" id="members" value="members" onChange={() => toggleList('members')} defaultChecked />
+        <label htmlFor="pending">Requests</label>
+        <input type="radio" name="listDisplay" id="pending" value="pending" onChange={() => toggleList('pending')} />
+      </RadioGroup>
       <p>show volunteers with these skills</p>
       <Select styles={styles.select(theme)} value={skills.values} options={skillsOptions} onChange={selectSkills} isMulti />
       <CheckBox>
@@ -81,11 +94,13 @@ const FilterControls = props => {
         <label htmlFor="strictSchedule">All</label>
         <input type="checkbox" id="schedule" checked={schedule.strict} onChange={toggleStrict}/>
       </CheckBox>
-      <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
-      <ButtonGroup>
-        <Button onClick={selectAll}>select all</Button>
-        <Button primary onClick={createNewGroup}>create group</Button>
-      </ButtonGroup>
+      {showChatCreate && <>
+        <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
+        <ButtonGroup>
+          <Button onClick={selectAll}>select all</Button>
+          <Button primary onClick={createNewGroup}>create group</Button>
+        </ButtonGroup>
+      </>}
     </Wrapper>
   )
 }

@@ -1,6 +1,8 @@
-import React from 'react'
-import { withRouter } from 'react-router-dom'
-import styled, { withTheme } from 'styled-components'
+import React, { useState, useContext } from 'react'
+import { useHistory } from 'react-router-dom'
+import styled, { ThemeContext } from 'styled-components'
+
+import { AppContext } from '../../App'
 
 import icons from '../../lib/icons'
 import UserForms from '../elements/UserForms'
@@ -35,9 +37,13 @@ const Items = styled.div`
   }
 `
 
-const NavBar = ({ app, history, changeTheme, theme }) => {
+const NavBar = ({ changeTheme }) => {
 
-  const [showForm, setShowForm] = React.useState(false)
+  const app = useContext(AppContext)
+  const theme = useContext(ThemeContext)
+  const history = useHistory()
+
+  const [showForm, setShowForm] = useState(false)
 
   const navUser = <>
     <span onClick={() => history.push('/profile')}>
@@ -59,7 +65,7 @@ const NavBar = ({ app, history, changeTheme, theme }) => {
 
   return (
     <>
-      <UserForms visible={showForm} onLogin={() => setShowForm(!showForm)} app={app}/>
+      <UserForms visible={showForm} onLogin={() => setShowForm(false)} />
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>
@@ -70,4 +76,4 @@ const NavBar = ({ app, history, changeTheme, theme }) => {
   )
 }
 
-export default withRouter(withTheme(NavBar))
+export default NavBar
