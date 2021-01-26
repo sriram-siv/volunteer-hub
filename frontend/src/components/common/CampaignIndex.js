@@ -52,7 +52,9 @@ const CampaignIndex = () => {
   )
 
   const attachMapBoundsListener = ref => {
-    if (ref) ref.getMap()._listeners.moveend = [() => getBounds(ref)]
+    if (ref) {
+      ref.getMap()._listeners.moveend = [() => getBounds(ref)]
+    }
   }
 
   const attachGeocoder = ref => {

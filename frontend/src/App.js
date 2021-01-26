@@ -14,6 +14,8 @@ import CampaignShow from './components/common/CampaignShow'
 import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
 
+import SubRouter from './components/common/SubRouter'
+
 export const AppContext = React.createContext()
 
 const App = () => {
@@ -68,6 +70,7 @@ const App = () => {
           <Route path='/campaigns/:id/edit' component={CampaignForm} />
           <Route path='/campaigns/:id' component={CampaignShow} />
           <Route path='/campaigns' component={CampaignIndex} />
+          <Route path='/test' component={SubRouter} />
         </Switch>
 
       </ThemeProvider>

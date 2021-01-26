@@ -1,17 +1,26 @@
 import React from 'react'
+import styled from 'styled-components'
 import MapGL from '@urbica/react-map-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 
 import Pin from './Pin'
-// import MapHelper from './MapHelper'
-// import MapLoading from './MapLoading'
+
+const LoadingScreen = styled.div`
+  position: absolute;
+  top: 0;
+  width: 100%;
+  line-height: calc(100vh - 3rem);
+  text-align: center;
+  z-index: 1;
+  background-color: white;
+  opacity: ${props => props.mapLoading ? 1 : 0};
+  transition: opacity 0.3s;
+`
 
 const Map = ({ pins, clickPin, flyTo, setRef }) => {
+
+  const [mapLoading, setMapLoading] = React.useState(true)
   const [viewport, setViewport] = React.useState({ zoom: 1, latitude: 50, longitude: 0 })
-  // const [mapReady, setMapReady] = React.useState(false)
-  // MapGL will only render child components once the tiles have loaded so
-  // we can use this to check when to stop displaying the loading screen
-  // const onMapLoad = () => setMapReady(true)
 
   React.useEffect(() => {
     if (!flyTo) return
@@ -19,21 +28,29 @@ const Map = ({ pins, clickPin, flyTo, setRef }) => {
     setViewport({ latitude, longitude, zoom: zoom + 10 })
   }, [flyTo])
 
+  const style = {
+    position: 'relative',
+    top: '-1px',
+    left: '-1px',
+    width: 'calc(100% + 2px)',
+    height: 'calc(100% + 2px)'
+  }
+
   return (
     <>
-      {/* {!mapReady && <MapLoading/>} */}
+      <LoadingScreen mapLoading={mapLoading}>Loading Map..</LoadingScreen>
       <MapGL
         ref={setRef}
         mapStyle='mapbox://styles/mapbox/streets-v11'
-        style={{ position: 'relative', top: '-1px', left: '-1px', width: 'calc(100% + 2px)', height: 'calc(100% + 2px)' }}
+        style={style}
         cursorStyle="default"
         accessToken={process.env.REACT_APP_MAPBOX_ACCESS_TOKEN}
         {...viewport}
         viewportChangeMethod="flyTo"
         onViewportChange={setViewport}
         doubleClickZoom={false}
+        onLoad={() => setMapLoading(false)}
       >
-        {/* <MapHelper onMount={onMapLoad} /> */}
         {pins && pins.map((pin, i) => (
           <Pin key={i} {...pin} clickPin={clickPin} dblClickPin={setViewport} />
         ))}
