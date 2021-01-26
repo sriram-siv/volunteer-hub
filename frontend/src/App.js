@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter, Switch, Route } from 'react-router-dom'
+import { Switch, Route, useHistory } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
 import styles from './lib/styles'
@@ -18,18 +18,25 @@ export const AppContext = React.createContext()
 
 const App = () => {
 
+  const history = useHistory()
+
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
 
   const changeTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
 
-  // TODO verify token -> set navbar to show logged in / out
+  // TODO - onMount
+  // Check age of token
+  // if 1+ days -> show welcome message and refresh token
+  // else refresh token, no message
+
+  // if expired -> remove token / id from localstorage 
 
   const logout = () => {
     localStorage.removeItem('user_id')
     localStorage.removeItem('token')
     showNotification('you are now logged out')
-    // TODO push browser location here ?
+    history.push('/campaigns')
   }
 
   const showNotification = (message, autoDismiss = true) => {
@@ -38,33 +45,31 @@ const App = () => {
 
   const currentUser = () => Number(localStorage.getItem('user_id'))
 
-  const app = {
+  const context = {
     logout,
     showNotification,
     currentUser,
     changeTheme
   }
-
-  const { pathname } = window.location
   
   return (
-    <AppContext.Provider value={app}>
+    <AppContext.Provider value={context}>
       <ThemeProvider theme={styles.themes[theme]}>
-        <BrowserRouter>
-          <Notification notification={notification}/>
-          {pathname !== '/' && <NavBar changeTheme={changeTheme} />}
-          <Switch>
-            <Route exact path="/" component={Home} />
-            {/* TODO make profile funtional and use context */}
-            <Route path="/profile" render={() => <Profile app={app} />} />
-            <Route path="/chat/:room" component={Room} />
-            <Route path='/campaigns/new' component={CampaignForm} />
-            <Route path='/campaigns/:id/edit' component={CampaignForm} />
-            <Route path='/campaigns/:id' component={CampaignShow} />
-            {/* TODO make index funtional and use context */}
-            <Route path='/campaigns' render={() => <CampaignIndex app={app} />} />
-          </Switch>
-        </BrowserRouter>
+
+        <NavBar changeTheme={changeTheme} />
+        <Notification notification={notification}/>
+
+        <Switch>
+          <Route exact path="/" component={Home} />
+          {/* TODO make profile funtional and use context */}
+          <Route path="/profile" render={() => <Profile app={context} />} />
+          <Route path="/chat/:room" component={Room} />
+          <Route path='/campaigns/new' component={CampaignForm} />
+          <Route path='/campaigns/:id/edit' component={CampaignForm} />
+          <Route path='/campaigns/:id' component={CampaignShow} />
+          <Route path='/campaigns' component={CampaignIndex} />
+        </Switch>
+
       </ThemeProvider>
     </AppContext.Provider>
   )

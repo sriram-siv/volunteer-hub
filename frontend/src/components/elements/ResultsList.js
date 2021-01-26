@@ -11,7 +11,7 @@ const Wrapper = styled.div`
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   overflow-y: hidden;
-  transition: all 0.2s;
+  transition: height 0.2s;
 `
 
 const ListScroll = styled.div`
@@ -42,56 +42,38 @@ const Toggle = styled.div`
   transition: all 0.2s;
 `
 
-class ResultsList extends React.Component {
+const ResultsList = ({ campaigns, signUp, resultShowingDetail, showDetail, theme }) => {
 
-  state = {
-    isHidden: true,
-    resultShowingDetail: -1
-  }
+  const [isHidden, setIsHidden] = React.useState(true)
 
-  componentDidUpdate = () => {
-    
-    if (this.props.resultShowingDetail !== this.state.resultShowingDetail) {
-      this.setState({ isHidden: false, resultShowingDetail: this.props.resultShowingDetail })
-    }
-  }
+  React.useEffect(() => {
+    if (resultShowingDetail !== -1) setIsHidden(false)
+  }, [resultShowingDetail])
 
-  toggleView = () => {
-    this.setState({ isHidden: !this.state.isHidden })
-  }
+  const toggleView = () => setIsHidden(!isHidden)
 
-  showDetail = id => {
-    const resultShowingDetail = this.state.resultShowingDetail === id ? -1 : id
-    this.props.showDetail(resultShowingDetail)
-  }
-
-  render() {
-    const { isHidden, resultShowingDetail } = this.state
-    const { campaigns, signUp } = this.props
-
-    return (
-      <Wrapper isHidden={isHidden}>
-        <Toggle isHidden={isHidden} onClick={this.toggleView}>{icons.right(this.props.theme.text)}</Toggle>
-        <Title>Results</Title>
-        <ListScroll scroll={resultShowingDetail === -1}>
-          {campaigns && campaigns.map((campaign, i) => {
-            const expanded = campaign.id === resultShowingDetail
-            return (
-              <ResultsItem
-                key={i}
-                position={i}
-                {...campaign}
-                expanded={expanded}
-                visible={expanded || resultShowingDetail === -1}
-                showDetails={this.showDetail}
-                signUp={signUp}
-              />
-            )
-          })}
-        </ListScroll>
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper isHidden={isHidden}>
+      <Toggle isHidden={isHidden} onClick={toggleView}>{icons.right(theme.text)}</Toggle>
+      <Title>Results</Title>
+      <ListScroll scroll={resultShowingDetail === -1}>
+        {campaigns && campaigns.map((campaign, i) => {
+          const expanded = campaign.id === resultShowingDetail
+          return (
+            <ResultsItem
+              key={i}
+              position={i}
+              {...campaign}
+              expanded={expanded}
+              visible={expanded || resultShowingDetail === -1}
+              showDetails={showDetail}
+              signUp={signUp}
+            />
+          )
+        })}
+      </ListScroll>
+    </Wrapper>
+  )
 }
 
 export default withTheme(ResultsList)

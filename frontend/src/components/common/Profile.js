@@ -153,13 +153,8 @@ class Profile extends React.Component {
     }
   }
 
-  logout = () => {
-    this.props.app.logout()
-    this.props.history.push('/campaigns')
-  }
-
   changeSection = section => {
-    if (section.value === 'logout') this.logout()
+    if (section.value === 'logout') this.props.app.logout()
     else this.setState({ section })
   }
 

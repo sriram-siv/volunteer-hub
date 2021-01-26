@@ -2,6 +2,8 @@ import React from 'react'
 import Select from 'react-select'
 import styled, { withTheme } from 'styled-components'
 
+import { AppContext } from '../../App'
+
 import Schedule from './Schedule'
 import InputText from './InputText'
 import Button from './Button'
@@ -46,6 +48,8 @@ const RadioGroup = styled.div`
 
 const FilterControls = props => {
 
+  const app = React.useContext(AppContext)
+
   const {
     theme,
     schedule,
@@ -63,14 +67,13 @@ const FilterControls = props => {
 
   const [skillsOptions, setSkillsOptions] = React.useState()
 
-  const getSkills = async () => {
-    try {
-      const { data } = await getAllSkills()
-      setSkillsOptions(data.map(skill => ({ value: skill.id, label: skill.name })))
-    } catch (err) {
-      console.error(err)
+  const getSkills = () => getAllSkills().then(
+    res => setSkillsOptions(res.data.map(skill => ({ value: skill.id, label: skill.name }))),
+    res => {
+      console.error({ res })
+      app.showNotification('Error loading skill data. Please try refreshing the page')
     }
-  }
+  )
 
   React.useEffect(getSkills, [])
 

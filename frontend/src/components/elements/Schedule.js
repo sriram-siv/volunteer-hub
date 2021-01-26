@@ -27,7 +27,6 @@ const Slot = styled.div`
   width: 2rem;
   height: 2rem;
   background-color: ${props => props.active ? props.theme.primary : 'transparent'};
-  outline: 0px solid white;
 
   &:hover {
     background-color: ${props => props.theme.primary};
@@ -35,6 +34,12 @@ const Slot = styled.div`
     outline: 3px solid white;
     outline-offset: -3px;
   }
+`
+
+const SlotReadOnly = styled.div`
+  width: 2rem;
+  height: 2rem;
+  background-color: ${props => props.active ? props.theme.primary : 'transparent'};
 `
 
 const Label = styled.div`
@@ -76,8 +81,9 @@ const Schedule = ({ schedule: slots, handleClick, hideBorder }) => {
         <Label>sun</Label>
       </Days>
       <Grid>
-        {slots?.map((slot, i) =>
-          <Slot key={i} active={slot} onClick={() => handleClick?.(i)} />)}
+        {slots?.map((slot, i) => handleClick
+          ? <Slot key={i} active={slot} onClick={() => handleClick(i)} />
+          : <SlotReadOnly key={i} active={slot} />)}
       </Grid>
     </Wrapper>
   )

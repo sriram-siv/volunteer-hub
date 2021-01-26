@@ -1,4 +1,5 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -20,11 +21,13 @@ const Wrapper = styled.div`
   opacity: 0.9;
   backdrop-filter: blur(4px);
 
-  transform: translateY(${props => props.show ? 0 : '-100%'});
+  transform: translateY(${props => props.show ? 0 : 'calc(-100% - 1px)'});
   transition: transform 1s ${props => props.show ? 'ease-out' : 'ease-in'};
 `
 
 const Notification = ({ notification }) => {
+
+  const location = useLocation()
 
   const [show, setShow] = React.useState(false)
 
@@ -32,6 +35,8 @@ const Notification = ({ notification }) => {
     if (notification.message) setTimeout(() => setShow(true), 1000)
     if (notification.autoDismiss) setTimeout(() => setShow(false), 4000)
   }, [notification])
+
+  if (location.pathname === '/') return null
 
   return <Wrapper show={show}>
     {notification.message}

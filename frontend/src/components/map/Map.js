@@ -6,7 +6,7 @@ import Pin from './Pin'
 // import MapHelper from './MapHelper'
 // import MapLoading from './MapLoading'
 
-const Map = ({ setRef, pins, clickPin, flyTo }) => {
+const Map = ({ pins, clickPin, flyTo, setRef }) => {
   const [viewport, setViewport] = React.useState({ zoom: 1, latitude: 50, longitude: 0 })
   // const [mapReady, setMapReady] = React.useState(false)
   // MapGL will only render child components once the tiles have loaded so

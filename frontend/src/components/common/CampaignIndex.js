@@ -1,5 +1,7 @@
-import React from 'react'
-import styled, { withTheme } from 'styled-components'
+import React, { useContext, useEffect, useState } from 'react'
+import styled from 'styled-components'
+
+import { AppContext } from '../../App'
 
 import Map from '../map/Map'
 import Geocoder from '../map/Geocoder'
@@ -23,109 +25,128 @@ const SearchFields = styled.div`
   > * { margin-bottom: 5px; }
 `
 
-class CampaignIndex extends React.Component {
+let geocoderRef = null
 
-  state = {
-    campaigns: [],
-    results: null,
-    location: '',
-    tag: '',
-    bounds: {
-      _ne: { lat: 90, lng: 180 },
-      _sw: { lat: -90, lng: -180 }
-    },
-    flyTo: null,
-    resultShowingDetail: -1,
-    tagError: ''
+const CampaignIndex = () => {
+
+  const app = useContext(AppContext)
+
+  const [campaigns, setCampaigns] = useState([])
+  const [results, setResults] = useState([])
+  const [location, setLocation] = useState('')
+  const [tag, setTag] = useState('')
+  const [bounds, setBounds] = useState({
+    ne: { lat: 90, lng: 180 },
+    sw: { lat: -90, lng: -180 }
+  })
+  const [flyTo, setFlyTo] = useState(null)
+  const [resultShowingDetail, setResultShowingDetail] = useState(-1)
+  const [tagError, setTagError] = useState('')
+
+  const getCampaigns = () => getAllCampaigns().then(
+    res => setCampaigns(res.data),
+    res => {
+      console.error({ res })
+      app.showNotification('Error loading campaign index. Please try refreshing the page')
+    }
+  )
+
+  const attachMapBoundsListener = ref => {
+    if (ref) ref.getMap()._listeners.moveend = [() => getBounds(ref)]
   }
 
-  componentDidMount = async () => {
-    this.getCampaigns()
+  const attachGeocoder = ref => {
+    geocoderRef = ref
   }
 
-  // componentDidUpdate = () => this.getResults() // ? would work well with useEffect
+  const getResults = () => {
 
-  getCampaigns = async () => {
-    const { data: campaigns } = await getAllCampaigns()
-    this.setState({ campaigns }, this.getResults)
-  }
-
-  handleChange = event => {
-    this.setState({ [event.target.name]: event.target.value }, this.getResults)
-  }
-
-  setMapRef = ref => {
-    ref && ref.getMap().on('moveend', () => this.getBounds(ref))
-  }
-  
-  setGeocoderInputRef = ref => {
-    this.geocoder = ref
-  }
-
-  getResults = () => {
-
-    const { campaigns, tag, bounds: { _sw: min, _ne: max } } = this.state
+    const { sw: min, ne: max } = bounds
 
     const inRange = (value, min, max) => value > min && value < max
     const matchesQuery = ({ name }) => name.toLowerCase().includes(tag.toLowerCase())
     const invalidTagQuery = /[^\w]/.test(tag)
-    const tagError = invalidTagQuery ? 'can only include alphanumeric characters' : ''
 
-    const results = campaigns
-      .filter(({ latitude, longitude }) => (
-        inRange(latitude, min.lat, max.lat) && inRange(longitude, min.lng, max.lng)
-      ))
-      .filter(({ tags }) => (
-        !tag || invalidTagQuery || tags.some(matchesQuery)
-      ))
-      .map((result, i) => ({ ...result, color: '#222', size: 20, number: ++i }))
-    
-    this.setState({ results, tagError })
-  }
+    setTagError(invalidTagQuery ? 'can only include alphanumeric characters' : '')
 
-  getBounds = map => {
-    // const { _ne: ne, _sw: sw } = map.getMap().getBounds()
-    this.setState({ bounds: map.getMap().getBounds() }, this.getResults)
-  }
-
-  flyToLocation = location => this.setState({ flyTo: location })
-
-  selectGeocoderItem = location => {
-    setTimeout(() => this.setState({ location: location.place_name }), 1)
-  }
-
-  updateGeocoderInput = e => {
-    this.setState(
-      { location: e.target.value },
-      () => setTimeout(() => this.geocoder.focus(), 1)
+    setResults(
+      campaigns
+        .filter(({ latitude, longitude }) => (
+          inRange(latitude, min.lat, max.lat) && inRange(longitude, min.lng, max.lng)
+        ))
+        .filter(({ tags }) => (
+          !tag || invalidTagQuery || tags.some(matchesQuery)
+        ))
+        .map((result, i) => ({ ...result, color: '#222', size: 20, number: ++i }))
     )
   }
 
-  signUpToCampaign = async id => {
-    const userID = this.props.app.currentUser()
-    if (!userID) {
-      this.props.app.showNotification('please login to sign up')
-    } else {
+  const getBounds = ref => {
+    const { _ne: ne, _sw: sw } = ref?.getMap().getBounds()
+    setBounds({ ne, sw })
+  }
+
+  const selectGeocoderItem = location => {
+    setTimeout(() => setLocation(location.place_name), 1)
+  }
+
+  const updateGeocoderInput = event => {
+    setLocation(event.target.value)
+    setTimeout(() => geocoderRef.focus(), 1)
+  }
+
+  const signUpToCampaign = async id => {
+    const userID = app.currentUser()
+    if (userID) {
       await updateVolunteers(id, { volunteer_id: userID, action: 'add' })
-      this.props.app.showNotification('A request to join has been sent to the campaign coordinators')
+      app.showNotification('A request to join has been sent to the campaign coordinators')
+    } else {
+      app.showNotification('please login to sign up')
     }
   }
 
-  showDetail = id => this.setState({ resultShowingDetail: id })
-
-  render() {
-    const { results, tag, flyTo, resultShowingDetail, location, tagError } = this.state
-    return (
-      <Wrapper>
-        <SearchFields>
-          <Geocoder value={location} onChange={this.updateGeocoderInput} onSelect={this.selectGeocoderItem} flyToLocation={this.flyToLocation} setRef={this.setGeocoderInputRef} />
-          <InputText name="tag" label="Tags" error={tagError} value={tag} returnValue={this.handleChange} />
-          <ResultsList campaigns={results} signUp={this.signUpToCampaign} showDetail={this.showDetail} resultShowingDetail={resultShowingDetail} />
-        </SearchFields>
-        <Map pins={results} flyTo={flyTo} setRef={this.setMapRef} clickPin={this.showDetail} />
-      </Wrapper>
-    )
+  const showDetail = id => {
+    setResultShowingDetail(resultShowingDetail === id ? -1 : id)
   }
+
+  useEffect(getCampaigns, [])
+  useEffect(getResults, [campaigns, location, tag, bounds])
+
+  return (
+    <Wrapper>
+
+      <SearchFields>
+        <Geocoder
+          value={location}
+          onChange={updateGeocoderInput}
+          onSelect={selectGeocoderItem}
+          flyToLocation={setFlyTo}
+          setRef={attachGeocoder}
+        />
+        <InputText
+          name="tag"
+          label="Tags"
+          value={tag}
+          error={tagError}
+          returnValue={e => setTag(e.target.value)}
+        />
+        <ResultsList
+          campaigns={results}
+          signUp={signUpToCampaign}
+          showDetail={showDetail}
+          resultShowingDetail={resultShowingDetail}
+        />
+      </SearchFields>
+
+      <Map
+        pins={results}
+        flyTo={flyTo}
+        setRef={attachMapBoundsListener}
+        clickPin={showDetail}
+      />
+
+    </Wrapper>
+  )
 }
 
-export default withTheme(CampaignIndex)
+export default CampaignIndex

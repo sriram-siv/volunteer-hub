@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { useHistory } from 'react-router-dom'
+import { useHistory, useLocation } from 'react-router-dom'
 import styled, { ThemeContext } from 'styled-components'
 
 import { AppContext } from '../../App'
@@ -42,8 +42,11 @@ const NavBar = ({ changeTheme }) => {
   const app = useContext(AppContext)
   const theme = useContext(ThemeContext)
   const history = useHistory()
+  const location = useLocation()
 
   const [showForm, setShowForm] = useState(false)
+
+  if (location.pathname === '/') return null
 
   const navUser = <>
     <span onClick={() => history.push('/profile')}>
