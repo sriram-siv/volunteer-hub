@@ -32,7 +32,7 @@ const Panel = styled.div`
 
 const Title = styled.h2`
   position: ${props => props.sticky ? 'fixed' : 'relative'};
-  top: ${props => props.sticky ? 'calc(3rem + 10px)' : 'calc(250px - 3rem)'};
+  top: ${props => props.sticky ? 'calc(3rem + 10px)' : 'calc(0px - 3rem)'};
   left: 10px;
   width: calc(100vw - 23px);
   font-size: 1.1rem;
@@ -87,7 +87,6 @@ const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }
   
   const theme = React.useContext(ThemeContext)
   
-  const [imageLabelVisible, setImageLabelVisible] = React.useState(false)
   const [stickyTitle, setStickyTitle] = React.useState(false)
 
   const toggleStickyTitleBar = event => {
@@ -97,18 +96,13 @@ const Show = ({ title, menu, banner, image, imageLabel, onImageClick, children }
   return (
     <Wrapper onScroll={toggleStickyTitleBar}>
 
-      <BannerImage src={banner} />
-
-      {image &&
-        <ProfilePic
-          image={image}
-          onClick={onImageClick}
-          onMouseEnter={() => setImageLabelVisible(true)}
-          onMouseLeave={() => setImageLabelVisible(false)}
-        >
-          {imageLabelVisible && <ImageLabel>{imageLabel}</ImageLabel>}
-        </ProfilePic>
-      }
+      <BannerImage
+        src={banner}
+        profile={image}
+        onProfileClick={onImageClick}
+        profileLabel={imageLabel}
+        maskActive={stickyTitle}
+      />
 
       <Title sticky={stickyTitle}>
         {title}

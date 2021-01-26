@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import React, { useEffect, useState } from 'react'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
 // import styled from 'styled-components'
 // import Select from 'react-select'
 
@@ -12,9 +12,14 @@ import NoticeBoard from '../elements/NoticeBoard'
 import VolunteersPanel from './VolunteersPanel'
 // import AdminPanel from './AdminPanel'
 import InputArea from '../elements/InputArea'
-import ChatControl from  '../elements/ChatControl'
+import ChatControl from '../elements/ChatControl'
 
-const CampaignShow = ({ history, match }) => {
+import RoomCard from '../elements/RoomCard'
+
+const CampaignShow = () => {
+
+  const history = useHistory()
+  const match = useRouteMatch()
 
   const [campaignData, setCampaignData] = useState()
   const [rooms, setRooms] = useState([])
@@ -92,15 +97,13 @@ const CampaignShow = ({ history, match }) => {
     onChange: setSection
   }
 
-  if (isAdmin) menu.options.push(selectMenu('admin'))
+  // if (isAdmin) menu.options.push(selectMenu('admin'))
 
   // if (menu.options.some(opt => opt.value === hash) && section.value !== hash) {
   //   setSection({ label: hash, value: hash })
   // }
 
   if (!campaignData) return null
-
-  // Can there be a subrouter here?
 
   return <>
     <Show title={campaignData.name} menu={menu}>
@@ -111,10 +114,8 @@ const CampaignShow = ({ history, match }) => {
       {section.label === 'members' &&
         <VolunteersPanel campaignData={campaignData} isAdmin={isAdmin} />}
       {section.label === 'chats' &&
-        rooms.map((room, i) => <p key={i}>{room.name}</p>)}
-      {section.label === 'admin' &&
-      // <AdminPanel campaignData={campaignData} />}
-      'admin section'}
+        rooms.map((room, i) => <RoomCard key={i} room={room} />)}
+      {/* rooms.map((room, i) => <p key={i}>{room.name}</p>)} */}
     </Show>
     {section.label === 'notices' &&
       <div style={{ position: 'absolute', bottom: '10px', left: '10px', zIndex: 10, width: 'calc(100% - 23px)', height: 'calc(4rem + 30px)' }}>
