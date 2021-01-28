@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -7,6 +7,7 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column-reverse;
   position: relative;
+  padding-bottom: calc(4rem + 30px);
   /* overflow-x: hidden; */
 `
 
@@ -17,8 +18,9 @@ const NoticeText = styled.div`
   padding: 15px;
   padding-bottom: calc(15px + 1rem);
   background-color: ${props => props.theme.background};
-  font-style: italic;
+  /* font-style: italic; */
   color: ${props => props.theme.text};
+  box-shadow: 0 0 2px #555a;
 `
 
 const NoticeDelete = styled.div`
@@ -48,16 +50,12 @@ const NoticeBoard = ({ campaignData, isAdmin, deleteNotice }) => {
     `${date.toDateString()} ${date.toLocaleTimeString()}`
   )
 
+
   return (
-    <Wrapper
-      ref={ref => {
-        if (ref) ref.scrollTop = -ref.scrollHeight
-        // this.noticeboard = ref
-      }}
-    >
+    <Wrapper>
       {campaignData.campaign_notices.map(({ id, owner, text, time_stamp }) => (
         <NoticeText key={id}>
-          <p>{text}</p>
+          {text.split('\n').map((line, i) => <p key={i}>{line}</p>)}
           <User>{`${formatDate(new Date(time_stamp))} - ${owner.username}`}</User>
           {isAdmin && <NoticeDelete id={id} onClick={deleteNotice}>delete</NoticeDelete>}
         </NoticeText>

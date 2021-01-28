@@ -7,13 +7,13 @@ const Wrapper = styled.button`
   width: 100%;
   border: none;
   font-family: 'Open Sans', sans-serif;
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.shadow};
   border-radius: 4px;
   line-height: 3rem;
   padding: 0 15px;
   margin: 5px 0;
   transition: all 0.2s;
-  color: ${props => props.theme.text};
+  color: #333;
 
   &:hover {
     background-color: ${props => props.theme.shadow};

@@ -37,7 +37,7 @@ const Items = styled.div`
   }
 `
 
-const NavBar = ({ changeTheme }) => {
+const NavBar = () => {
 
   const app = useContext(AppContext)
   const theme = useContext(ThemeContext)
@@ -55,7 +55,7 @@ const NavBar = ({ changeTheme }) => {
     <span onClick={() => history.push('/campaigns')}>
       {icons.home()}
     </span>
-    <span onClick={changeTheme}>
+    <span onClick={app.changeTheme}>
       {theme.name === 'light' ? icons.sun() : icons.moon()}
     </span>
   </>

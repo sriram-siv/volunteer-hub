@@ -33,14 +33,14 @@ const Notification = ({ notification }) => {
 
   React.useEffect(() => {
     if (notification.message) setTimeout(() => setShow(true), 1000)
-    if (notification.autoDismiss) setTimeout(() => setShow(false), 4000)
+    if (!notification.remain) setTimeout(() => setShow(false), 4000)
   }, [notification])
 
   if (location.pathname === '/') return null
 
   return <Wrapper show={show}>
     {notification.message}
-    {notification.autoDismiss === false && <div>ok</div>}
+    {notification.remain && <div>ok</div>}
   </Wrapper>
 }
 

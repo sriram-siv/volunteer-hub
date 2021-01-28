@@ -3,7 +3,14 @@ import styled from 'styled-components'
 import { Picker } from 'emoji-mart'
 import icons from '../../lib/icons'
 
+import InputArea from './InputArea'
+
 const Wrapper = styled.div`
+  height: calc(4rem + 40px);
+  background-color: ${props => props.theme.background};
+`
+
+const ToolBar = styled.div`
   background-color: ${props => props.theme.shadow};
   height: 30px;
   border-radius: 0 0 2px 2px;
@@ -28,11 +35,26 @@ const EmojiPicker = styled.div`
   display: ${props => props.show ? 'block' : 'none'};
 `
 
-const ChatControl = ({ send, pickEmoji }) => {
+const ChatControl = ({ send, handleChange, value, label }) => {
+
   const [showEmoji, setShowEmoji] = React.useState(false)
+
   const toggleEmoji = () => setShowEmoji(!showEmoji)
-  return (
-    <Wrapper>
+
+  const pickEmoji = emoji => {
+    handleChange({ target: { value: value + emoji.native } })
+  }
+
+  return (<Wrapper>
+    <InputArea
+      width="100%"
+      name="draft"
+      value={value}
+      returnValue={handleChange}
+      submit={send}
+      label={label}
+    />
+    <ToolBar>
       <Button position="right" corner onClick={send}>
         <IconSpan>{icons.send('#232323', 16)}</IconSpan>
       </Button>
@@ -42,8 +64,8 @@ const ChatControl = ({ send, pickEmoji }) => {
       <EmojiPicker show={showEmoji} onBlur={toggleEmoji}>
         <Picker onSelect={pickEmoji} />
       </EmojiPicker>
-    </Wrapper>
-  )
+    </ToolBar>
+  </Wrapper>)
 }
 
 export default ChatControl

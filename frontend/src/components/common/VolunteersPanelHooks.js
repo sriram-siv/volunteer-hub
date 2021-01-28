@@ -100,13 +100,16 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
 
   const editGroupName = event => setGroupName(event.target.value)
 
-  const updateList = async (volunteer_id, action) => {
-    try {
-      const { data } = await updateVolunteers(campaignData.id, { volunteer_id, action })
-      // TODO update parent component here with new campaignData?
-    } catch (err) {
-      console.error(err)
-    }
+  // TODO BACKEND return campaignData 
+  const updateList = (volunteer_id, action) => {
+    updateVolunteers(campaignData.id, { volunteer_id, action })
+      .then(
+        res => console.log(res, 'TODO update parent with new data'),
+        res => {
+          console.log({ res })
+          // app.setNotification({ message: 'There was an error while attempting to update the list' })
+        }
+      )
   }
 
   const selectVolunteer = id => {
@@ -117,6 +120,7 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
     )
   }
 
+  // TODO deselect not working on filtered lists
   const selectAll = () => {
     setSelectedVolunteers(
       selectedVolunteers.length !== memberList.length

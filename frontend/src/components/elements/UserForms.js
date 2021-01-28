@@ -12,6 +12,7 @@ const Wrapper = styled.form`
   top: ${props => props.visible ? 'calc(3rem + 5px)' : '-12rem'};
   right: 5px;
   width: 20rem;
+  max-width: calc(100vw - 10px);
   padding: 5px;
   z-index: 8;
   border-radius: 3px;
@@ -22,6 +23,10 @@ const Wrapper = styled.form`
 
   > * {
     margin-bottom: 5px;
+  }
+
+  @media only screen and (max-width: 425px) {
+    width: calc(100vw - 10px);
   }
 `
 
@@ -91,10 +96,10 @@ const UserForms = ({ visible, onLogin }) => {
       localStorage.setItem('user_id', data.id)
       if (status === 200) {
         onLogin()
-        app.showNotification(data.message)
+        app.setNotification({ message: data.message })
       }
     } catch (err) {
-      app.showNotification(err.response.data.detail)
+      app.setNotification({ message: err.response.data.detail })
     }
   }
 

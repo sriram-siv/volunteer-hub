@@ -105,7 +105,7 @@ class Profile extends React.Component {
   }
 
   saveProfile = async () => {
-    const { currentUser, showNotification } = this.props.app
+    const { currentUser, setNotification } = this.props.app
     try {
 
       await updateProfile(currentUser(), this.state.pendingUserData)
@@ -115,9 +115,9 @@ class Profile extends React.Component {
         this.toggleEditMode
       )
 
-      showNotification('your profile has been updated')
+      setNotification({ message: 'your profile has been updated' })
     } catch (err) {
-      showNotification(err.response.data)
+      setNotification({ message: err.response.data })
     }
   }
 
@@ -136,20 +136,20 @@ class Profile extends React.Component {
 
   saveSettings = async () => {
     const { user_skills, schedule } = this.state
-    // const { currentUser, showNotification } = this.props.app
-    const { showNotification } = this.props.app
+    // const { currentUser, setNotification } = this.props.app
+    const { setNotification } = this.props.app
 
     try {
-      // TODO check if this works - does backend care if id is number or string
+      // TODO BACKEND check if this works - does backend care if id is number or string
       const userID = localStorage.getItem('user_id')
       const skillIds = user_skills.map(skill => skill.id)
 
       await updateProfileShifts(userID, { schedule })
       await updateProfileSkills(userID, { 'user_skills': skillIds })
 
-      showNotification('your preferences have been updated')
+      setNotification({ message: 'your preferences have been updated' })
     } catch (err) {
-      showNotification('there was an error updating your details')
+      setNotification({ message: 'there was an error updating your details' })
     }
   }
 

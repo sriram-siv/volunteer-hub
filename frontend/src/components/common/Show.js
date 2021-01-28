@@ -52,32 +52,6 @@ const Title = styled.h2`
   }
 `
 
-const ProfilePic = styled.button`
-  position: fixed;
-  top: calc(3rem + 15px);
-  left: 10px;
-  border: none;
-  padding: 0;
-  background-image: ${props => 'url(' + props.image + ')'};
-  background-size: contain;
-  background-color: ${props => props.theme.glass};
-  width: calc(230px - 3rem);
-  height: calc(230px - 3rem);
-  border-radius: 4px;
-`
-
-const ImageLabel = styled.div`
-  position: absolute;
-  top: 0;
-  font-size: 0.85rem;
-  font-family: 'Open Sans', sans-serif;
-  text-align: center;
-  width: 100%;
-  line-height: 1.5rem;
-  background-color: ${props => props.theme.glass};
-  color: ${props => props.theme.text};
-  border-radius: 4px 4px 0 0;
-`
 /**
  * Template for show pages, with sticky title bar, glassy panel and masked banner image
  * Child components displayed inside panel. Optional inner image that lays on top of banner.

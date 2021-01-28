@@ -21,8 +21,13 @@ const SearchFields = styled.div`
   top: 10px;
   left: 10px;
   width: 350px;
+  max-width: calc(100vw - 20px);
   z-index: 1;
   > * { margin-bottom: 5px; }
+
+  @media only screen and (max-width: 425px) {
+    width: calc(100vw - 20px);
+  }
 `
 
 let geocoderRef = null
@@ -47,7 +52,7 @@ const CampaignIndex = () => {
     res => setCampaigns(res.data),
     res => {
       console.error({ res })
-      app.showNotification('Error loading campaign index. Please try refreshing the page')
+      app.setNotification({ message: 'Error loading campaign index. Please try refreshing the page' })
     }
   )
 
@@ -101,9 +106,9 @@ const CampaignIndex = () => {
     const userID = app.currentUser()
     if (userID) {
       await updateVolunteers(id, { volunteer_id: userID, action: 'add' })
-      app.showNotification('A request to join has been sent to the campaign coordinators')
+      app.setNotification({ message: 'A request to join has been sent to the campaign coordinators' })
     } else {
-      app.showNotification('please login to sign up')
+      app.setNotification({ message: 'please login to sign up' })
     }
   }
 

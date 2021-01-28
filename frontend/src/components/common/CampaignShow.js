@@ -10,8 +10,6 @@ import { selectMenu } from '../../lib/helper'
 import Show from './Show'
 import NoticeBoard from '../elements/NoticeBoard'
 import VolunteersPanel from './VolunteersPanel'
-// import AdminPanel from './AdminPanel'
-import InputArea from '../elements/InputArea'
 import ChatControl from '../elements/ChatControl'
 
 import RoomCard from '../elements/RoomCard'
@@ -62,11 +60,12 @@ const CampaignShow = () => {
         campaign: campaignData.id
       }
       const { data } = await addCampaignNotice(newNotice)
+      // TODO BACKEND return full owner info in response
       const notices = [...campaignData.campaign_notices, data]
       setNoticeInput('')
       setCampaignData({ ...campaignData, campaign_notices: notices })
     } catch (err) {
-      console.log(err.response.data)
+      console.log(err)
     }
   }
 
@@ -118,9 +117,8 @@ const CampaignShow = () => {
       {/* rooms.map((room, i) => <p key={i}>{room.name}</p>)} */}
     </Show>
     {section.label === 'notices' &&
-      <div style={{ position: 'absolute', bottom: '10px', left: '10px', zIndex: 10, width: 'calc(100% - 23px)', height: 'calc(4rem + 30px)' }}>
-        <InputArea submit={postNotice} name='textArea' label='Post a notice to the team' hideLabel value={noticeInput} returnValue={updateNoticeInput} />
-        <ChatControl send={postNotice} />
+      <div style={{ position: 'absolute', bottom: 0, left: '10px', zIndex: 5, width: 'calc(100% - 23px)' }}>
+        <ChatControl value={noticeInput} handleChange={updateNoticeInput} send={postNotice} />
       </div>}
   </>
 }

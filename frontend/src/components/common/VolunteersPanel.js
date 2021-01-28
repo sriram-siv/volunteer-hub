@@ -105,7 +105,7 @@ class VolunteersPanel extends React.Component {
   confirmVolunteer = async volunteerID => {
     const { campaignData } = this.props
     try {
-      const { data } = await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'confirm' })
+      await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'confirm' })
       // const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
       // const volunteers = [...this.state.volunteers, confirmedVolunteer]
       // const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)

@@ -9,12 +9,14 @@ const LoadingScreen = styled.div`
   position: absolute;
   top: 0;
   width: 100%;
+  /* TODO fix this height measure for non fullscreen instances */
   line-height: calc(100vh - 3rem);
   text-align: center;
   z-index: 1;
   background-color: white;
   opacity: ${props => props.mapLoading ? 1 : 0};
   transition: opacity 0.3s;
+  pointer-events: none;
 `
 
 const Map = ({ pins, clickPin, flyTo, setRef }) => {

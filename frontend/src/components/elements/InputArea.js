@@ -19,6 +19,7 @@ const Input = styled.textarea`
   letter-spacing: ${props => props.theme.letterSpacing};
   border: 1px solid ${props => props.theme.shadow};
   padding: 8px 10px;
+  padding-top: ${props => props.hideLabel ? '8px' : 'calc(12px + 0.7rem)'};
   margin-bottom: -7px;
   resize: none;
   &:focus {
@@ -32,7 +33,7 @@ const Input = styled.textarea`
 
 const Label = styled.div`
 position: absolute;
-top: ${props => props.focus ? '.2px' : '0.8rem'};
+top: ${props => props.focus ? '6px' : '0.8rem'};
 display: ${props => props.focus && props.hideLabel ? 'none' : 'block'};
 left: 11px;
 color: ${props => props.theme.text};
@@ -56,7 +57,7 @@ const Highlight = styled.div`
 
 /** my documentation for this class */
 // Add docstring to say that returnValue and name must always be provided
-const InputArea = ({ name, value, width, returnValue, label, height, hideLabel, submit }) => {
+const InputArea = ({ name, value, width, returnValue, label, height, submit }) => {
 
   const [shiftActive, setShiftActive] = React.useState(0)
   const [hasFocus, setHasFocus] = React.useState(false)
@@ -83,8 +84,9 @@ const InputArea = ({ name, value, width, returnValue, label, height, hideLabel, 
         onKeyDown={keyDown}
         onKeyUp={keyUp}
         height={height}
+        hideLabel={!label}
       />
-      <Label focus={hasFocus || value} hideLabel={hideLabel}>{label}</Label>
+      <Label focus={hasFocus || value} hideLabel={!label}>{label}</Label>
       <Highlight focus={hasFocus} />
     </Wrapper>
   )

@@ -5,7 +5,6 @@ import 'emoji-mart/css/emoji-mart.css'
 import { getSingleRoom } from '../../lib/api'
 
 import ChatWindow from '../elements/ChatWindow' 
-import InputArea from '../elements/InputArea'
 import ChatControl from '../elements/ChatControl'
 import List from '../elements/RoomMemberList'
 
@@ -115,13 +114,7 @@ class Room extends React.Component {
         </Header>
         <ChatWindow setRef={ref => this.chatWindow = ref} messages={messages} historyLoaded={historyLoaded}/>
         <ControlWrapper>
-          <InputArea
-            width="100%"
-            name="draft" value={draft}
-            returnValue={this.handleChange}
-            submit={this.sendMessage}
-          />
-          <ChatControl send={this.sendMessage} pickEmoji={this.pickEmoji} />
+          <ChatControl value={draft} handleChange={this.handleChange} send={this.sendMessage} />
         </ControlWrapper>
       </Wrapper>
     )

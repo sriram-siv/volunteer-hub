@@ -71,7 +71,7 @@ const FilterControls = props => {
     res => setSkillsOptions(res.data.map(skill => ({ value: skill.id, label: skill.name }))),
     res => {
       console.error({ res })
-      app.showNotification('Error loading skill data. Please try refreshing the page')
+      app.setNotification({ message: 'Error loading skill data. Please try refreshing the page' })
     }
   )
 

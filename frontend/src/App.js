@@ -24,47 +24,42 @@ const App = () => {
 
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
-
-  const changeTheme = () => setTheme(theme === 'light' ? 'dark' : 'light')
-
-  // TODO - onMount
+  
+  // TODO BACKEND - onMount
   // Check age of token
   // if 1+ days -> show welcome message and refresh token
   // else refresh token, no message
 
   // if expired -> remove token / id from localstorage 
 
-  const logout = () => {
-    localStorage.removeItem('user_id')
-    localStorage.removeItem('token')
-    showNotification('you are now logged out')
-    history.push('/campaigns')
+  // this way userID could be kept in state instead of storage ?
+
+  const methods = {
+
+    setNotification,
+
+    changeTheme: () => setTheme(theme === 'light' ? 'dark' : 'light'),
+
+    currentUser: () => +localStorage.getItem('user_id'),
+
+    logout: () => {
+      localStorage.clear()
+      history.push('/campaigns')
+      setNotification({ message: 'Logged out successfully. Goodbye' })
+    } 
   }
 
-  const showNotification = (message, autoDismiss = true) => {
-    setNotification({ message, autoDismiss })
-  }
-
-  const currentUser = () => Number(localStorage.getItem('user_id'))
-
-  const context = {
-    logout,
-    showNotification,
-    currentUser,
-    changeTheme
-  }
-  
   return (
-    <AppContext.Provider value={context}>
+    <AppContext.Provider value={methods}>
       <ThemeProvider theme={styles.themes[theme]}>
 
-        <NavBar changeTheme={changeTheme} />
+        <NavBar/>
         <Notification notification={notification}/>
 
         <Switch>
           <Route exact path="/" component={Home} />
           {/* TODO make profile funtional and use context */}
-          <Route path="/profile" render={() => <Profile app={context} />} />
+          <Route path="/profile" render={() => <Profile app={methods} />} />
           <Route path="/chat/:room" component={Room} />
           <Route path='/campaigns/new' component={CampaignForm} />
           <Route path='/campaigns/:id/edit' component={CampaignForm} />

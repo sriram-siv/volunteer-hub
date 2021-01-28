@@ -6,7 +6,7 @@ import ResultsItem from './ResultsItem'
 const Wrapper = styled.div`
   position: relative;
   width: 100%;
-  height: ${props => props.isHidden ? '40px' : 'calc(100vh - 9rem - 30px)'};
+  height: ${props => props.isHidden ? '3rem' : 'calc(100vh - 9rem - 30px)'};
   background-color: ${props => `${props.theme.background}e`};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -16,30 +16,30 @@ const Wrapper = styled.div`
 
 const ListScroll = styled.div`
   position: relative;
-  margin-top: 5px;
-  height: calc(100% - 40px);
+  height: calc(100% - 3rem);
   overflow-y: ${props => props.scroll ? 'scroll' : 'hidden'};
 `
 
 const Title = styled.div`
   text-align: left;
-  line-height: 30px;
-  padding-top: 5px;
   padding-left: 10px;
   color: ${props => props.theme.text};
   font-size: 1rem;
+  line-height: 3rem;
   font-weight: ${props => props.theme.fontWeight};
   ::selection {
     background-color: transparent;
   }
-  `
+  cursor: pointer;
+`
 
 const Toggle = styled.div`
   position: absolute;
-  top: 7px;
+  top: 0.65rem;
   right: 15px;
   transform: rotateZ(${props => props.isHidden ? '0deg' : '90deg'});
   transition: all 0.2s;
+  pointer-events: none;
 `
 
 const ResultsList = ({ campaigns, signUp, resultShowingDetail, showDetail, theme }) => {
@@ -54,8 +54,8 @@ const ResultsList = ({ campaigns, signUp, resultShowingDetail, showDetail, theme
 
   return (
     <Wrapper isHidden={isHidden}>
-      <Toggle isHidden={isHidden} onClick={toggleView}>{icons.right(theme.text)}</Toggle>
-      <Title>Results</Title>
+      <Toggle isHidden={isHidden}>{icons.right(theme.text)}</Toggle>
+      <Title onClick={toggleView}>Results</Title>
       <ListScroll scroll={resultShowingDetail === -1}>
         {campaigns && campaigns.map((campaign, i) => {
           const expanded = campaign.id === resultShowingDetail

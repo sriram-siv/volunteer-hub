@@ -13,7 +13,7 @@ const Wrapper = styled.div`
   top: ${props => props.expanded ? `calc(-${props.position * 3.4}rem - ${props.position * 15}px)` : 0};
   height: ${props => props.expanded ? 'calc(100% - 10px)' : 'calc(3.4rem + 10px)'};
   opacity: ${props => props.visible ? 1 : 0};
-  transition: height 0.2s, top 0.2s;
+  transition: height 0.4s, top 0.4s, opacity 0.2s;
 
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
@@ -23,7 +23,7 @@ const Wrapper = styled.div`
   > button {
     float: right;
     opacity: ${props => props.expanded ? 1 : 0};
-    transition: opacity 0.2s ${props => props.expanded ? '0.2s' : 0};
+    transition: opacity 0.2s ${props => props.expanded ? '0.3s' : 0};
   }
 `
 
