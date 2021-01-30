@@ -126,8 +126,9 @@ class VolunteersPanel extends React.Component {
     }
   }
 
-  selectVolunteer = id => {
+  selectVolunteer = event => {
     const { selectedVolunteers } = this.state
+    const id = +event.target.name
 
     if (selectedVolunteers.includes(id)) {
       this.setState({ selectedVolunteers: [...selectedVolunteers].filter(vol => vol !== id) })

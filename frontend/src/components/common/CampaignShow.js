@@ -1,42 +1,63 @@
 /* eslint-disable camelcase */
-import React, { useEffect, useState } from 'react'
-import { Route, Switch, useHistory, useRouteMatch } from 'react-router-dom'
+import React, { useContext, useEffect, useState } from 'react'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 // import styled from 'styled-components'
 // import Select from 'react-select'
+
+import { AppContext } from '../../App'
 
 import { getSingleCampaign, addCampaignNotice, deleteCampaignNotice } from '../../lib/api'
 import { selectMenu } from '../../lib/helper'
 
 import Show from './Show'
+import CampaignInfo from './CampaignInfo'
 import NoticeBoard from '../elements/NoticeBoard'
+import CampaignChats from './CampaignChats'
 import VolunteersPanel from './VolunteersPanel'
 import ChatControl from '../elements/ChatControl'
 
-import RoomCard from '../elements/RoomCard'
+import Button from '../elements/Button'
 
 const CampaignShow = () => {
+
+  const app = useContext(AppContext)
 
   const history = useHistory()
   const match = useRouteMatch()
 
+  const address = match.params.section || 'about'
+
   const [campaignData, setCampaignData] = useState()
   const [rooms, setRooms] = useState([])
-  const [isAdmin, setIsAdmin] = useState(false)
-  const [section, setSection] = useState(selectMenu('about'))
+  const [isAdmin, setIsAdmin] = useState(null)
   const [noticeInput, setNoticeInput] = useState('')
+
+  const [sections, setSections] = useState([
+    ['about', ''], 'notices', 'chats', 'members', 'admin'
+  ])
 
   const getCampaign = async () => {
     try {
       const { data } = await getSingleCampaign(match.params.id)
       const { message_rooms, owner, coordinators } = data
-      
-      const userID = Number(localStorage.getItem('user_id'))
 
       // This should be filtered on the backend for privacy
       setRooms(message_rooms
-        .filter(({ members }) => members.includes(userID)))
-      // This could be set from backend using permission levels
-      setIsAdmin([owner.id, ...coordinators].includes(userID))
+        .filter(({ members }) => members.includes(app.userID())))
+    
+      // TODO BACKEND This could be set from backend using permission levels
+      const userIsAdmin = [owner.id, ...coordinators].includes(app.userID())
+      setIsAdmin(userIsAdmin)
+
+      const userSections = userIsAdmin
+        ? [...sections]
+        : sections.filter(section => section !== 'admin')
+      
+      setSections(userSections)
+
+      if (!userSections.includes(address)) {
+        history.push(`/campaigns/${match.params.id}`)
+      }
 
       setCampaignData(data)
 
@@ -80,46 +101,67 @@ const CampaignShow = () => {
     }
   }
 
-  // const openChatRoom = roomID => {
-  //   history.push(`/chat/${roomID}`)
-  // }
-
-  // const editCampaign = () => {
-  //   history.push(`/campaigns/${campaignData.id}/edit`)
-  // }
-
-  // const hash = history.location.hash.replace('#', '')
-
-  const menu = {
-    options: ['about', 'notices', 'chats', 'members'].map(selectMenu),
-    value: section,
-    onChange: setSection
+  const editCampaign = () => {
+    history.push(`/campaigns/${match.params.id}/edit`)
   }
 
-  // if (isAdmin) menu.options.push(selectMenu('admin'))
+  const changeSection = ({ value }) => {
+    history.push(`/campaigns/${match.params.id}/${value}`)
+  }
 
-  // if (menu.options.some(opt => opt.value === hash) && section.value !== hash) {
-  //   setSection({ label: hash, value: hash })
-  // }
+  const menu = {
+    options: sections.map(selectMenu),
+    value: selectMenu(address),
+    onChange: changeSection
+  }
+
 
   if (!campaignData) return null
 
   return <>
     <Show title={campaignData.name} menu={menu}>
-      {section.label === 'about' &&
+
+      {{ // switch on address value
+
+        about:
+          <CampaignInfo campaignData={campaignData} />,
+
+        notices:
+          <NoticeBoard campaignData={campaignData} isAdmin={isAdmin} deleteNotice={deleteNotice} />,
+
+        members:
+          <VolunteersPanel campaignData={campaignData} isAdmin={isAdmin} />,
+
+        chats:
+          <CampaignChats rooms={rooms} />,
+
+        admin:
+          <Button onClick={editCampaign}>edit campaign</Button>
+
+      }[address]}
+
+      {/* {address === 'about' &&
         campaignData.description.split('\n').map((para, i) => <p key={i}>{para}</p>)}
-      {section.label === 'notices' &&
+
+      {address === 'notices' &&
         <NoticeBoard campaignData={campaignData} isAdmin={isAdmin} deleteNotice={deleteNotice} />}
-      {section.label === 'members' &&
+
+      {address === 'members' &&
         <VolunteersPanel campaignData={campaignData} isAdmin={isAdmin} />}
-      {section.label === 'chats' &&
+
+      {address === 'chats' &&
         rooms.map((room, i) => <RoomCard key={i} room={room} />)}
-      {/* rooms.map((room, i) => <p key={i}>{room.name}</p>)} */}
+
+      {address === 'admin' &&
+        <Button onClick={editCampaign}>edit campaign</Button>} */}
+
     </Show>
-    {section.label === 'notices' &&
-      <div style={{ position: 'absolute', bottom: 0, left: '10px', zIndex: 5, width: 'calc(100% - 23px)' }}>
+
+    {address === 'notices' &&
+      <div style={{ position: 'absolute', bottom: 0, zIndex: 5, width: '100%', paddingLeft: '10px', paddingRight: '13px' }}>
         <ChatControl value={noticeInput} handleChange={updateNoticeInput} send={postNotice} />
-      </div>}
+      </div>
+    }
   </>
 }
 

@@ -6,12 +6,13 @@ import 'mapbox-gl/dist/mapbox-gl.css'
 import Pin from './Pin'
 
 const LoadingScreen = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
   position: absolute;
   top: 0;
   width: 100%;
-  /* TODO fix this height measure for non fullscreen instances */
-  line-height: calc(100vh - 3rem);
-  text-align: center;
+  height: 100%;
   z-index: 1;
   background-color: white;
   opacity: ${props => props.mapLoading ? 1 : 0};

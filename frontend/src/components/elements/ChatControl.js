@@ -6,6 +6,7 @@ import icons from '../../lib/icons'
 import InputArea from './InputArea'
 
 const Wrapper = styled.div`
+  width: 100%;
   height: calc(4rem + 40px);
   background-color: ${props => props.theme.background};
 `

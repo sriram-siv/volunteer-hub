@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import React, { useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 const Wrapper = styled.div`
@@ -44,12 +44,9 @@ const User = styled.div`
 
 const NoticeBoard = ({ campaignData, isAdmin, deleteNotice }) => {
 
-  if (!campaignData) return null
-
   const formatDate = date => (
     `${date.toDateString()} ${date.toLocaleTimeString()}`
   )
-
 
   return (
     <Wrapper>

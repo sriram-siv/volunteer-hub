@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { ThemeContext } from 'styled-components'
+import styled from 'styled-components'
 
 import Schedule from './Schedule'
 
@@ -20,6 +20,13 @@ const Wrapper = styled.div`
 const Header = styled.div`
   display: flex;
   margin: 0 -5px;
+
+  > input {
+    height: 1.5rem;
+    width: 1.5rem;
+    margin-top: 0.75rem;
+    margin-right: 0.75rem;
+  }
 `
 
 const Title = styled.div`
@@ -64,7 +71,7 @@ const Details = styled.div`
 
 const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpanded }) => {
 
-  const theme = React.useContext(ThemeContext)
+  // const theme = React.useContext(ThemeContext)
 
   const [denyActive, setDenyActive] = React.useState(false)
 
@@ -101,9 +108,8 @@ const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpan
             {denyActive ? 'sure?' : 'deny'}
           </Button>}
         {select &&
-          <Button color={theme.primary} onClick={() => select(user.id)}>
-            {isSelected ? 'deselect' : 'select'}
-          </Button>}
+          <input type="checkbox" name={user.id} onChange={select} checked={isSelected} />
+        }
       </Header>
       
       <Details>

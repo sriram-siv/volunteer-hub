@@ -68,11 +68,11 @@ const NavBar = () => {
 
   return (
     <>
-      <UserForms visible={showForm} onLogin={() => setShowForm(false)} />
+      <UserForms visible={showForm} hideForm={() => setShowForm(false)} />
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>
-          {app.currentUser() ? navUser : navGuest }
+          {app.userID() ? navUser : navGuest }
         </Items>
       </NavBarContainer>
     </>

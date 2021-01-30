@@ -112,7 +112,8 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
       )
   }
 
-  const selectVolunteer = id => {
+  const selectVolunteer = event => {
+    const id = +event.target.name
     setSelectedVolunteers(
       selectedVolunteers.includes(id)
         ? [...selectedVolunteers].filter(vol => vol !== id)

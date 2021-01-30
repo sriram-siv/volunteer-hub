@@ -12,6 +12,7 @@ import { getAllCampaigns, updateVolunteers } from '../../lib/api'
 
 const Wrapper = styled.main`
   position: relative;
+  width: 100%;
   height: calc(100vh - 3rem);
   overflow: hidden;
 `
@@ -103,7 +104,7 @@ const CampaignIndex = () => {
   }
 
   const signUpToCampaign = async id => {
-    const userID = app.currentUser()
+    const userID = app.userID()
     if (userID) {
       await updateVolunteers(id, { volunteer_id: userID, action: 'add' })
       app.setNotification({ message: 'A request to join has been sent to the campaign coordinators' })

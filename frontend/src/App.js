@@ -14,8 +14,6 @@ import CampaignShow from './components/common/CampaignShow'
 import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
 
-import SubRouter from './components/common/SubRouter'
-
 export const AppContext = React.createContext()
 
 const App = () => {
@@ -40,7 +38,13 @@ const App = () => {
 
     changeTheme: () => setTheme(theme === 'light' ? 'dark' : 'light'),
 
-    currentUser: () => +localStorage.getItem('user_id'),
+    userID: () => +localStorage.getItem('id'),
+
+    login: (data) => {
+      setNotification({ message: data.message })
+      localStorage.setItem('token', data.token)
+      localStorage.setItem('id', data.id)
+    },
 
     logout: () => {
       localStorage.clear()
@@ -63,9 +67,8 @@ const App = () => {
           <Route path="/chat/:room" component={Room} />
           <Route path='/campaigns/new' component={CampaignForm} />
           <Route path='/campaigns/:id/edit' component={CampaignForm} />
-          <Route path='/campaigns/:id' component={CampaignShow} />
+          <Route path='/campaigns/:id/:section?' component={CampaignShow} />
           <Route path='/campaigns' component={CampaignIndex} />
-          <Route path='/test' component={SubRouter} />
         </Switch>
 
       </ThemeProvider>

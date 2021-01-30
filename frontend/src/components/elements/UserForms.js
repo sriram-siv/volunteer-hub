@@ -40,7 +40,7 @@ const ChangeMode = styled.button`
   background-color: transparent;
 `
 
-const UserForms = ({ visible, onLogin }) => {
+const UserForms = ({ visible, hideForm }) => {
 
   const app = useContext(AppContext)
 
@@ -92,11 +92,9 @@ const UserForms = ({ visible, onLogin }) => {
     try {
       const { email, password } = formData
       const { data, status } = await loginUser({ email, password })
-      localStorage.setItem('token', data.token)
-      localStorage.setItem('user_id', data.id)
       if (status === 200) {
-        onLogin()
-        app.setNotification({ message: data.message })
+        hideForm()
+        app.login(data)
       }
     } catch (err) {
       app.setNotification({ message: err.response.data.detail })

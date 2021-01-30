@@ -43,7 +43,7 @@ class Profile extends React.Component {
   }
   
   getProfile = async () => {
-    const userID = localStorage.getItem('user_id')
+    const userID = localStorage.getItem('id')
     const { data } = await getSingleProfile(userID)
 
     const userData = [
@@ -105,10 +105,10 @@ class Profile extends React.Component {
   }
 
   saveProfile = async () => {
-    const { currentUser, setNotification } = this.props.app
+    const { userID, setNotification } = this.props.app
     try {
 
-      await updateProfile(currentUser(), this.state.pendingUserData)
+      await updateProfile(userID(), this.state.pendingUserData)
 
       this.setState(
         { userData: this.state.pendingUserData },
