@@ -1,1 +1,1 @@
-web: python manage.py runserver 0.0.0.0:$PORT --noreload
+web: gunicorn -k uvicorn.workers.UvicornWorker --bind 0.0.0.0:$PORT project.asgi:application
