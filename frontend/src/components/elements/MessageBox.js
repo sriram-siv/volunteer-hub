@@ -1,74 +1,81 @@
 import React from 'react'
 import styled from 'styled-components'
 
-class MessageBox extends React.Component {
+// class MessageBox extends React.Component {
   
-  Wrapper = styled.div`
-    position: relative;
-    transform: ${() => this.props.isSelf ? 'scaleX(-1)' : 'none'};
-  `
+const  Wrapper = styled.div`
+  position: relative;
+  transform: ${props => props.isSelf ? 'scaleX(-1)' : 'none'};
 
-  Box = styled.div`
-    display: inline-block;
-    position: relative;
+  .box {
+    width: fit-content;
     min-width: 200px;
     margin: 10px 10px 10px 25px;
-    padding: 10px;
-    padding-top: ${() => this.props.isSelf ? '10px' : '5px'};
-    background-color: ${props => this.props.isSelf ? props.theme.accent : props.theme.background};
+    padding: 15px;
+    padding-top: ${props => props.isSelf ? '15px' : '10px'};
+    background-color: ${props => props.isSelf ? props.theme.accent : props.theme.panels};
     border-radius: 2px;
-    box-shadow: ${(props) => this.props.isSelf
-    ? `1px 2px 2px ${props.theme.name === 'light' ? '#ddd' : '#111'}`
-    : `-1px 2px 2px ${props.theme.name === 'light' ? '#ddd' : '#111'}`};
-    `
+    border-top-left-radius: 0;
+    z-index: 2;
+  }
 
-  Accent = styled.div`
+  .shadow {
+    z-index: 1;
+  }
+
+  > :nth-child(1) {
+    position: relative;
+  }
+  > :nth-child(2) {
+    position: absolute;
+    top: -9px;
+    left: -1px;
+    background-color: ${props => props.theme.name === 'light' ? '#bbb' : '#333'};
+    filter: blur(1px);
+  }
+
+  .accent {
     position: absolute;
     top: 0;
-    left: -15px;
-    width: 20px;
-    height: 20px;
-    background-color: ${props => this.props.isSelf ? props.theme.accent : props.theme.background};
+    left: -14px;
+    width: 15px;
+    height: 15px;
+    background-color: inherit;
     clip-path: polygon(100% 0, 0 0, 100% 100%);
-  `
+  }
 
-  AccentShadow = styled.div`
-    position: absolute;
-    top: 13px;
-    left: 10px;
-    width: 20px;
-    height: 20px;
-    background-color: ${props => props.theme.name === 'light' ? '#ddd' : '#111'};
-    clip-path: polygon(100% 0, 0 0, 100% 100%);
-    filter: blur(10px);
-  `
+  a {
+    color: ${props => props.isSelf && props.theme.name === 'dark' ? 'rebeccapurple' : 'palevioletred'};
+    font-weight: 600;
+    letter-spacing: 0;
+  }
 
-  Name = styled.div`
-    font-size: 0.7rem;
-    color: palevioletred;
-    transform: ${() => this.props.isSelf ? 'scaleX(-1)' : 'none'};
-  `
-
-  Text = styled.p`
-    color: ${props => this.props.isSelf ? '#333' : props.theme.text};
+  p {
+    color: ${props => props.isSelf ? '#333' : props.theme.text};
     font-size: 0.85rem;
     font-weight: ${props => props.theme.fontWeight};
+    letter-spacing: ${props => props.theme.letterSpacing};
     line-height: 1.2rem;
     margin: 0;
-    width: 100%;
-    transform: ${() => this.props.isSelf ? 'scaleX(-1)' : 'none'};
-  `
+    transform: ${props => props.isSelf ? 'scaleX(-1)' : 'none'};
+  }
 
-  Link = styled.a`
+  .name {
+    font-size: 0.7rem;
+    font-weight: 600;
     color: palevioletred;
-  `
+    margin-bottom: 3px;
+  }
+`
 
-  linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+const MessageBox = ({ data, isSelf, prevMessage }) => {
 
-  interpolateLinks = line => {
+  const linkMatch = /(http(s)?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_+.~#?&//=]*)/g
+
+  const interpolateLinks = line => {
     // Get two arrays for plaintext and links
-    const links = line.match(this.linkMatch)
-    const plain = line.split(this.linkMatch).filter(res => res)
+    const links = line.match(linkMatch)
+    const plain = line.split(linkMatch).filter(res => res)
     
     const joined = links ? plain.concat(links.reverse()) : plain
     const interpolated = []
@@ -83,32 +90,42 @@ class MessageBox extends React.Component {
     return interpolated
   }
 
-  getHref = address => {
-    return address.startsWith('http') ? address : `http://${address}`
-  }
+  const getHref = address => (
+    address.startsWith('http') ? address : `http://${address}`
+  )
   
-  render() {
-    const { data, isSelf, prevMessage } = this.props
-    const { Wrapper, Accent, AccentShadow, Box, Text, Name, Link, linkMatch } = this
-    const consecutiveMessage = prevMessage
-      ? prevMessage.user.id === data.user.id : false
+  const consecutiveMessage = prevMessage
+    ? prevMessage.user.id === data.user.id : false
+  
+  const content = <>
+    <div className="accent" />
 
-    return (
-      <Wrapper consecutive={consecutiveMessage}>
-        <AccentShadow/>
-        <Box>
-          <Accent/>
-          {!isSelf && !consecutiveMessage && <Name>{data.user.username}</Name>}
-          {data.text.split('\n').map((line, i) => {
-            const interpolated = this.interpolateLinks(line)
-            return <Text key={i}>{interpolated.map(frag => (
-              frag.match(linkMatch) ? <Link href={this.getHref(frag)} target="_blank">{frag}</Link> : frag
-            ))}</Text>
-          })}
-        </Box>
-      </Wrapper>
-    )
-  }
+    {!isSelf && !consecutiveMessage && <p className="name">{data.user.username}</p>}
+
+    {data.text.split('\n').map((line, i) => (
+
+      <p key={i}>
+        {interpolateLinks(line).map((frag, j) => (
+          frag.match(linkMatch)
+            ? <a key={j} href={getHref(frag)} rel="noreferrer" target="_blank">{frag}</a>
+            : frag
+        ))}
+      </p>
+      
+    ))}
+  </>
+
+  return (
+    <Wrapper isSelf={isSelf}>
+      <div className="box">
+        {content}
+      </div>
+      <div className="box shadow">
+        {content}
+      </div>
+    </Wrapper>
+  )
+
 }
 
 export default MessageBox

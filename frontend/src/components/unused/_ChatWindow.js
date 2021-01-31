@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import MessageBox from './MessageBox'
+import MessageBox from '../elements/MessageBox'
 
 const Wrapper = styled.section`
   height: calc(100vh - 10rem - 55px);

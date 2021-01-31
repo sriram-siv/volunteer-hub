@@ -1,7 +1,9 @@
 import axios from 'axios'
 
 // TODO make this conditional
-const baseUrl = 'http://localhost:3000/api'
+const baseUrl = process.env.NODE_ENV === 'development'
+  ? 'http://localhost:3000/api'
+  : '/api'
 const baseUrlCampaigns = baseUrl + '/campaigns'
 const baseUrlProfiles = baseUrl + '/profiles'
 

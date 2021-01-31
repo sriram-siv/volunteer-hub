@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 100%;
   height: ${props => props.isHidden ? '3rem' : 'calc(100vh - 9rem - 30px)'};
-  background-color: ${props => `${props.theme.background}e`};
+  background-color: ${props => props.theme.panels};
   border-radius: 2px;
   border: 1px solid ${props => props.theme.shadow};
   overflow-y: hidden;
@@ -18,6 +18,7 @@ const ListScroll = styled.div`
   position: relative;
   height: calc(100% - 3rem);
   overflow-y: ${props => props.scroll ? 'scroll' : 'hidden'};
+  padding-right: ${props => props.scroll ? 0 : '3px'};
 `
 
 const Title = styled.div`

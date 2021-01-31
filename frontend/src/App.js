@@ -50,7 +50,11 @@ const App = () => {
       localStorage.clear()
       history.push('/campaigns')
       setNotification({ message: 'Logged out successfully. Goodbye' })
-    } 
+    }
+  }
+
+  if (process.env.NODE_ENV === 'development') {
+    console.warn('running in development')
   }
 
   return (

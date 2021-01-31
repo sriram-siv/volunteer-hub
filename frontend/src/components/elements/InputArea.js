@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 `
 
 const Input = styled.textarea`
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.panels};
   color: ${props => props.theme.text};
   border-radius: 2px;
   /* height: 4rem; */

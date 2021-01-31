@@ -2,25 +2,25 @@ const themes = {
   dark: {
     name: 'dark',
     primary: '#ffff50',
-    shadow: '#aeb4ba',
-    background: '#222',
+    shadow: '#72787e',
+    background: '#131d25',
     text: '#ccc',
     fontWeight: 300,
-    letterSpacing: '-0.002rem',
-    accent: '#999',
-    panels: '#131d25',
+    letterSpacing: '0.015rem',
+    accent: '#8695a3',
+    panels: '#0b1014',
     glass: '#cccd'
   },
   light: {
     name: 'light',
     primary: '#ffff50',
     shadow: '#aeb4ba',
-    background: '#fff',
+    background: '#dde8f6',
     text: '#333',
     fontWeight: 400,
     letterSpacing: 0,
-    accent: '#eee',
-    panels: 'papayawhip',
+    accent: 'lightyellow',
+    panels: '#ffffff',
     glass: '#fafafada'
   }
 }
@@ -28,7 +28,7 @@ const themes = {
 const select = theme => ({
   control: styles => ({
     ...styles,
-    backgroundColor: theme.background,
+    backgroundColor: theme.panels,
     borderRadius: '2px',
     borderColor: theme.shadow,
     height: 'calc(2rem)'

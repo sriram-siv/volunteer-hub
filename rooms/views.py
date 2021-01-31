@@ -50,6 +50,7 @@ class RoomDetailView(APIView):
     ''' Handles Requests to /rooms/:room_name '''
 
     def get_room(self, pk):
+        print(pk)
         try:
             return Room.objects.get(pk=pk)
         except Room.DoesNotExist:

@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export default styled.button`
   /* display: block; */
-  background-color: ${props => props.primary ? props.theme.primary : props.theme.background};
+  background-color: ${props => props.primary ? props.theme.primary : props.theme.panels};
   color: ${props => props.primary ? '#333' : props.theme.text};
   border-radius: 2px;
   width: ${props => props.width};

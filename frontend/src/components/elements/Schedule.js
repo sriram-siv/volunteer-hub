@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   position: relative;
   padding: 5px;
   padding-top: calc(2rem + 10px);
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.panels};
   border-radius: 2px;
   border: 1px solid ${props => props.hideBorder ? 'transparent' : props.theme.shadow};
   height: calc(6rem + 25px);
@@ -30,8 +30,8 @@ const Slot = styled.div`
 
   &:hover {
     background-color: ${props => props.theme.primary};
-    opacity: ${props => props.active ? 1 : 0.5};
-    outline: 3px solid white;
+    opacity: ${props => props.active ? 1 : 0.7};
+    outline: 3px solid ${props => props.theme.panels};
     outline-offset: -3px;
   }
 `

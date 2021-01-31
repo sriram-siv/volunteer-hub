@@ -6,7 +6,6 @@ import Select from 'react-select'
 import styles from '../../lib/styles'
 
 import BannerImage from '../elements/BannerImage'
-import Button from '../elements/Button'
 
 const Wrapper = styled.div`
   position: relative;

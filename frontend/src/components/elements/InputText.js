@@ -8,7 +8,7 @@ const Wrapper = styled.div`
 `
 // TODO implement focus visible
 const Input = styled.input`
-  background-color: ${props => props.theme.background};
+  background-color: ${props => props.theme.panels};
   color: ${props => props.theme.text};
   border-radius: 2px;
   height: 3.1rem;
