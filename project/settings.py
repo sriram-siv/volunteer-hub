@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 if str(os.getenv('ENVIRONMENT')) == 'development':
-    SECRET_KEY = 'r!yf=eas)(wiz4c1a&_rkf$$swsk3azi4yp)q5^^)8#i8$bbsm' # should be whatever your original key was
+    SECRET_KEY = 'r!yf=eas)(wiz4c1a&_rkf$$swsk3azi4yp)q5^^)8#i8$bbsm'
 else:
     SECRET_KEY = str(os.getenv('SECRET_KEY'))
 
