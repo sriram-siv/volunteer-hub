@@ -131,7 +131,7 @@ const CampaignShow = () => {
           <NoticeBoard campaignData={campaignData} isAdmin={isAdmin} deleteNotice={deleteNotice} />,
 
         members:
-          <VolunteersPanel campaignData={campaignData} isAdmin={isAdmin} />,
+          <VolunteersPanel updateData={getCampaign} campaignData={campaignData} isAdmin={isAdmin} />,
 
         chats:
           <CampaignChats rooms={rooms} />,

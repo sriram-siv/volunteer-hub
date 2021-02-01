@@ -151,7 +151,7 @@ class VolunteersPanel extends React.Component {
     const { groupName, selectedVolunteers } = this.state
     const { campaignData } = this.props
     if (!groupName || !selectedVolunteers.length) return
-    const userID = Number(localStorage.getItem('user_id'))
+    const userID = Number(localStorage.getItem('id'))
     if (!selectedVolunteers.includes(userID)) selectedVolunteers.unshift(userID)
     const formData = {
       name: groupName,
