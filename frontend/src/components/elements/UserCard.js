@@ -72,7 +72,6 @@ const Details = styled.div`
 const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpanded }) => {
 
   // const theme = React.useContext(ThemeContext)
-  console.log(user)
 
   const [denyActive, setDenyActive] = React.useState(false)
 
@@ -86,9 +85,11 @@ const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpan
     else deny(user.id)
   }
 
+  // TODO handle non-admin instance of user-card more gracefully
+  // for now, using a simple fallback
   const schedule = Array.from(
     { length: 14 },
-    (_, i) => user.user_shifts?.some(shift => shift.id === i + 1) || false
+    (_, i) => user.user_shifts.some(shift => shift.id === i + 1)
   )
 
   const showDefaultProfile = user.profile_image.includes('fg5afp4hagsrz2fgkbwd')

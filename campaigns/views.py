@@ -65,7 +65,6 @@ class CampaignDetailView(APIView):
             'confirmed': 1
         }
         user_status = self.get_user_status(campaign, user)
-        print(user_status)
         # if self.get_user_status(campaign, user) < perm_levels[status]:
         if user_status < perm_levels[status]:
             raise PermissionDenied()
@@ -76,7 +75,9 @@ class CampaignDetailView(APIView):
         if self.get_user_status(campaign, request.user) > 1:
             serialized_campaign = PopulatedCampaignSerializer(campaign)
         else:
-            serialized_campaign = CampaignSerializer(campaign)
+            serialized_campaign = PopulatedCampaignSerializer(campaign)
+            # TODO fix this logic
+            # serialized_campaign = CampaignSerializer(campaign)
         return Response(serialized_campaign.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
