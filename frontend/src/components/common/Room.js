@@ -195,7 +195,7 @@ const Room = () => {
       </Header>
       
       <Body ref={setChatWindowRef} smoothScroll={smoothScroll}>
-        {messages.map((message, i) =>
+        {messages && messages.map((message, i) =>
           <MessageBox key={i} prevMessage={messages[i - 1]} data={message} isSelf={message.user.id === app.userID()} />)}
       </Body>
       
