@@ -72,7 +72,7 @@ const NavBar = () => {
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>
-          {app.userID() ? navUser : navGuest }
+          {app.user ? navUser : navGuest }
         </Items>
       </NavBarContainer>
     </>

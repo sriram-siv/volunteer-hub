@@ -22,6 +22,7 @@ const App = () => {
 
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
+  const [user, setUser] = useState()
   
   // TODO BACKEND - onMount
   // Check age of token
@@ -39,11 +40,13 @@ const App = () => {
     changeTheme: () => setTheme(theme === 'light' ? 'dark' : 'light'),
 
     userID: () => +localStorage.getItem('id'),
+    user,
 
     login: (data) => {
       setNotification({ message: data.message })
       localStorage.setItem('token', data.token)
       localStorage.setItem('id', data.id)
+      setUser(data.id)
     },
 
     logout: () => {
