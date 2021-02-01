@@ -38,6 +38,7 @@ const CampaignShow = () => {
 
   const getCampaign = async () => {
     try {
+      console.log(match.params.id)
       const { data } = await getSingleCampaign(match.params.id)
       const { message_rooms, owner, coordinators } = data
 
