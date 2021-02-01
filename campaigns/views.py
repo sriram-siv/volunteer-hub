@@ -18,6 +18,7 @@ class CampaignListView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get(self, _request):
+        print('fetching campaigns')
         campaign_list = Campaign.objects.all()
         serialized_campaign_list = IndexSerializer(campaign_list, many=True)
         return Response(serialized_campaign_list.data, status=status.HTTP_200_OK)
