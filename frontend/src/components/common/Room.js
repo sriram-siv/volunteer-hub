@@ -203,7 +203,7 @@ const Room = () => {
         <ChatControl value={draft} handleChange={handleChange} send={sendMessage} />
       </div>
 
-      <Modal show={showMembers} count={members.length} onClick={() => setShowMembers(false)}>
+      <Modal show={showMembers} count={members?.length} onClick={() => setShowMembers(false)}>
         <div className="panel" onClick={e => e.stopPropagation()}>
           {members.map((member, i) => 
             <div key={i} className="member-card">{member.username}</div>
