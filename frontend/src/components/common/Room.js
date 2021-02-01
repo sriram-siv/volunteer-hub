@@ -144,13 +144,14 @@ const Room = () => {
 
   const getChatHistory = async () => {
     try {
-      const { data } = await getSingleRoom(params.room)
-      setName(data.name)
-      setMembers(data.members)
-      setMessages(data.messages)
+      const response = await getSingleRoom(params.room)
+      // const { data } = await getSingleRoom(params.room)
+      setName(response.data.name)
+      setMembers(response.data.members)
+      setMessages(response.data.messages)
       setHistoryLoaded(true)
 
-      console.log(data)
+      console.log(response)
 
       connectToSocket()
     } catch (err) {
