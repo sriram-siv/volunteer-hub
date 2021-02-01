@@ -149,8 +149,7 @@ const Room = () => {
       setMembers(data.members)
       setMessages(data.messages)
       setHistoryLoaded(true)
-      console.log('resonse from api: ', data)
-      // connectToSocket()
+      connectToSocket()
     } catch (err) {
       console.log(err)
       history.goBack()

@@ -50,10 +50,7 @@ const CampaignIndex = () => {
   const [tagError, setTagError] = useState('')
 
   const getCampaigns = () => getAllCampaigns().then(
-    res => {
-      console.log(res)
-      setCampaigns(res.data)
-    },
+    res => setCampaigns(res.data),
     res => {
       console.error({ res })
       app.setNotification({ message: 'Error loading campaign index. Please try refreshing the page' })
