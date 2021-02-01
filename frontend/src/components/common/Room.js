@@ -150,6 +150,8 @@ const Room = () => {
       setMessages(data.messages)
       setHistoryLoaded(true)
 
+      console.log(data)
+
       connectToSocket()
     } catch (err) {
       console.log(err)
