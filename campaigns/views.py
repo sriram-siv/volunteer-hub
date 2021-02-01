@@ -64,7 +64,10 @@ class CampaignDetailView(APIView):
             'coordinator': 2,
             'confirmed': 1
         }
-        if self.get_user_status(campaign, user) < perm_levels[status]:
+        user_status = self.get_user_status(campaign, user)
+        print(user_status)
+        # if self.get_user_status(campaign, user) < perm_levels[status]:
+        if user_status < perm_levels[status]:
             raise PermissionDenied()
 
     def get(self, request, pk):
