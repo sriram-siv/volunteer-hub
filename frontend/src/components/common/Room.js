@@ -206,7 +206,7 @@ const Room = () => {
       {/* <Modal show={showMembers} count={members.length} onClick={() => setShowMembers(false)}> */}
       <Modal show={showMembers} onClick={() => setShowMembers(false)}>
         <div className="panel" onClick={e => e.stopPropagation()}>
-          {members.map((member, i) => 
+          {members?.map((member, i) => 
             <div key={i} className="member-card">{member.username}</div>
           )}
         </div>
