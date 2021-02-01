@@ -55,4 +55,4 @@ export const deleteCampaignNotice = noticeId => axios.delete(`${baseUrl}/notices
 
 export const createRoom = formData => axios.post(`${baseUrl}/rooms/`, formData)
 
-export const getSingleRoom = roomId => axios.get(`${baseUrl}/rooms/${roomId}`, withHeaders())
+export const getSingleRoom = roomId => axios.get(`${baseUrl}/rooms/${roomId}/`, withHeaders())
