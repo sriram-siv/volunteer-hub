@@ -40,11 +40,10 @@ const CampaignShow = () => {
     try {
       const { data } = await getSingleCampaign(match.params.id)
       const { message_rooms, owner, coordinators } = data
-      
 
       // This should be filtered on the backend for privacy
       setRooms(message_rooms
-        .filter(({ members }) => members.includes(app.user)))
+        ?.filter(({ members }) => members.includes(app.user)) || [])
     
       // TODO BACKEND This could be set from backend using permission levels
       const userIsAdmin = [owner.id, ...coordinators].includes(app.user)
