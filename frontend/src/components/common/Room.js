@@ -142,22 +142,34 @@ const Room = () => {
     // chatSocket.onclose = () => console.log('Chat socket closed unexpectedly')
   }
 
-  const getChatHistory = async () => {
-    try {
-      const response = await getSingleRoom(params.room)
-      // const { data } = await getSingleRoom(params.room)
-      setName(response.data.name)
-      setMembers(response.data.members)
-      setMessages(response.data.messages)
-      setHistoryLoaded(true)
+  // const getChatHistory = async () => {
+  //   try {
+  //     const { data } = await getSingleRoom(params.room)
+  //     setName(data.name)
+  //     setMembers(data.members)
+  //     setMessages(data.messages)
+  //     setHistoryLoaded(true)
 
-      console.log(response)
+  //     connectToSocket()
+  //   } catch (err) {
+  //     console.log(err)
+  //     history.goBack()
+  //   }
+  // }
 
-      connectToSocket()
-    } catch (err) {
-      console.log(err)
-      history.goBack()
-    }
+  const getChatHistory = () => {
+    getSingleRoom().then(
+      res => {
+        console.log(res)
+        setName(res.data.name)
+        setMembers(res.data.members)
+        setMessages(res.data.messages)
+        setHistoryLoaded(true)
+      },
+      res => {
+        console.error(res)
+      }
+    )
   }
 
   const sendMessage = event => {
