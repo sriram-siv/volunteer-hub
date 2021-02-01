@@ -61,6 +61,7 @@ class RoomDetailView(APIView):
             raise PermissionDenied()
 
     def get(self, request, pk):
+        print('fetching room', pk)
         room = self.get_room(pk=pk)
         self.is_member(room, request.user)
         serialized_room = PopulatedRoomSerializer(room)
