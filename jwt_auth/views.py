@@ -35,6 +35,10 @@ class LoginView(APIView):
         except User.DoesNotExist:
             raise PermissionDenied(detail='Invalid Credentials')
 
+    def get(self, request):
+        print(request)
+        return Response(status=status.HTTP_200_OK)
+
     def post(self, request):
         email = request.data.get('email')
         password = request.data.get('password')
