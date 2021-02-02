@@ -26,10 +26,16 @@ const App = () => {
   const [user, setUser] = useState()
 
   useEffect(() => {
-    checkToken().then(
-      res => setUser(res.data.id),
-      res => console.error(res)
-    )
+    if (localStorage.getItem('token')) {
+      checkToken().then(
+        res => {
+          console.log(res)
+          setUser(res.data.user)
+          localStorage.setItem('token', res.data.token)
+        },
+        res => console.error(res)
+      )
+    }
   }, [])
 
 
