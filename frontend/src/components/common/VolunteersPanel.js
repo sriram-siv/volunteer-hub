@@ -24,7 +24,7 @@ const Wrapper = styled.div`
   }
 `
 
-const VolunteersPanel = ({ campaignData, isAdmin }) => {
+const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
 
   const app = useContext(AppContext)
   const history = useHistory()
@@ -107,10 +107,11 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
   const updateList = (volunteer_id, action) => {
     updateVolunteers(campaignData.id, { volunteer_id, action })
       .then(
-        res => console.log(res, 'TODO update parent with new data'),
-        res => {
-          console.log({ res })
-          // app.setNotification({ message: 'There was an error while attempting to update the list' })
+        () => updateData(),
+        () => {
+          app.setNotification(
+            { message: 'There was an error while attempting to update the list' }
+          )
         }
       )
   }
