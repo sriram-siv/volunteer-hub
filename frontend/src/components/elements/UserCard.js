@@ -69,7 +69,7 @@ const Details = styled.div`
   }
 `
 
-const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpanded }) => {
+const UserCard = ({ user, updateList, select, showDetail, isSelected, isExpanded }) => {
 
   // const theme = React.useContext(ThemeContext)
 
@@ -82,7 +82,7 @@ const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpan
 
   const clickDeny = () => {
     if (!denyActive) setDenyActive(true)
-    else deny(user.id)
+    else updateList(user.id, 'delete')
   }
 
   // TODO handle non-admin instance of user-card more gracefully
@@ -101,14 +101,14 @@ const UserCard = ({ user, confirm, deny, select, showDetail, isSelected, isExpan
         {showDefaultProfile && <ProfilePic src={require('../../images/default_profile.png')} />}
         <Title onClick={() => showDetail(user.id)}>{user.username}</Title>
 
-        {confirm &&
-          <Button color="#afa" onClick={() => confirm(user.id)}>
+        {updateList && <>
+          <Button color="#afa" onClick={() => updateList(user.id, 'confirm')}>
             accept
-          </Button>}
-        {deny &&
+          </Button>
           <Button color={denyActive ? '#f55' : '#faa'} onClick={clickDeny}>
             {denyActive ? 'sure?' : 'deny'}
-          </Button>}
+          </Button>
+        </>}
         {select &&
           <input type="checkbox" name={user.id} onChange={select} checked={isSelected} />
         }

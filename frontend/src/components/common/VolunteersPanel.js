@@ -158,8 +158,6 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
       isExpanded={user.id === itemExpanded}
       showDetail={showDetail}
       select={listDisplay === 'members' && selectVolunteer}
-      // TODO update usercard component to reflect consolidated action for updating
-      // () => updateList(vol_id, 'action')
       updateList={listDisplay === 'pending' && updateList}
     />
   )
