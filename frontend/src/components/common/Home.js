@@ -10,12 +10,30 @@ import campPreview from '../../images/campPreview.jpg'
 import chatgif from '../../gif/chatgif.gif'
 
 const Hero = styled.div`
+  position: fixed;
+  top: 0;
   display: flex;
-  height: 75vh;
+  height: 15rem;
+  width: 100vw;
   justify-content: center;
   align-items: center;
   font-size: 2.5rem;
   font-family: 'Montserrat Alternates', sans-serif;
+  background-color: ${props => props.theme.primary};
+  z-index: 5;
+
+  a {
+    position: absolute;
+    bottom: 1rem;
+    font-size: 1rem; 
+
+  }
+
+  button {
+    &:hover {
+      border-color: white;
+    }
+  }
 `
 
 class Home extends React.Component {
@@ -27,23 +45,21 @@ class Home extends React.Component {
 
   render() {
 
-    const width = '30%'
-
     return (
       <>
-        <Hero>Welcome to Volunteer.io</Hero>
+        <Hero>
+          Welcome to Volunteer Hub
+          <Link to='/campaigns'>
+            <Button width="10rem">Get Started</Button>
+          </Link>
+        </Hero>
         <SplitContain>
           <SplitRow>
             <div>
-              <SplitTitle>Find a Campaign</SplitTitle>
+              <SplitTitle>Use Your Skills to Help Out</SplitTitle>
               <p>
-                Browse the best volunteer opportunities near you and even match with those looking for someone with your skills. Your community needs your help, what are you waiting for?
+                Browse the best volunteer opportunities near you and match with those looking for someone with your skills. Your community needs your help, what are you waiting for?
               </p>
-              <Link to='/campaigns' style={{ textDecoration: 'none' }} >
-                <Button width={width}>
-                  Search Campaigns
-                </Button>
-              </Link>
             </div>
             <div>
               <SplitImg src={campaigns} alt='' />
@@ -57,13 +73,8 @@ class Home extends React.Component {
             <div>
               <SplitTitle>Manage a Campaign</SplitTitle>
               <p>
-              Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting and managing a campaign.
+              Do you know of a local cause in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting and managing a campaign.
               </p>
-              <Link to='/campaigns/new' style={{ textDecoration: 'none' }}>
-                <Button width={width}>
-                  Start a Campaign
-                </Button>
-              </Link>
             </div>
           </SplitRow>
           <SplitBrk/>
@@ -71,7 +82,7 @@ class Home extends React.Component {
             <div>
               <SplitTitle>Connect With Teammates</SplitTitle>
               <p>
-                Volunteers.io’s chat feature allows you to stay up to date with your team and share updates in real time.
+                Volunteer Hub’s chat feature allows you to stay up to date with your team and share updates in real time.
               </p>
             </div>
             <div>
