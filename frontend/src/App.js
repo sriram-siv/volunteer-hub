@@ -3,6 +3,7 @@ import { Switch, Route, useHistory } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
 import styles from './lib/styles'
+import { checkToken } from './lib/api'
 
 import NavBar from './components/common/NavBar'
 import Notification from './components/common/Notification'
@@ -23,6 +24,11 @@ const App = () => {
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
   const [user, setUser] = useState()
+
+  checkToken().then(
+    res => console.log(res),
+    res => console.log(res)
+  )
   
   // TODO BACKEND - onMount
   // Check age of token
