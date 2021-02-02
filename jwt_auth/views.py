@@ -50,7 +50,7 @@ class LoginView(APIView):
 
 class AuthToken(APIView):
 
-    def get(self, request):
+    def post(self, request):
         header = request.headers.get('Authorization')
         if not header:
             return None
