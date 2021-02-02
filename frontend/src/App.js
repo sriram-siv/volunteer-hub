@@ -25,31 +25,24 @@ const App = () => {
   const [notification, setNotification] = useState({})
   const [user, setUser] = useState()
 
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      checkToken().then(
-        res => {
-          setUser(res.data.user)
-          localStorage.setItem('token', res.data.token)
-        },
-        res => {
-          if (res.response.status === 403) {
-            localStorage.removeItem('token')
-          }
+  const refreshToken = () => {
+    
+    if (!localStorage.getItem('token')) return
+
+    checkToken().then(
+      ({ data }) => {
+        setUser(data.user)
+        localStorage.setItem('token', data.token)
+      },
+      ({ response }) => {
+        if (response.status === 403) {
+          localStorage.removeItem('token')
         }
-      )
-    }
-  }, [])
+      }
+    )
+  }
 
-
-  // TODO BACKEND - onMount
-  // Check age of token
-  // if 1+ days -> show welcome message and refresh token
-  // else refresh token, no message
-
-  // if expired -> remove token / id from localstorage 
-
-  // this way userID could be kept in state instead of storage ?
+  useEffect(refreshToken, [])
 
   const methods = {
 
