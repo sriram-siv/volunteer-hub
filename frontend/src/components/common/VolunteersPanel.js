@@ -149,7 +149,7 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
     }
   }
 
-  useEffect(() => filterUsers, [memberList, skills, schedule])
+  useEffect(filterUsers, [memberList, skills, schedule])
 
   const itemElement = (user, i, itemExpanded, showDetail) => (
     <UserCard
