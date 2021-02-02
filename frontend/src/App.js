@@ -33,7 +33,9 @@ const App = () => {
           setUser(res.data.user)
           localStorage.setItem('token', res.data.token)
         },
-        res => console.error(res)
+        res => {
+          if (res.status === 403) localStorage.removeItem('token')
+        }
       )
     }
   }, [])
