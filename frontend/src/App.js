@@ -3,6 +3,7 @@ import { Switch, Route, useHistory } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
 import styles from './lib/styles'
+import { checkToken } from './lib/api'
 
 import NavBar from './components/common/NavBar'
 import Notification from './components/common/Notification'
@@ -24,7 +25,10 @@ const App = () => {
   const [notification, setNotification] = useState({})
   const [user, setUser] = useState()
 
-  useEffect(() => console.log('app launched'), [])
+  useEffect(() => {
+    const response = checkToken()
+    console.log(response)
+  }, [])
 
 
   // TODO BACKEND - onMount
