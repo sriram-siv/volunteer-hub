@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { withRouter } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 import { createRoom, updateVolunteers } from '../../lib/api'
 
@@ -23,52 +23,49 @@ const Wrapper = styled.div`
   }
 `
 
-class VolunteersPanel extends React.Component {
+const VolunteersPanel = ({ campaignData, isAdmin }) => {
 
-  state = {
-    filteredUsers: [],
-    memberList: [],
-    listDisplay: 'members',
-    skills: {
-      values: [],
-      strict: true
-    },
-    schedule: {
-      values: Array.from({ length: 14 }),
-      strict: true
-    },
-    selectedVolunteers: [],
-    groupName: ''
+  const history = useHistory()
+
+  const [filteredUsers, setFilteredUsers] = useState([])
+  const [memberList, setMemberList] = useState([])
+  const [listDisplay, setListDisplay] = useState('members')
+  const [skills, setSkills] = useState({ values: [], strict: true })
+  const [schedule, setSchedule] = useState({ values: [], strict: true })
+  const [selectedVolunteers, setSelectedVolunteers] = useState([])
+  const [groupName, setGroupName] = useState('')
+
+  // onMount
+  useEffect(() => toggleUserList('members'), [])
+
+  useEffect(() => filterUsers, [memberList, skills, schedule])
+
+  const toggleUserList = listName => {
+
+    setListDisplay(listName)
+
+    setMemberList(
+      listName === 'members'
+        ? ['owner', 'coordinators', 'conf_volunteers']
+          .reduce((arr, prop) => arr.concat(campaignData[prop]), [])
+        : campaignData.pend_volunteers
+    )
+
+    setSelectedVolunteers([])
   }
 
-  componentDidMount = () => {
-    this.toggleUserList('members')
+  const selectSchedule = slot => {
+    setSchedule({
+      ...schedule,
+      values: schedule.values.map((val, i) => i === slot ? !val : val)
+    })
   }
 
-  toggleUserList = list => {
-
-    const { campaignData } = this.props
-
-    const memberList = list === 'members'
-      ? ['owner', 'coordinators', 'conf_volunteers']
-        .reduce((arr, prop) => arr.concat(campaignData[prop]), [])
-      : campaignData.pend_volunteers
-
-    this.setState({ listDisplay: list, memberList, selectedVolunteers: [] }, this.filterUsers)
+  const selectSkills = values => {
+    setSkills({ ...skills, values })
   }
 
-  selectSchedule = slot => {
-    const values = [...this.state.schedule.values]
-    values[slot] = !values[slot]
-    this.setState({ schedule: { ...this.state.schedule, values } }, this.filterUsers)
-  }
-
-  selectSkills = values => {
-    this.setState({ skills: { ...this.state.skills, values } }, this.filterUsers)
-  }
-
-  filterUsers = () => {
-    const { memberList, schedule, skills, selectedVolunteers } = this.state
+  const filterUsers = () => {
 
     const isAvailable = userShifts => (
       schedule.strict
@@ -82,142 +79,113 @@ class VolunteersPanel extends React.Component {
         : skills.values.some(({ value }) => userSkills.some(({ id }) => value === id))
     )
 
-    const filteredUsers = memberList
-      .filter(({ user_skills }) => !skills.values?.length || hasSkills(user_skills))
-      .filter(({ user_shifts }) => schedule.values.every(slot => !slot) || isAvailable(user_shifts))
-    
-    const newSelected = selectedVolunteers.filter(id => filteredUsers.map(({ id }) => id).includes(id))
-    
-    this.setState({ filteredUsers, selectedVolunteers: newSelected })
-  }
+    setFilteredUsers(
+      memberList
+        .filter(({ user_skills }) => !skills.values?.length || hasSkills(user_skills))
+        .filter(({ user_shifts }) => schedule.values.every(slot => !slot) || isAvailable(user_shifts))
+    )
 
-  toggleStrict = (event) => {
-    this.setState(
-      { [event.target.id]: { ...this.state[event.target.id], strict: event.target.checked } },
-      this.filterUsers
+    setSelectedVolunteers(
+      selectedVolunteers.filter(id => filteredUsers.map(({ id }) => id).includes(id))
     )
   }
 
-  editGroupName = event => {
-    this.setState({ [event.target.name]: event.target.value })
-  }
-
-  confirmVolunteer = async volunteerID => {
-    const { campaignData, updateData } = this.props
-    try {
-      await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'confirm' })
-      updateData()
-      // const confirmedVolunteer = this.state.pendingVolunteers.find(volunteer => volunteer.id === volunteerID)
-      // const volunteers = [...this.state.volunteers, confirmedVolunteer]
-      // const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer !== confirmedVolunteer)
-      // this.setState({ volunteers, pendingVolunteers }, this.filterVolunteers)
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  denyVolunteer = async volunteerID => {
-    const { campaignData, updateData } = this.props
-    try {
-      await updateVolunteers(campaignData.id, { volunteer_id: volunteerID, action: 'delete' })
-      updateData()
-      // const pendingVolunteers = this.state.pendingVolunteers.filter(volunteer => volunteer.id !== volunteerID)
-      // this.setState({ pendingVolunteers })
-    } catch (err) {
-      console.error(err)
-    }
-  }
-
-  selectVolunteer = event => {
-    const { selectedVolunteers } = this.state
-    const id = +event.target.name
-
-    if (selectedVolunteers.includes(id)) {
-      this.setState({ selectedVolunteers: [...selectedVolunteers].filter(vol => vol !== id) })
+  const toggleStrict = event => {
+    if (event.target.id === 'skills') {
+      setSkills({ ...skills, strict: event.target.checked })
     } else {
-      this.setState({ selectedVolunteers: selectedVolunteers.concat(id) })
+      setSchedule({ ...schedule, strict: event.target.checked })
     }
   }
 
-  selectAll = () => {
+  const editGroupName = event => setGroupName(event.target.value)
 
-    const { selectedVolunteers, memberList, filteredUsers } = this.state
-    const allSelected = selectedVolunteers.length === memberList.length
-
-    const newSelection = allSelected ? [] : filteredUsers.map(({ id }) => id)
-
-    this.setState({ selectedVolunteers: newSelection })
+  // TODO BACKEND return campaignData 
+  const updateList = (volunteer_id, action) => {
+    updateVolunteers(campaignData.id, { volunteer_id, action })
+      .then(
+        res => console.log(res, 'TODO update parent with new data'),
+        res => {
+          console.log({ res })
+          // app.setNotification({ message: 'There was an error while attempting to update the list' })
+        }
+      )
   }
 
-  createNewGroup = async () => {
-    const { groupName, selectedVolunteers } = this.state
-    const { campaignData } = this.props
+  const selectVolunteer = event => {
+    const id = +event.target.name
+    setSelectedVolunteers(
+      selectedVolunteers.includes(id)
+        ? [...selectedVolunteers].filter(vol => vol !== id)
+        : selectedVolunteers.concat(id)
+    )
+  }
+
+  // TODO deselect not working on filtered lists
+  const selectAll = () => {
+    setSelectedVolunteers(
+      selectedVolunteers.length !== memberList.length
+        ? filteredUsers.map(({ id }) => id)
+        : []
+    )
+  }
+
+  const createNewGroup = async () => {
     if (!groupName || !selectedVolunteers.length) return
-    const userID = Number(localStorage.getItem('id'))
-    if (!selectedVolunteers.includes(userID)) selectedVolunteers.unshift(userID)
-    const formData = {
+    const userID = Number(localStorage.getItem('user_id'))
+    const members = selectedVolunteers
+      .concat(selectedVolunteers.includes(userID) ? null : userID)
+    // instead - does backend filter out doubles
+    // const members = selectedVolunteers.concat(userID)
+    const response = await createRoom({
       name: groupName,
-      members: selectedVolunteers,
+      members,
       campaign: campaignData.id
-    }
-    
-    const response = await createRoom(formData)
+    })
     if (response.status === 201) {
-      this.props.history.push(`/chat/${response.data.id}`)
+      history.push(`/chat/${response.data.id}`)
     }
   }
 
-  render() {
-    const {
-      filteredUsers,
-      listDisplay,
-      selectedVolunteers,
-      skills,
-      schedule,
-      groupName
-    } = this.state
+  const itemElement = (user, i, itemExpanded, showDetail) => (
+    <UserCard
+      key={i}
+      user={user}
+      isSelected={selectedVolunteers.includes(user.id)}
+      isExpanded={user.id === itemExpanded}
+      showDetail={showDetail}
+      select={listDisplay === 'members' && selectVolunteer}
+      // TODO update usercard component to reflect consolidated action for updating
+      // () => updateList(vol_id, 'action')
+      updateList={listDisplay === 'pending' && updateList}
+    />
+  )
 
-    const { isAdmin } = this.props
+  return (
+    <Wrapper>
 
-    const itemElement = (user, i, itemExpanded, showDetail) => (
-      <UserCard
-        key={i}
-        user={user}
-        isSelected={selectedVolunteers.includes(user.id)}
-        isExpanded={user.id === itemExpanded}
-        showDetail={showDetail}
-        select={listDisplay === 'members' && this.selectVolunteer}
-        confirm={listDisplay === 'pending' && this.confirmVolunteer}
-        deny={listDisplay === 'pending' && this.denyVolunteer}
+      <List
+        items={filteredUsers}
+        itemElement={itemElement}
       />
-    )
 
-    return (
-      <Wrapper>
+      {isAdmin &&
+        <FilterControls
+          skills={skills}
+          schedule={schedule}
+          selectSkills={selectSkills}
+          selectSchedule={selectSchedule}
+          toggleStrict={toggleStrict}
+          toggleList={toggleUserList}
+          groupName={groupName}
+          editGroupName={editGroupName}
+          selectAll={selectAll}
+          createNewGroup={createNewGroup}
+          showChatCreate={listDisplay === 'members'}
+        />}
 
-        <List
-          items={filteredUsers}
-          itemElement={itemElement}
-        />
-
-        {isAdmin &&
-          <FilterControls
-            skills={skills}
-            schedule={schedule}
-            selectSkills={this.selectSkills}
-            selectSchedule={this.selectSchedule}
-            toggleStrict={this.toggleStrict}
-            toggleList={this.toggleUserList}
-            groupName={groupName}
-            editGroupName={this.editGroupName}
-            selectAll={this.selectAll}
-            createNewGroup={this.createNewGroup}
-            showChatCreate={listDisplay === 'members'}
-          />}
-
-      </Wrapper>
-    )
-  }
+    </Wrapper>
+  )
 }
 
-export default withRouter(VolunteersPanel)
+export default VolunteersPanel
