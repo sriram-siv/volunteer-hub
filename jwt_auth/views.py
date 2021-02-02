@@ -46,7 +46,6 @@ class LoginView(APIView):
         )
 
         print(request.user.id)
-        print(serialized_user.id)
         print(token)
 
         return Response(serialized_user.data, status=status.HTTP_200_OK)
