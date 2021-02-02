@@ -45,10 +45,7 @@ class LoginView(APIView):
             algorithm='HS256'
         )
 
-        print(request.user.id)
-        print(token)
-
-        return Response({ user: request.user.id, token: token }, status=status.HTTP_200_OK)
+        return Response({ 'user': request.user.id, 'token': token }, status=status.HTTP_200_OK)
 
     def post(self, request):
         email = request.data.get('email')
