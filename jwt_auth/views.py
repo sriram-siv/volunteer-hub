@@ -38,7 +38,7 @@ class LoginView(APIView):
     def get(self, request):
         serialized_user = UserSerializer(request.user)
         print(serialized_user)
-        return Response(status=status.HTTP_200_OK)
+        return Response(serialized_user.data, status=status.HTTP_200_OK)
 
     def post(self, request):
         email = request.data.get('email')
