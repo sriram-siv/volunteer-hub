@@ -117,6 +117,8 @@ const CampaignShow = () => {
     onChange: changeSection
   }
 
+  useEffect(getCampaign, [app])
+
 
   if (!campaignData) return null
 

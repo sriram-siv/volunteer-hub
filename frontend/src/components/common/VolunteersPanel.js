@@ -34,7 +34,7 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
   const [memberList, setMemberList] = useState([])
   const [listDisplay, setListDisplay] = useState('members')
   const [skills, setSkills] = useState({ values: [], strict: true })
-  const [schedule, setSchedule] = useState({ values: [], strict: true })
+  const [schedule, setSchedule] = useState({ values: Array.from({ length: 14 }), strict: true })
   const [selectedVolunteers, setSelectedVolunteers] = useState([])
   const [groupName, setGroupName] = useState('')
 

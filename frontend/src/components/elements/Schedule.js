@@ -65,6 +65,8 @@ const Days = styled.div`
 
 const Schedule = ({ schedule: slots, handleClick, hideBorder }) => {
 
+  if (!slots) slots = Array.from({ length: 14 })
+
   return (
     <Wrapper hideBorder={hideBorder}>
       <Time>
@@ -81,8 +83,8 @@ const Schedule = ({ schedule: slots, handleClick, hideBorder }) => {
         <Label>sun</Label>
       </Days>
       <Grid>
-        {slots?.map((slot, i) => handleClick
-          ? <Slot key={i} active={slot} onClick={() => handleClick(i)} />
+        {slots.map((slot, i) => handleClick
+          ? <Slot key={i} active={slot} onClick={() => handleClick?.(i)} />
           : <SlotReadOnly key={i} active={slot} />)}
       </Grid>
     </Wrapper>
