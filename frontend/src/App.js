@@ -26,8 +26,9 @@ const App = () => {
   const [user, setUser] = useState()
 
   useEffect(() => {
-    const response = checkToken()
-    console.log(response)
+    checkToken().then(
+      res => console.log(res)
+    )
   }, [])
 
 
