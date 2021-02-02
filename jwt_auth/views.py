@@ -48,30 +48,6 @@ class LoginView(APIView):
             algorithm='HS256')
         return Response({'token': token, 'id': user_to_login.id, 'message': f'Welcome Back {user_to_login.username}'})
 
-class AuthToken(APIView):
-
-    def post(self, request):
-        header = request.headers.get('Authorization')
-        if not header:
-            return None
-        if not header.startswith('Bearer'):
-            raise PermissionDenied(detail='Invalid Authorization Token Format')
-        token = header.replace('Bearer ', '')
-        try:
-            payload = jwt.decode(
-                token,
-                settings.SECRET_KEY,
-                algorithms=['HS256']
-            )
-            user = User.objects.get(pk=payload.get('sub'))
-            serialized_user = UserSerializer(user)
-            print(serialized_user)
-        except jwt.exceptions.InvalidTokenError:
-            raise PermissionDenied(detail='Invalid Authorization Token')
-        except User.DoesNotExist:
-            raise PermissionDenied(detail='User Not Found')
-        return Response({ user: serialized_user.id })
-
 class ProfileListView(APIView):
 
     ''' Handles requests to /profiles '''

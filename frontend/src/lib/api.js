@@ -15,8 +15,6 @@ const withHeaders = () => {
   }
 }
 
-export const checkToken = () => axios.post(`${baseUrl}/auth/token/`, withHeaders())
-
 export const registerUser = formData => axios.post(`${baseUrl}/auth/register/`, formData)
 
 export const loginUser = formData => axios.post(`${baseUrl}/auth/login/`, formData)
