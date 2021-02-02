@@ -135,15 +135,12 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
   }
 
   const createNewGroup = async () => {
+
     if (!groupName || !selectedVolunteers.length) return
-    const userID = Number(localStorage.getItem('user_id'))
-    const members = selectedVolunteers
-      .concat(selectedVolunteers.includes(userID) ? null : userID)
-    // instead - does backend filter out doubles
-    // const members = selectedVolunteers.concat(userID)
+
     const response = await createRoom({
       name: groupName,
-      members,
+      members: selectedVolunteers.concat(app.user),
       campaign: campaignData.id
     })
     if (response.status === 201) {
