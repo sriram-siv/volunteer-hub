@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Switch, Route, useHistory } from 'react-router-dom'
 import { ThemeProvider } from 'styled-components'
 
@@ -23,6 +23,8 @@ const App = () => {
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
   const [user, setUser] = useState()
+
+  useEffect(() => console.log('app launched'), [])
 
 
   // TODO BACKEND - onMount
