@@ -27,7 +27,8 @@ const App = () => {
 
   useEffect(() => {
     checkToken().then(
-      res => console.log(res)
+      res => setUser(res.data.id),
+      res => console.error(res)
     )
   }, [])
 
