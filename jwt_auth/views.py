@@ -64,11 +64,13 @@ class AuthToken(APIView):
                 algorithms=['HS256']
             )
             user = User.objects.get(pk=payload.get('sub'))
+            serialized_user = UserSerializer(user)
+            print(serialized_user)
         except jwt.exceptions.InvalidTokenError:
             raise PermissionDenied(detail='Invalid Authorization Token')
         except User.DoesNotExist:
             raise PermissionDenied(detail='User Not Found')
-        return Response({ user: user.id })
+        return Response({ user: serialized_user.id })
 
 class ProfileListView(APIView):
 
