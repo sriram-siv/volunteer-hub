@@ -33,7 +33,7 @@ const App = () => {
           localStorage.setItem('token', res.data.token)
         },
         res => {
-          console.log('token auth failed: ', res)
+          console.log('token auth failed: ', { res })
           if (res.status === 403) localStorage.removeItem('token')
         }
       )
