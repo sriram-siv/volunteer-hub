@@ -29,11 +29,11 @@ const App = () => {
     if (localStorage.getItem('token')) {
       checkToken().then(
         res => {
-          console.log(res)
           setUser(res.data.user)
           localStorage.setItem('token', res.data.token)
         },
         res => {
+          console.log('token auth failed: ', res)
           if (res.status === 403) localStorage.removeItem('token')
         }
       )
