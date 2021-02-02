@@ -36,7 +36,9 @@ class LoginView(APIView):
             raise PermissionDenied(detail='Invalid Credentials')
 
     def get(self, request):
-        return Response({ user: request.user.id }, status=status.HTTP_200_OK)
+        serialized_user = UserSerializer(request.user)
+        print(serialized_user)
+        return Response(status=status.HTTP_200_OK)
 
     def post(self, request):
         email = request.data.get('email')
