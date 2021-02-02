@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 
 import { createRoom, updateVolunteers } from '../../lib/api'
+import { AppContext } from '../../App'
 
 import FilterControls from '../elements/FilterControls'
 import List from '../elements/List'
@@ -25,6 +26,7 @@ const Wrapper = styled.div`
 
 const VolunteersPanel = ({ campaignData, isAdmin }) => {
 
+  const app = useContext(AppContext)
   const history = useHistory()
 
   const [filteredUsers, setFilteredUsers] = useState([])
@@ -37,8 +39,9 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
 
   // onMount
   useEffect(() => toggleUserList('members'), [])
+  // update campaign data from request actions
+  useEffect(() => toggleUserList(listDisplay), [campaignData])
 
-  useEffect(() => filterUsers, [memberList, skills, schedule])
 
   const toggleUserList = listName => {
 
@@ -146,6 +149,8 @@ const VolunteersPanel = ({ campaignData, isAdmin }) => {
       history.push(`/chat/${response.data.id}`)
     }
   }
+
+  useEffect(() => filterUsers, [memberList, skills, schedule])
 
   const itemElement = (user, i, itemExpanded, showDetail) => (
     <UserCard
