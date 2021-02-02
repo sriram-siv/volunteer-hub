@@ -37,7 +37,18 @@ class LoginView(APIView):
 
     def get(self, request):
         serialized_user = UserSerializer(request.user)
-        print(serialized_user)
+
+        dt = datetime.now() + timedelta(days=7)
+        token = jwt.encode(
+            {'sub': request.user.id, 'exp': int(dt.strftime('%s'))},
+            settings.SECRET_KEY,
+            algorithm='HS256'
+        )
+
+        print(request.user.id)
+        print(serialized_user.id)
+        print(token)
+
         return Response(serialized_user.data, status=status.HTTP_200_OK)
 
     def post(self, request):
