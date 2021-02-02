@@ -39,7 +39,11 @@ class Home extends React.Component {
               <p>
                 Browse the best volunteer opportunities near you and even match with those looking for someone with your skills. Your community needs your help, what are you waiting for?
               </p>
-              <Link to='/campaigns' style={{ textDecoration: 'none' }} ><Button width={width} label='Search Campaigns'/></Link>
+              <Link to='/campaigns' style={{ textDecoration: 'none' }} >
+                <Button width={width}>
+                  Search Campaigns
+                </Button>
+              </Link>
             </div>
             <div>
               <SplitImg src={campaigns} alt='' />
@@ -55,7 +59,11 @@ class Home extends React.Component {
               <p>
               Do you know of someone or a project in need of a few helping hands? Get a qualified team together and you can start making a difference today by starting and managing a campaign.
               </p>
-              <Link to='/campaigns/new' style={{ textDecoration: 'none' }}><Button width={width} label='Start a Campaign' /></Link>
+              <Link to='/campaigns/new' style={{ textDecoration: 'none' }}>
+                <Button width={width}>
+                  Start a Campaign
+                </Button>
+              </Link>
             </div>
           </SplitRow>
           <SplitBrk/>
