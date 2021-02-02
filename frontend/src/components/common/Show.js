@@ -21,12 +21,11 @@ const Panel = styled.div`
   top: calc(255px - 3rem);
   left: 10px;
   width: calc(100vw - 23px);
-  min-height: calc(100vh - 3rem - 25px);
+  min-height: calc(100vh - 3rem - 15px);
   padding: 20px;
   padding-top: calc(3rem + 20px);
   background-color: ${props => props.theme.glass};
   border-radius: 4px;
-  margin-bottom: 10px;
   backdrop-filter: blur(4px);
   z-index: 1;
 `
