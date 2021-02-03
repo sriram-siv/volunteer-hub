@@ -19,6 +19,7 @@ class CampaignListView(APIView):
 
     def get(self, _request):
         print('hello there')
+        print('hello there from don')
         campaign_list = Campaign.objects.all()
         serialized_campaign_list = IndexSerializer(campaign_list, many=True)
         return Response(serialized_campaign_list.data, status=status.HTTP_200_OK)
