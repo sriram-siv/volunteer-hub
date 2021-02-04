@@ -34,7 +34,7 @@ class Profile extends React.Component {
     user_skills: [],
     schedule: [],
     editMode: false,
-    section: { label: 'profile', value: 'profile' },
+    section: { label: 'profile', value: 'profile' }
   }
 
   componentDidMount = () => {
@@ -160,6 +160,7 @@ class Profile extends React.Component {
 
   render() {
     const { history } = this.props
+    // eslint-disable-next-line no-unused-vars
     const { userData, userCampaigns, skills, section, schedule, user_skills, editMode } = this.state
 
     const menu = {

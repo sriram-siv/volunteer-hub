@@ -14,6 +14,7 @@ import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
 import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
+import ProfileB from './components/common/ProfileB'
 
 export const AppContext = React.createContext()
 
