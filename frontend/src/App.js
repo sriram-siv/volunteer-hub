@@ -24,7 +24,7 @@ const App = () => {
 
   const [theme, setTheme] = useState('light')
   const [notification, setNotification] = useState({})
-  const [user, setUser] = useState()
+  const [user, setUser] = useState(null)
 
   const refreshToken = () => {
     
@@ -64,6 +64,7 @@ const App = () => {
     logout: () => {
       localStorage.clear()
       history.push('/campaigns')
+      setUser(null)
       setNotification({ message: 'Logged out successfully. Goodbye' })
     }
   }
