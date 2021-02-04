@@ -82,7 +82,8 @@ const App = () => {
         <Switch>
           <Route exact path="/" component={Home} />
           {/* TODO make profile funtional and use context */}
-          <Route path="/profile" render={() => <Profile app={methods} />} />
+          <Route path="/profile" component={ProfileB} />
+          {/* <Route path="/profile" render={() => <Profile app={methods} />} /> */}
           <Route path="/chat/:room" component={Room} />
           <Route path='/campaigns/new' component={CampaignForm} />
           <Route path='/campaigns/:id/edit' component={CampaignForm} />

@@ -198,7 +198,7 @@ const Profile  = () => {
         settings:
           <>
           </>
-      }[section]}
+      }[section.value]}
     </Show>
   )
 }
