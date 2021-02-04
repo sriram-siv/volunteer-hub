@@ -1,19 +1,19 @@
 {
   "files": {
     "main.css": "/static/css/main.cbf4965d.chunk.css",
-    "main.js": "/static/js/main.b4ff2285.chunk.js",
-    "main.js.map": "/static/js/main.b4ff2285.chunk.js.map",
+    "main.js": "/static/js/main.9d29f20c.chunk.js",
+    "main.js.map": "/static/js/main.9d29f20c.chunk.js.map",
     "runtime-main.js": "/static/js/runtime-main.c8a21426.js",
     "runtime-main.js.map": "/static/js/runtime-main.c8a21426.js.map",
     "static/css/2.08c12e69.chunk.css": "/static/css/2.08c12e69.chunk.css",
-    "static/js/2.315f0443.chunk.js": "/static/js/2.315f0443.chunk.js",
-    "static/js/2.315f0443.chunk.js.map": "/static/js/2.315f0443.chunk.js.map",
+    "static/js/2.e0c0e694.chunk.js": "/static/js/2.e0c0e694.chunk.js",
+    "static/js/2.e0c0e694.chunk.js.map": "/static/js/2.e0c0e694.chunk.js.map",
     "index.html": "/index.html",
-    "precache-manifest.f479ad1716601663b11af67d89be7b93.js": "/precache-manifest.f479ad1716601663b11af67d89be7b93.js",
+    "precache-manifest.4a923981beb4b1cc45931af6b233160b.js": "/precache-manifest.4a923981beb4b1cc45931af6b233160b.js",
     "service-worker.js": "/service-worker.js",
     "static/css/2.08c12e69.chunk.css.map": "/static/css/2.08c12e69.chunk.css.map",
     "static/css/main.cbf4965d.chunk.css.map": "/static/css/main.cbf4965d.chunk.css.map",
-    "static/js/2.315f0443.chunk.js.LICENSE.txt": "/static/js/2.315f0443.chunk.js.LICENSE.txt",
+    "static/js/2.e0c0e694.chunk.js.LICENSE.txt": "/static/js/2.e0c0e694.chunk.js.LICENSE.txt",
     "static/media/campPreview.jpg": "/static/media/campPreview.6174eea3.jpg",
     "static/media/campaigns.jpg": "/static/media/campaigns.39815fad.jpg",
     "static/media/chatgif.gif": "/static/media/chatgif.86166eee.gif",
@@ -24,8 +24,8 @@
   "entrypoints": [
     "static/js/runtime-main.c8a21426.js",
     "static/css/2.08c12e69.chunk.css",
-    "static/js/2.315f0443.chunk.js",
+    "static/js/2.e0c0e694.chunk.js",
     "static/css/main.cbf4965d.chunk.css",
-    "static/js/main.b4ff2285.chunk.js"
+    "static/js/main.9d29f20c.chunk.js"
   ]
 }
