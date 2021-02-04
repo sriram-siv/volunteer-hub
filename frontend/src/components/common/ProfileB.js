@@ -101,9 +101,10 @@ const Profile  = () => {
   // can we quickly go over how this destructure should look?
   // const { schedule: prev } = schedule?
   const editSchedule = slot => {
-    const { schedule: prev } = this.state
-    const schedule = update(prev, slot, !prev[slot])
-    setSchedule(schedule)
+    // const { schedule: prev } = this.state
+
+    const newSchedule = update(schedule, slot, !schedule[slot])
+    setSchedule(newSchedule)
   }
   
   const editSkills = skills => {
