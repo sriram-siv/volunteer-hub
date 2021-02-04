@@ -18,8 +18,6 @@ class CampaignListView(APIView):
     permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get(self, _request):
-        print('hello there')
-        print('hello there from don')
         campaign_list = Campaign.objects.all()
         serialized_campaign_list = IndexSerializer(campaign_list, many=True)
         return Response(serialized_campaign_list.data, status=status.HTTP_200_OK)
@@ -74,13 +72,16 @@ class CampaignDetailView(APIView):
     def get(self, request, pk):
         campaign = self.get_campaign(pk=pk)
         self.check_user_perm(campaign, request.user, 'confirmed')
-        if self.get_user_status(campaign, request.user) > 1:
+        user_status = self.get_user_status(campaign, request.user)
+        if user_status > 1:
             serialized_campaign = PopulatedCampaignSerializer(campaign)
         else:
             serialized_campaign = PopulatedCampaignSerializer(campaign)
             # TODO fix this logic
             # serialized_campaign = CampaignSerializer(campaign)
-        return Response(serialized_campaign.data, status=status.HTTP_200_OK)
+        response_data = serialized_campaign.data
+        response_data['user_status'] = user_status
+        return Response(response_data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
         campaign_to_update = self.get_campaign(pk=pk)
