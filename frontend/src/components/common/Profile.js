@@ -1,12 +1,14 @@
 /* eslint-disable camelcase */
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import React, { useState, useEffect, useContext } from 'react'
+import { withRouter, useHistory } from 'react-router-dom'
 import styled, { withTheme } from 'styled-components'
 
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
+import { AppContext } from '../../App'
 // import icons from '../../lib/icons'
 // import styles from '../../lib/styles'
 import { update } from '../../lib/helper'
+import { createWidget } from '../../lib/cloudinary'
 
 // import Button from '../elements/Button'
 import Show from '../common/Show'
@@ -22,193 +24,171 @@ const NewCampaign = styled.button`
   border: none;
   background-color: transparent;
 `
-
-class Profile extends React.Component {
+const Profile  = () => {
   
-  state = {
-    userData: null,
-    pendingUserData: null,
-    userCampaigns: [],
-    skills: null,
+  const app = useContext(AppContext)
+  const { userID, setNotification, logout } = app
 
-    user_skills: [],
-    schedule: [],
-    editMode: false,
-    section: { label: 'profile', value: 'profile' }
-  }
+  const history = useHistory()
 
-  componentDidMount = () => {
-    this.getProfile()
-    this.getSkills()
-  }
+  const [ userData, setUserData ] = useState(null)
+  const [ pendingUserData, setPendingUserData ] = useState(null)
+  const [ userCampaigns, setUserCampaigns ]  = useState([])
+  const [ skills, setSkills ] = useState(null)
+  const [ user_skills, setUserSkills ] = useState([])
+  const [ schedule, setSchedule ] = useState([])
+  const [ editMode, setEditMode ] = useState(false)
+  const [ section, setSection ] = useState({ label: 'profile', value: 'profile' })
   
-  getProfile = async () => {
+  const getProfile = async () => {
     const userID = localStorage.getItem('id')
     const { data } = await getSingleProfile(userID)
-
+    
     const userData = [
       'username', 'first_name', 'last_name', 'email', 'phone', 'profile_image'
     ].reduce((obj, prop) => ({ ...obj, [prop]: data[prop] }), {})
-
+    
     const userCampaigns = [
       'owned_campaigns', 'coord_campaigns', 'conf_campaigns'
     ].reduce((arr, prop) => [...arr, ...data[prop]], [])
-
+    
     const userShifts = data.user_shifts.reduce((arr, { id }) => [...arr, id], [])
     const schedule = Array.from({ length: 14 }, (val, i) => userShifts.includes(++i))
     
-    this.setState({
-      userData,
-      pendingUserData: userData,
-      userCampaigns,
-      user_skills: data.user_skills,
-      schedule
-    }) 
+    setUserData(userData)
+    setPendingUserData(userData)
+    setUserCampaigns(userCampaigns)
+    setUserSkills(data.user_skills)
+    setSchedule(schedule)
+  }
+  
+  const updateProfileImage = (url) => {
+    const newUserData = { ...pendingUserData, profile_image: url }
+    console.log(url)
+    setPendingUserData(newUserData)
   }
 
-  getSkills = async () => {
+  const cloudinaryWidget = createWidget(updateProfileImage)
+  
+  const openCloudWidget = () => cloudinaryWidget.open()
+
+  const getSkills = async () => {
     const { data } = await getAllSkills()
     const skills = data.map(skill => ({ value: skill.id, label: skill.name }))
-    this.setState({ skills })
+    setSkills(skills)
+  }
+  
+  // componentDidMount
+  useEffect( () => {
+    getProfile()
+    getSkills()
+  }, [])
+  
+  const toggleEditMode = () => {
+    setEditMode(!editMode)
+    setPendingUserData(userData)
   }
 
-  // TODO move this to helper library
-  showWidget = () => {
-    const widget = window.cloudinary.createUploadWidget(
-      { 
-        cloudName: 'dmhj1vjdf',
-        uploadPreset: 'jisx4gi0',
-        showUploadMoreButton: false
-      },
-      (error, result) => {
-        if (result?.event === 'success') { 
-          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
-          this.setState({ pendingUserData })
-        }
-      })
-    widget.open()
+  // eslint-disable-next-line no-unused-vars
+  const handleEditProfile = (event) => {
+    setPendingUserData({ ...pendingUserData, [event.target.name]: event.target.value })
   }
-
-  toggleEditMode = () => {
-    this.setState({
-      editMode: !this.state.editMode,
-      pendingUserData: this.state.userData
-    })
-  }
-
-  handleEditProfile = (event) => {
-    const pendingUserData = {
-      ...this.state.pendingUserData,
-      [event.target.name]: event.target.value
-    }
-    this.setState({ pendingUserData })
-  }
-
-  saveProfile = async () => {
-    const { userID, setNotification } = this.props.app
+  
+  // eslint-disable-next-line no-unused-vars
+  const saveProfile = async () => {
     try {
-
-      await updateProfile(userID(), this.state.pendingUserData)
-
-      this.setState(
-        { userData: this.state.pendingUserData },
-        this.toggleEditMode
-      )
-
+      await updateProfile(userID(), pendingUserData)
+      
+      setUserData(pendingUserData)
+      toggleEditMode()
+      
       setNotification({ message: 'your profile has been updated' })
+      
     } catch (err) {
       setNotification({ message: err.response.data })
     }
   }
-
-  editSchedule = slot => {
-    const { schedule: prev } = this.state
-    const schedule = update(prev, slot, !prev[slot])
-    this.setState({ schedule })
+  
+  const editSchedule = slot => {
+    const newSchedule = update(schedule, slot, !schedule[slot])
+    setSchedule(newSchedule)
   }
-
-  editSkills = skills => {
+  
+  const editSkills = skills => {
     const user_skills = 
-      skills?.map(skill => ({ id: skill.value, name: skill.label })) || []
+    skills?.map(skill => ({ id: skill.value, name: skill.label })) || []
     
-    this.setState({ user_skills })
+    setUserSkills(user_skills)
   }
-
-  saveSettings = async () => {
-    const { user_skills, schedule } = this.state
-    // const { currentUser, setNotification } = this.props.app
-    const { setNotification } = this.props.app
-
+  
+  // eslint-disable-next-line no-unused-vars
+  const saveSettings = async () => {
     try {
       // TODO BACKEND check if this works - does backend care if id is number or string
       const userID = localStorage.getItem('user_id')
       const skillIds = user_skills.map(skill => skill.id)
-
+  
       await updateProfileShifts(userID, { schedule })
       await updateProfileSkills(userID, { 'user_skills': skillIds })
-
+  
       setNotification({ message: 'your preferences have been updated' })
     } catch (err) {
       setNotification({ message: 'there was an error updating your details' })
     }
   }
 
-  changeSection = section => {
-    if (section.value === 'logout') this.props.app.logout()
-    else this.setState({ section })
+  const changeSection = section => {
+    if (section.value === 'logout') logout()
+    else setSection(section)
+  }
+  
+  const menu = {
+    options: [
+      'profile', 'campaigns', 'settings', 'logout'
+    ].map(str => ({ label: str, value: str })),
+    value: section,
+    onChange: changeSection
   }
 
-  render() {
-    const { history } = this.props
-    // eslint-disable-next-line no-unused-vars
-    const { userData, userCampaigns, skills, section, schedule, user_skills, editMode } = this.state
+  if (!userData || !pendingUserData) return null
 
-    const menu = {
-      options: [
-        'profile', 'campaigns', 'settings', 'logout'
-      ].map(str => ({ label: str, value: str })),
-      value: section,
-      onChange: this.changeSection
-    }
+  return (
+    <Show
+      title={`${userData.first_name} ${userData.last_name}`}
+      menu={menu}
+      banner={require('../../images/default_banner_profile.jpg')}
+      image={pendingUserData.profile_image}
+      // image={require('../../images/default_profile.png')}
+      imageLabel="change profile image"
+      onImageClick={openCloudWidget}
+    >
+      {{
 
-    if (!userData) return null
-
-    return (
-      <Show
-        title={`${userData.first_name} ${userData.last_name}`}
-        menu={menu}
-        banner={require('../../images/default_banner_profile.jpg')}
-        image={require('../../images/default_profile.png')}
-        imageLabel="change profile image"
-        onImageClick={this.showWidget}
-      >
-
-        {section.value === 'profile' &&
+        profile:
           <UserDetails
-            editInfo={this.toggleEditMode}
+            editInfo={toggleEditMode}
             userData={userData}
             userSkills={user_skills}
             skills={skills}
             schedule={schedule}
-            editSkills={this.editSkills}
-            editSchedule={this.editSchedule}
-          />
-        }
+            editSkills={editSkills}
+            editSchedule={editSchedule}
+          />,
 
-        {section.value === 'campaigns' && <>
-          <NewCampaign onClick={() => history.push('/campaigns/new')}>New Campaign</NewCampaign>
+        campaigns:
+          <>
+            <NewCampaign onClick={() => history.push('/campaigns/new')}>New Campaign</NewCampaign>
 
-          {userCampaigns.map((campaign, i) => (
-            <CampaignCard key={i} campaign={campaign} onClick={history.push} />))}
-        </>}
+            {userCampaigns.map((campaign, i) => (
+              <CampaignCard key={i} campaign={campaign} onClick={history.push} />))}
+          </>,
 
-        {section.value === 'settings' && <>
-      
-        </>}
-
-      </Show>
-    )
-  }
+        settings:
+          <>
+          </>
+      }[section.value]}
+    </Show>
+  )
 }
 
 export default withTheme(withRouter(Profile))
