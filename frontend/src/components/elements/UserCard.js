@@ -118,6 +118,7 @@ const UserCard = ({ user, updateList, select, showDetail, isSelected, isExpanded
         <p>{user.first_name} {user.last_name}</p>
         <p>{user.user_skills.map(skill => skill.name).join(', ')}</p>
       </Details>
+      
       <Schedule schedule={schedule} hideBorder />
 
     </Wrapper>

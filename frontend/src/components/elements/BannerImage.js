@@ -83,6 +83,7 @@ const BannerImage = ({ src, profile, onProfileClick, profileLabel, maskActive })
     <Banner src={src ? src : defaultSrc}>
       {profile &&
         <Profile
+          aria-label="User Profile Image"
           image={profile}
           onClick={onProfileClick}
           onMouseEnter={() => setImageLabelVisible(true)}

@@ -1,7 +1,7 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect, useContext } from 'react'
-import { withRouter, useHistory } from 'react-router-dom'
-import styled, { withTheme } from 'styled-components'
+import { useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { getSingleProfile, updateProfile, getAllSkills, updateProfileShifts, updateProfileSkills } from '../../lib/api'
 import { AppContext } from '../../App'

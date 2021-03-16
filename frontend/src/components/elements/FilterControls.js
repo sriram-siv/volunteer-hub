@@ -1,6 +1,6 @@
 import React from 'react'
 import Select from 'react-select'
-import styled, { withTheme } from 'styled-components'
+import styled, { withTheme, useTheme } from 'styled-components'
 
 import { AppContext } from '../../App'
 
@@ -17,6 +17,7 @@ const Wrapper = styled.div`
   border: 1px solid ${props => props.theme.shadow};
   padding: 10px;
   text-align: center;
+  width: 100%;
   
   > * {
     margin: 10px auto 0;
@@ -50,8 +51,9 @@ const FilterControls = props => {
 
   const app = React.useContext(AppContext)
 
+  const theme = useTheme()
+
   const {
-    theme,
     schedule,
     skills,
     selectSchedule,
@@ -78,7 +80,7 @@ const FilterControls = props => {
   React.useEffect(getSkills, [])
 
   return (
-    <Wrapper>
+    <Wrapper aria-roledescription="Filtering controls for user list">
       <RadioGroup>
         <label htmlFor="members">Members</label>
         <input type="radio" name="listDisplay" id="members" value="members" onChange={() => toggleList('members')} defaultChecked />
