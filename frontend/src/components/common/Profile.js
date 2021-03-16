@@ -8,6 +8,7 @@ import { AppContext } from '../../App'
 // import icons from '../../lib/icons'
 // import styles from '../../lib/styles'
 import { update } from '../../lib/helper'
+import { createWidget } from '../../lib/cloudinary'
 
 // import Button from '../elements/Button'
 import Show from './Show'
@@ -38,28 +39,38 @@ const Profile  = () => {
   const [ schedule, setSchedule ] = useState([])
   const [ editMode, setEditMode ] = useState(false)
   const [ section, setSection ] = useState({ label: 'profile', value: 'profile' })
-
+  
   const getProfile = async () => {
     const userID = localStorage.getItem('id')
     const { data } = await getSingleProfile(userID)
-  
+    
     const userData = [
       'username', 'first_name', 'last_name', 'email', 'phone', 'profile_image'
     ].reduce((obj, prop) => ({ ...obj, [prop]: data[prop] }), {})
-  
+    
     const userCampaigns = [
       'owned_campaigns', 'coord_campaigns', 'conf_campaigns'
     ].reduce((arr, prop) => [...arr, ...data[prop]], [])
-  
+    
     const userShifts = data.user_shifts.reduce((arr, { id }) => [...arr, id], [])
     const schedule = Array.from({ length: 14 }, (val, i) => userShifts.includes(++i))
-  
+    
     setUserData(userData)
     setPendingUserData(userData)
     setUserCampaigns(userCampaigns)
     setUserSkills(data.user_skills)
     setSchedule(schedule)
   }
+  
+  const updateProfileImage = (url) => {
+    const newUserData = { ...pendingUserData, profile_image: url }
+    console.log(url)
+    setPendingUserData(newUserData)
+  }
+
+  const cloudinaryWidget = createWidget(updateProfileImage)
+  
+  const openCloudWidget = () => cloudinaryWidget.open()
 
   const getSkills = async () => {
     const { data } = await getAllSkills()
@@ -98,11 +109,7 @@ const Profile  = () => {
     }
   }
   
-  // can we quickly go over how this destructure should look?
-  // const { schedule: prev } = schedule?
   const editSchedule = slot => {
-    // const { schedule: prev } = this.state
-
     const newSchedule = update(schedule, slot, !schedule[slot])
     setSchedule(newSchedule)
   }
@@ -116,10 +123,6 @@ const Profile  = () => {
   
   // eslint-disable-next-line no-unused-vars
   const saveSettings = async () => {
-    // const { user_skills, schedule } = this.state
-    // const { currentUser, setNotification } = this.props.app
-    // const { setNotification } = app
-  
     try {
       // TODO BACKEND check if this works - does backend care if id is number or string
       const userID = localStorage.getItem('user_id')
@@ -146,34 +149,18 @@ const Profile  = () => {
     value: section,
     onChange: changeSection
   }
-  
-  // TODO move this to helper library
-  const showWidget = () => {
-    const widget = window.cloudinary.createUploadWidget(
-      { 
-        cloudName: 'dmhj1vjdf',
-        uploadPreset: 'jisx4gi0',
-        showUploadMoreButton: false
-      },
-      (error, result) => {
-        if (result?.event === 'success') { 
-          const pendingUserData = { ...this.state.pendingUserData, profile_image: result.info.url }
-          this.setState({ pendingUserData })
-        }
-      })
-    widget.open()
-  }
 
-  if (!userData) return null
+  if (!userData || !pendingUserData) return null
 
   return (
     <Show
       title={`${userData.first_name} ${userData.last_name}`}
       menu={menu}
       banner={require('../../images/default_banner_profile.jpg')}
-      image={require('../../images/default_profile.png')}
+      image={pendingUserData.profile_image}
+      // image={require('../../images/default_profile.png')}
       imageLabel="change profile image"
-      onImageClick={showWidget}
+      onImageClick={openCloudWidget}
     >
       {{
 
@@ -204,34 +191,4 @@ const Profile  = () => {
   )
 }
 
-export default withTheme(withRouter(Profile))
-
-// class Profile extends React.Component {
-  
-// state = {
-//   // userData: null,
-//   pendingUserData: null,
-//   userCampaigns: [],
-//   skills: null,
-
-//   user_skills: [],
-//   schedule: [],
-//   editMode: false,
-//   section: { label: 'profile', value: 'profile' },
-// }
-
-// componentDidMount = () => {
-//   this.getProfile()
-//   this.getSkills()
-// }
-    
-//   render() {
-//     // const { history } = this.props
-//     // const { userData, userCampaigns, skills, section, schedule, user_skills, editMode } = this.state
-
-
-
-//     return (
-//     )
-//   }
-// }
+export default Profile

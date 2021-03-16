@@ -66,6 +66,7 @@ const App = () => {
       setUser(null)
       setNotification({ message: 'Logged out successfully. Goodbye' })
     }
+
   }
 
   if (process.env.NODE_ENV === 'development') {
