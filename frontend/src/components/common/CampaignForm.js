@@ -27,7 +27,7 @@ const MapContain = styled.div`
   overflow: hidden;
 `
 
-let mapRef
+// let mapRef
 let geocoderRef
 
 const CampaignForm = () => {
@@ -95,7 +95,7 @@ const CampaignForm = () => {
     }
   }
 
-  const setMapRef = ref => mapRef = ref
+  // const setMapRef = ref => mapRef = ref
 
   const setGeocoderRef = ref => geocoderRef = ref
 
@@ -183,7 +183,8 @@ const CampaignForm = () => {
         />
 
         <MapContain>
-          <Map setRef={setMapRef} flyTo={flyTo}/>
+          {/* <Map setRef={setMapRef} flyTo={flyTo}/> */}
+          <Map flyTo={flyTo}/>
         </MapContain>
       </Form>
 

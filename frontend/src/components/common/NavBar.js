@@ -46,6 +46,7 @@ const Items = styled.ul`
 
   button, a {
     width: 2.5rem;
+    min-width: fit-content;
     height: 3rem;
     line-height: 3rem;
     text-align: center;
@@ -53,6 +54,7 @@ const Items = styled.ul`
     &:focus { outline: none; }
     &:focus-visible {
       background-color: #333;
+      color: white;
 
       path {
         fill: white;
@@ -153,7 +155,7 @@ const NavBar = () => {
 
   return (
     <>
-      <UserForms visible={showForm} hideForm={() => setShowForm(false)} />
+      <UserForms visible={showForm && !app.user} hideForm={() => setShowForm(false)} />
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>

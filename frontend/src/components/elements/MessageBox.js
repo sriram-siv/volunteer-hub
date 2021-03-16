@@ -107,7 +107,7 @@ const MessageBox = ({ data, isSelf, prevMessage }) => {
       <p key={i}>
         {interpolateLinks(line).map((frag, j) => (
           frag.match(linkMatch)
-            ? <a key={j} href={getHref(frag)} rel="noreferrer" target="_blank">{frag}</a>
+            ? <a key={j} href={getHref(frag)} rel="noopener noreferrer" target="_blank">{frag}</a>
             : frag
         ))}
       </p>

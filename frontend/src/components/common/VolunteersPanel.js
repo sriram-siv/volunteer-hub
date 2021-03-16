@@ -10,19 +10,24 @@ import { AppContext } from '../../App'
 import FilterControls from '../elements/FilterControls'
 import List from '../elements/List'
 import UserCard from '../elements/UserCard'
+import Button from '../elements/Button'
 
 const Wrapper = styled.div`
   position: relative;
   display: flex;
   justify-content: space-between;
   width: 100%;
-  height: calc(100vh - 6rem - 65px);
+  height: calc(100vh - 6rem - 40px);
 
   > * {
     position: relative;
     height: 100%;
-    width: calc(50% - 5px);
+    margin: auto 5px;
   }
+`
+
+const ControlToggle = styled.div`
+  margin: -20px 5px 5px;
 `
 
 const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
@@ -37,6 +42,9 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
   const [schedule, setSchedule] = useState({ values: Array.from({ length: 14 }), strict: true })
   const [selectedVolunteers, setSelectedVolunteers] = useState([])
   const [groupName, setGroupName] = useState('')
+
+  const [view, setView] = useState(window.innerWidth < 650 ? 'toggle' : 'full')
+  const [panel, setPanel] = useState(0)
 
   // onMount
   useEffect(() => toggleUserList('members'), [])
@@ -158,20 +166,44 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
       isSelected={selectedVolunteers.includes(user.id)}
       isExpanded={user.id === itemExpanded}
       showDetail={showDetail}
-      select={listDisplay === 'members' && selectVolunteer}
+      select={listDisplay === 'members' && isAdmin && selectVolunteer}
       updateList={listDisplay === 'pending' && updateList}
     />
   )
 
-  return (
+  React.useEffect(() => {
+    const handleResize = () => {
+      const mode = window.innerWidth < 650 ? 'toggle' : 'full'
+      setView(mode)
+
+
+    }
+    window.addEventListener('resize', handleResize)
+    // Clean up on unmount
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
+
+  const togglePanel = () => setPanel((panel + 1) % 2)
+
+
+  return (<>
+    
+    {view === 'toggle' &&
+      <ControlToggle>
+        <Button width="100%" onClick={togglePanel}>Filter List</Button>
+      </ControlToggle>
+    }
+
     <Wrapper>
 
-      <List
-        items={filteredUsers}
-        itemElement={itemElement}
-      />
+      {(view === 'full' || panel === 0) &&
+        <List
+          items={filteredUsers}
+          itemElement={itemElement}
+        />
+      }
 
-      {isAdmin &&
+      {isAdmin && (view === 'full' || panel === 1) &&
         <FilterControls
           skills={skills}
           schedule={schedule}
@@ -187,7 +219,7 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
         />}
 
     </Wrapper>
-  )
+  </>)
 }
 
 export default VolunteersPanel

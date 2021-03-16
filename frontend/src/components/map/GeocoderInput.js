@@ -49,18 +49,6 @@ const Highlight = styled.div`
   transition: all 0;
 `
 
-const Error = styled.div`
-  position: absolute;
-  top: 6px;
-  right: 11px;
-  color: palevioletred;
-  font-size: 0.7rem;
-  font-weight: ${props => props.theme.fontWeight};
-  letter-spacing: ${props => props.theme.letterSpacing};
-  pointer-events: none;
-  text-transform: lowercase;
-`
-
 
 const GeocoderInput = ({ label, width, inputProps, setRef, value, onChange }) => {
 
