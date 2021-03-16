@@ -9,7 +9,8 @@ const themes = {
     letterSpacing: '0.015rem',
     accent: '#8695a3',
     panels: '#0b1014',
-    glass: '#cccd'
+    glass: '#cccd',
+    focus: '#ffff50'
   },
   light: {
     name: 'light',
@@ -21,14 +22,15 @@ const themes = {
     letterSpacing: 0,
     accent: 'lightyellow',
     panels: '#ffffff',
-    glass: '#fafafada'
+    glass: '#fafafada',
+    focus: '#0160cc'
   }
 }
 
 const select = theme => ({
   control: styles => ({
     ...styles,
-    backgroundColor: theme.panels,
+    backgroundColor: theme.name === 'light' ? theme.panels : theme.background,
     borderRadius: '2px',
     borderColor: theme.shadow,
     height: 'calc(2rem)'
@@ -40,6 +42,13 @@ const select = theme => ({
     letterSpacing: theme.letterSpacing,
     left: '50%',
     transform: 'translate(calc(-50% + 1rem), -50%)'
+  }),
+  option: styles => ({
+    ...styles,
+    '&:hover': {
+      backgroundColor: '#2884fb',
+      color: 'white'
+    }
   }),
   menu: styles => ({
     ...styles,

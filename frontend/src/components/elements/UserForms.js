@@ -89,9 +89,9 @@ const UserForms = ({ visible, hideForm }) => {
         return
       }
     }
+
     try {
-      const { email, password } = formData
-      const { data, status } = await loginUser({ email, password })
+      const { data, status } = await loginUser(formData)
       if (status === 200) {
         hideForm()
         app.login(data)
@@ -115,17 +115,17 @@ const UserForms = ({ visible, hideForm }) => {
   return (
     <Wrapper visible={visible} onSubmit={handleSubmit}>
       {register && <>
-        <InputText label="username" name="username" value={username} returnValue={handleChange} error={errors.username} />
-        <InputText label="first name" name="first_name" value={firstName} returnValue={handleChange} error={errors.first_name} />
-        <InputText label="last name" name="last_name" value={lastName} returnValue={handleChange} error={errors.last_name} />
+        <InputText aria-label="Username" label="username" name="username" value={username} returnValue={handleChange} error={errors.username} />
+        <InputText aria-label="First Name" label="first name" name="first_name" value={firstName} returnValue={handleChange} error={errors.first_name} />
+        <InputText aria-label="Last Name" label="last name" name="last_name" value={lastName} returnValue={handleChange} error={errors.last_name} />
       </>}
-      <InputText label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
+      <InputText aria-label="Email" label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
       {/* TODO Remove phone number from model? */}
       {register &&
-        <InputText label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />}
-      <InputText label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
+        <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />}
+      <InputText aria-label="Password" label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
       {register &&
-        <InputText label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}
+        <InputText aria-label="Password Confirmation" label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}
       <Button primary={true} width={'100%'}>{mode}</Button>
       <ChangeMode onClick={switchMode}>{register ? ' I have an account' : 'new user'}</ChangeMode>
     </Wrapper>

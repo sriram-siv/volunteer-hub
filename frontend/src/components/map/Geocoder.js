@@ -15,6 +15,7 @@ const Item = styled.div`
 `
 
 const Geocoder = ({ width, value, onSelect, onChange, flyToLocation, setRef }) => {
+
   return (
     <GeocoderGL
       viewport={{}} // set to empty as we are handling connection to map component manually
@@ -25,7 +26,7 @@ const Geocoder = ({ width, value, onSelect, onChange, flyToLocation, setRef }) =
       
       // Click capture is needed here to allow onSelected to retain functionality
       itemComponent={itemProps => (
-        <Item {...itemProps} onClickCapture={() => onSelect(itemProps.item)} />)}
+        <Item {...itemProps} onClickCapture={() => onSelect(itemProps.item)} tabIndex="0"/>)}
 
       onSelected={flyToLocation}
       initialInputValue={value}

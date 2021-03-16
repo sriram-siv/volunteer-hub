@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div`
   position: relative;
-  width: ${props => props.width};
+  width: ${props => props.width || '100%' };
   margin: auto;
 `
 
@@ -13,11 +13,12 @@ const Input = styled.input`
   border-radius: 2px;
   height: 3.1rem;
   width: 100%;
-  font-size: 1rem;
+  font-weight: ${props => props.theme.fontWeight};
   border: 1px solid ${props => props.theme.shadow};
   padding: calc(12px + 0.7rem) 10px 5px;
   &:focus {
-    outline: none;
+    outline: ${props => props.tabbed ? '2px solid ' + props.theme.panels : 'none'};
+    border-color: ${props => props.tabbed ? props.theme.focus : props.theme.shadow};
   }
   ::selection {
     background-color: ${props => props.theme.primary};
@@ -39,38 +40,58 @@ const Label = styled.div`
 const Highlight = styled.div`
   height: ${props => props.focus ? '3px' : 0};
   width: calc(100% - 2px);
-  background-color: ${props => props.theme.primary};
+  background-color: ${props => props.tabbed ? props.theme.focus : props.theme.primary};
   position: absolute;
   bottom: 1px;
   left: 1px;
-  border-bottom-left-radius: 2px;
-  border-bottom-right-radius: 2px;
+  border-bottom-left-radius: ${props => props.focus ? 0 : '2px'};
+  border-bottom-right-radius: ${props => props.focus ? 0 : '2px'};
   transition: all 0;
 `
 
-// This could be a simple component to convert to functional with hooks
-class GeocoderInput extends React.Component {
+const Error = styled.div`
+  position: absolute;
+  top: 6px;
+  right: 11px;
+  color: palevioletred;
+  font-size: 0.7rem;
+  font-weight: ${props => props.theme.fontWeight};
+  letter-spacing: ${props => props.theme.letterSpacing};
+  pointer-events: none;
+  text-transform: lowercase;
+`
 
-  state = {
-    focus: false
+
+const GeocoderInput = ({ label, width, inputProps, setRef, value, onChange }) => {
+
+  const [focus, setFocus] = React.useState(false)
+  const [tabbed, setTabbed] = React.useState(true)
+
+  const handleBlur = () => {
+    setFocus(false)
+    setTabbed(true)
   }
 
-  toggleFocus = () => {
-    this.setState({ focus: !this.state.focus })
-  }
 
-  render() {
-    const { focus } = this.state
-    const { label, width, inputProps, setRef, value, onChange } = this.props
-
-    return (
-      <Wrapper width={width} onFocus={this.toggleFocus} onBlur={this.toggleFocus}>
-        <Input ref={ref => setRef(ref)} {...inputProps} spellCheck="false" onChangeCapture={onChange} value={value} />
-        <Label focus={focus || value}>{label}</Label>
-        <Highlight focus={focus} />
-      </Wrapper>
-    )
-  }
+  return (
+    <Wrapper
+      width={width}
+      onFocus={() => setFocus(true)}
+      onBlur={handleBlur}
+      onClick={() => setTabbed(false)}
+    >
+      <Input
+        ref={ref => setRef(ref)}
+        {...inputProps}
+        spellCheck="false"
+        onChangeCapture={onChange}
+        value={value}
+        tabbed={tabbed}
+      />
+      <Label focus={focus || value}>{label}</Label>
+      <Highlight focus={focus} tabbed={tabbed} />
+    </Wrapper>
+  )
 }
 
 export default GeocoderInput

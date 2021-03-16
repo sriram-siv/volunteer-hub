@@ -14,7 +14,6 @@ import CampaignIndex from './components/common/CampaignIndex'
 import CampaignShow from './components/common/CampaignShow'
 import CampaignForm from './components/common/CampaignForm'
 import Profile from './components/common/Profile'
-import ProfileB from './components/common/ProfileB'
 
 export const AppContext = React.createContext()
 
@@ -82,9 +81,7 @@ const App = () => {
 
         <Switch>
           <Route exact path="/" component={Home} />
-          {/* TODO make profile funtional and use context */}
-          <Route path="/profile" component={ProfileB} />
-          {/* <Route path="/profile" render={() => <Profile app={methods} />} /> */}
+          <Route path="/profile" component={Profile} />
           <Route path="/chat/:room" component={Room} />
           <Route path='/campaigns/new' component={CampaignForm} />
           <Route path='/campaigns/:id/edit' component={CampaignForm} />

@@ -99,8 +99,15 @@ const CampaignIndex = () => {
   }
 
   const updateGeocoderInput = event => {
+    const { selectionStart } = event.target
+
     setLocation(event.target.value)
-    setTimeout(() => geocoderRef.focus(), 1)
+    
+    setTimeout(() => {
+      geocoderRef.focus()
+      geocoderRef.selectionStart = selectionStart
+      geocoderRef.selectionEnd = selectionStart
+    }, 1)
   }
 
   const signUpToCampaign = async id => {

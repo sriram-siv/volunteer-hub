@@ -22,3 +22,11 @@ export const selectMenu = option => (
     ? { label: option[0], value: option[1] }
     : { label: option, value: option }
 )
+
+export const actionKeyPressed = (event, targetName) => {
+
+  const isContainer = event.target.getAttribute('name') === targetName
+  const isActionKey = ['Enter', 'Space'].includes(event.code)
+
+  return isActionKey && isContainer
+}

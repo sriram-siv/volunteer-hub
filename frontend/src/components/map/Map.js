@@ -41,7 +41,7 @@ const Map = ({ pins, clickPin, flyTo, setRef }) => {
 
   return (
     <>
-      <LoadingScreen mapLoading={mapLoading}>Loading Map..</LoadingScreen>
+      {/* <LoadingScreen mapLoading={mapLoading}>Loading Map..</LoadingScreen> */}
       <MapGL
         ref={setRef}
         mapStyle='mapbox://styles/mapbox/streets-v11'

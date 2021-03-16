@@ -1,8 +1,10 @@
 import axios from 'axios'
 
-const baseUrl = process.env.NODE_ENV === 'development'
-  ? 'http://localhost:3000/api'
-  : '/api'
+// const baseUrl = process.env.NODE_ENV === 'development'
+//   ? 'http://localhost:3000/api'
+//   : '/api'
+
+const baseUrl = '/api'
 
 const baseUrlCampaigns = baseUrl + '/campaigns'
 const baseUrlProfiles = baseUrl + '/profiles'
