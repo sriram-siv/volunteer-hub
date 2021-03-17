@@ -116,8 +116,8 @@ const UserForms = ({ visible, hideForm }) => {
     password_confirmation: passConf,
     first_name: firstName,
     last_name: lastName
-    // phone
   } = formData
+  
   const register = mode === 'register'
 
   return (
@@ -129,9 +129,6 @@ const UserForms = ({ visible, hideForm }) => {
           <InputText aria-label="Last Name" label="last name" name="last_name" value={lastName} returnValue={handleChange} error={errors.last_name} />
         </>}
         <InputText aria-label="Email" label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
-        {/* TODO Remove phone number from model? */}
-        {/* {register &&
-          <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />} */}
         <InputText aria-label="Password" label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
         {register &&
           <InputText aria-label="Password Confirmation" label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}

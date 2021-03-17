@@ -18,6 +18,7 @@ const Wrapper = styled.div`
   padding: 10px;
   text-align: center;
   width: 100%;
+  overflow-y: scroll;
   
   > * {
     margin: 10px auto 0;
@@ -64,7 +65,8 @@ const FilterControls = props => {
     editGroupName,
     selectAll,
     createNewGroup,
-    showChatCreate
+    showChatCreate,
+    selectFunction
   } = props
 
   const [skillsOptions, setSkillsOptions] = React.useState()
@@ -102,7 +104,7 @@ const FilterControls = props => {
       {showChatCreate && <>
         <InputText label="group name" name="groupName" value={groupName} returnValue={editGroupName} />
         <ButtonGroup>
-          <Button onClick={selectAll}>select all</Button>
+          <Button onClick={selectAll}>{selectFunction ? 'select all' : 'clear'}</Button>
           <Button primary onClick={createNewGroup}>create group</Button>
         </ButtonGroup>
       </>}
