@@ -33,7 +33,7 @@ const Wrapper = styled.form`
 
 const ChangeMode = styled.button`
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   margin: auto;
   border: none;
   font-family: 'Open Sans', sans-serif;
@@ -60,6 +60,7 @@ const UserForms = ({ visible, hideForm }) => {
   })
 
   const [hide, setHide] = useState(true)
+
 
   useEffect(() => {
     setMode('login')
@@ -114,8 +115,8 @@ const UserForms = ({ visible, hideForm }) => {
     password,
     password_confirmation: passConf,
     first_name: firstName,
-    last_name: lastName,
-    phone
+    last_name: lastName
+    // phone
   } = formData
   const register = mode === 'register'
 
@@ -129,8 +130,8 @@ const UserForms = ({ visible, hideForm }) => {
         </>}
         <InputText aria-label="Email" label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
         {/* TODO Remove phone number from model? */}
-        {register &&
-          <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />}
+        {/* {register &&
+          <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />} */}
         <InputText aria-label="Password" label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
         {register &&
           <InputText aria-label="Password Confirmation" label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}
