@@ -8,6 +8,7 @@ import InputText from './InputText'
 import Button from './Button'
 
 const Wrapper = styled.form`
+
   position: absolute;
   top: ${props => props.visible ? 'calc(3rem + 5px)' : '-12rem'};
   right: 5px;
@@ -32,7 +33,7 @@ const Wrapper = styled.form`
 
 const ChangeMode = styled.button`
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.9rem;
   margin: auto;
   border: none;
   font-family: 'Open Sans', sans-serif;
@@ -58,7 +59,14 @@ const UserForms = ({ visible, hideForm }) => {
     profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
   })
 
-  useEffect(() => setMode('login'), [visible])
+  const [hide, setHide] = useState(true)
+
+
+  useEffect(() => {
+    setMode('login')
+    const delay = visible ? 0 : 400
+    setTimeout(() => setHide(!visible), delay)
+  }, [visible])
   
   const switchMode = event => {
     event.preventDefault()
@@ -107,27 +115,29 @@ const UserForms = ({ visible, hideForm }) => {
     password,
     password_confirmation: passConf,
     first_name: firstName,
-    last_name: lastName,
-    phone
+    last_name: lastName
+    // phone
   } = formData
   const register = mode === 'register'
 
   return (
     <Wrapper visible={visible} onSubmit={handleSubmit}>
-      {register && <>
-        <InputText aria-label="Username" label="username" name="username" value={username} returnValue={handleChange} error={errors.username} />
-        <InputText aria-label="First Name" label="first name" name="first_name" value={firstName} returnValue={handleChange} error={errors.first_name} />
-        <InputText aria-label="Last Name" label="last name" name="last_name" value={lastName} returnValue={handleChange} error={errors.last_name} />
+      {!hide && <>
+        {register && <>
+          <InputText aria-label="Username" label="username" name="username" value={username} returnValue={handleChange} error={errors.username} />
+          <InputText aria-label="First Name" label="first name" name="first_name" value={firstName} returnValue={handleChange} error={errors.first_name} />
+          <InputText aria-label="Last Name" label="last name" name="last_name" value={lastName} returnValue={handleChange} error={errors.last_name} />
+        </>}
+        <InputText aria-label="Email" label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
+        {/* TODO Remove phone number from model? */}
+        {/* {register &&
+          <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />} */}
+        <InputText aria-label="Password" label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
+        {register &&
+          <InputText aria-label="Password Confirmation" label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}
+        <Button primary={true} width={'100%'}>{mode}</Button>
+        <ChangeMode onClick={switchMode}>{register ? ' I have an account' : 'new user'}</ChangeMode>
       </>}
-      <InputText aria-label="Email" label="email" name="email" value={email} returnValue={handleChange} error={errors.email} />
-      {/* TODO Remove phone number from model? */}
-      {register &&
-        <InputText aria-label="Phone Number" label="phone" name="phone" value={phone} type="number" returnValue={handleChange} error={errors.phone} />}
-      <InputText aria-label="Password" label="password" name="password" value={password} type="password" returnValue={handleChange} error={errors.password} />
-      {register &&
-        <InputText aria-label="Password Confirmation" label="confirm password" name="password_confirmation" value={passConf} type="password" returnValue={handleChange} error={errors.password_confirmation} />}
-      <Button primary={true} width={'100%'}>{mode}</Button>
-      <ChangeMode onClick={switchMode}>{register ? ' I have an account' : 'new user'}</ChangeMode>
     </Wrapper>
   )
 }

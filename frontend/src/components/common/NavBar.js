@@ -155,7 +155,6 @@ const NavBar = () => {
 
   return (
     <>
-      <UserForms visible={showForm && !app.user} hideForm={() => setShowForm(false)} />
       <NavBarContainer>
         <Title>VolunteerHub</Title>
         <Items>
@@ -167,6 +166,7 @@ const NavBar = () => {
           </Tooltip>
         }
       </NavBarContainer>
+      <UserForms visible={showForm && !app.user} hideForm={() => setShowForm(false)} />
     </>
   )
 }
