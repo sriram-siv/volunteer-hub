@@ -15,6 +15,7 @@ import Button from '../elements/Button'
 const Wrapper = styled.div`
   position: relative;
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   width: 100%;
   height: calc(100vh - 6rem - 40px);
@@ -24,10 +25,26 @@ const Wrapper = styled.div`
     height: 100%;
     margin: auto 5px;
   }
+
+  @media screen and (max-width: 650px) {
+
+    flex-direction: column;
+
+    > * { margin: auto; }
+
+    >:nth-child(${props => props.panel + 1}) {
+      display: none
+    }
+  }
 `
 
 const ControlToggle = styled.div`
-  margin: -20px 5px 5px;
+  margin: -10px 0 10px;
+  height: 3rem;
+
+  @media screen and (min-width: 651px) {
+    display: none;
+  }
 `
 
 const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
@@ -43,8 +60,9 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
   const [selectedVolunteers, setSelectedVolunteers] = useState([])
   const [groupName, setGroupName] = useState('')
 
-  const [view, setView] = useState(window.innerWidth < 650 ? 'toggle' : 'full')
-  const [panel, setPanel] = useState(0)
+  const [panel, setPanel] = useState(1)
+
+  const togglePanel = () => setPanel((panel % 2) + 1)
 
   // onMount
   useEffect(() => toggleUserList('members'), [])
@@ -116,7 +134,10 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
   const updateList = (volunteer_id, action) => {
     updateVolunteers(campaignData.id, { volunteer_id, action })
       .then(
-        () => updateData(),
+        () => {
+          // console.log(res)
+          updateData()
+        },
         () => {
           app.setNotification(
             { message: 'There was an error while attempting to update the list' }
@@ -171,39 +192,21 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
     />
   )
 
-  React.useEffect(() => {
-    const handleResize = () => {
-      const mode = window.innerWidth < 650 ? 'toggle' : 'full'
-      setView(mode)
 
 
-    }
-    window.addEventListener('resize', handleResize)
-    // Clean up on unmount
-    return () => window.removeEventListener('resize', handleResize)
-  }, [])
+  return (
+    <Wrapper panel={panel}>
 
-  const togglePanel = () => setPanel((panel + 1) % 2)
-
-
-  return (<>
-    
-    {view === 'toggle' &&
       <ControlToggle>
         <Button width="100%" onClick={togglePanel}>Filter List</Button>
       </ControlToggle>
-    }
 
-    <Wrapper>
+      <List
+        items={filteredUsers}
+        itemElement={itemElement}
+      />
 
-      {(view === 'full' || panel === 0) &&
-        <List
-          items={filteredUsers}
-          itemElement={itemElement}
-        />
-      }
-
-      {isAdmin && (view === 'full' || panel === 1) &&
+      {isAdmin &&
         <FilterControls
           skills={skills}
           schedule={schedule}
@@ -216,10 +219,11 @@ const VolunteersPanel = ({ campaignData, updateData, isAdmin }) => {
           selectAll={selectAll}
           createNewGroup={createNewGroup}
           showChatCreate={listDisplay === 'members'}
+          selectFunction={selectedVolunteers.length !== memberList.length}
         />}
 
     </Wrapper>
-  </>)
+  )
 }
 
 export default VolunteersPanel
