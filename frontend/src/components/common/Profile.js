@@ -152,12 +152,14 @@ const Profile  = () => {
 
   if (!userData || !pendingUserData) return null
 
+  const defaultProfile = require('../../images/default_profile.png')
+
   return (
     <Show
       title={`${userData.first_name} ${userData.last_name}`}
       menu={menu}
       banner={require('../../images/default_banner_profile.jpg')}
-      image={pendingUserData.profile_image}
+      image={pendingUserData.profile_image || defaultProfile}
       // image={require('../../images/default_profile.png')}
       imageLabel="change profile image"
       onImageClick={openCloudWidget}

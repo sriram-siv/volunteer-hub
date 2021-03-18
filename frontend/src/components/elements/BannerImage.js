@@ -76,7 +76,6 @@ const BannerImage = ({ src, profile, onProfileClick, profileLabel, maskActive })
   const [imageLabelVisible, setImageLabelVisible] = React.useState(false)
 
   const defaultSrc = require('../../images/default_banner.png')
-  const defaultProfile = require('../../images/default_profile.png')
   
   return <Wrapper>
     <Mask active={maskActive}>
@@ -86,7 +85,7 @@ const BannerImage = ({ src, profile, onProfileClick, profileLabel, maskActive })
       {profile &&
         <Profile
           aria-label="User Profile Image"
-          image={profile || defaultProfile}
+          image={profile}
           onClick={onProfileClick}
           onMouseEnter={() => setImageLabelVisible(true)}
           onMouseLeave={() => setImageLabelVisible(false)}
