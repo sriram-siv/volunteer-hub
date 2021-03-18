@@ -7,7 +7,8 @@ class User(AbstractUser):
     last_name = models.CharField(max_length=50)
     email = models.EmailField()
     phone = models.CharField(max_length=15, blank=True)
-    profile_image = models.CharField(max_length=300, default="https://res.cloudinary.com/dmhj1vjdf/image/upload/v1603705159/volunteers/fg5afp4hagsrz2fgkbwd.png")
+    # profile_image = models.CharField(max_length=300, default="https://res.cloudinary.com/dmhj1vjdf/image/upload/v1603705159/volunteers/fg5afp4hagsrz2fgkbwd.png")
+    profile_image = models.CharField(max_length=300, blank=True)
     active = models.BooleanField(default=True)
 
     def __str__(self):

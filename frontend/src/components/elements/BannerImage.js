@@ -59,14 +59,15 @@ const Profile = styled.button`
 
 const ProfileLabel = styled.div`
   position: absolute;
-  top: 0;
+  top: 1px;
+  left: 1px;
   font-size: 0.85rem;
   font-family: 'Open Sans', sans-serif;
   text-align: center;
-  width: 100%;
+  width: calc(100% - 2px);
   line-height: 1.5rem;
   background-color: ${props => props.theme.glass};
-  color: ${props => props.theme.text};
+  color: #333;
   border-radius: 4px 4px 0 0;
 `
 
@@ -75,19 +76,22 @@ const BannerImage = ({ src, profile, onProfileClick, profileLabel, maskActive })
   const [imageLabelVisible, setImageLabelVisible] = React.useState(false)
 
   const defaultSrc = require('../../images/default_banner.png')
+  const defaultProfile = require('../../images/default_profile.png')
   
   return <Wrapper>
     <Mask active={maskActive}>
-      <MaskImage src={src ? src : defaultSrc} />
+      <MaskImage src={src || defaultSrc} />
     </Mask>
-    <Banner src={src ? src : defaultSrc}>
+    <Banner src={src || defaultSrc}>
       {profile &&
         <Profile
           aria-label="User Profile Image"
-          image={profile}
+          image={profile || defaultProfile}
           onClick={onProfileClick}
           onMouseEnter={() => setImageLabelVisible(true)}
           onMouseLeave={() => setImageLabelVisible(false)}
+          onFocus={() => setImageLabelVisible(true)}
+          onBlur={() => setImageLabelVisible(false)}
         >
           {imageLabelVisible && <ProfileLabel>{profileLabel}</ProfileLabel>}
         </Profile>

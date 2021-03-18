@@ -7,7 +7,7 @@ const Wrapper = styled.div`
   position: relative;
   padding: 5px;
   padding-top: calc(2rem + 10px);
-  background-color: ${props => props.theme.panels};
+  background-color: ${props => props.theme.name === 'light' ? props.theme.panels : props.theme.background};
   border-radius: 2px;
   border: 1px solid ${props => props.hideBorder ? 'transparent' : props.theme.shadow};
   height: calc(6rem + 25px);
