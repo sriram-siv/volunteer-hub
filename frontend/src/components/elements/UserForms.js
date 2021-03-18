@@ -54,9 +54,8 @@ const UserForms = ({ visible, hideForm }) => {
     email: '',
     phone: '',
     password: '',
-    password_confirmation: '',
-    // TODO default should be in the backend
-    profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
+    password_confirmation: ''
+    // profile_image: 'http://res.cloudinary.com/dmhj1vjdf/image/upload/v1603961535/volunteers/u4zukx1dlvly1pu2zz81.png'
   })
 
   const [hide, setHide] = useState(true)
